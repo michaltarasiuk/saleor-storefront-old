@@ -119,6 +119,25 @@ export type CollectionNavLinksItemFragment = { readonly id: string, readonly nam
 
 export type CollectionNavLinkFragment = { readonly name: string, readonly slug: string };
 
+export type GetCategoryIdsVariables = Types.Exact<{
+  first?: Types.InputMaybe<Types.Scalars['Int']['input']>;
+  after?: Types.InputMaybe<Types.Scalars['String']['input']>;
+  filter?: Types.InputMaybe<Types.CategoryFilterInput>;
+}>;
+
+
+export type GetCategoryIds = { readonly categories?: { readonly edges: ReadonlyArray<{ readonly node: { readonly id: string } }>, readonly pageInfo: { readonly hasNextPage: boolean, readonly endCursor?: string | null } } | null };
+
+export type GetCollectionIdsVariables = Types.Exact<{
+  first?: Types.InputMaybe<Types.Scalars['Int']['input']>;
+  after?: Types.InputMaybe<Types.Scalars['String']['input']>;
+  filter?: Types.InputMaybe<Types.CollectionFilterInput>;
+  channel?: Types.InputMaybe<Types.Scalars['String']['input']>;
+}>;
+
+
+export type GetCollectionIds = { readonly collections?: { readonly edges: ReadonlyArray<{ readonly node: { readonly id: string } }>, readonly pageInfo: { readonly hasNextPage: boolean, readonly endCursor?: string | null } } | null };
+
 export type GetProductsVariables = Types.Exact<{
   first?: Types.InputMaybe<Types.Scalars['Int']['input']>;
   after?: Types.InputMaybe<Types.Scalars['String']['input']>;
@@ -158,18 +177,6 @@ export type GetProductAttributes = { readonly attributes?: { readonly edges: Rea
 export type ProductAttributeFragment = { readonly name?: string | null, readonly slug?: string | null, readonly type?: Types.AttributeTypeEnum | null, readonly inputType?: Types.AttributeInputTypeEnum | null, readonly choices?: { readonly edges: ReadonlyArray<{ readonly node: { readonly id: string, readonly name?: string | null, readonly slug?: string | null, readonly translation?: { readonly name: string } | null } }> } | null };
 
 export type ProductAttributeValueFragment = { readonly name?: string | null, readonly slug?: string | null };
-
-export type GetCategoryIdsVariables = Types.Exact<{ [key: string]: never; }>;
-
-
-export type GetCategoryIds = { readonly categories?: { readonly edges: ReadonlyArray<{ readonly node: { readonly id: string, readonly slug: string } }> } | null };
-
-export type GetCollectionIdsVariables = Types.Exact<{
-  channel?: Types.InputMaybe<Types.Scalars['String']['input']>;
-}>;
-
-
-export type GetCollectionIds = { readonly collections?: { readonly edges: ReadonlyArray<{ readonly node: { readonly id: string, readonly slug: string } }> } | null };
 
 export type Address = { readonly firstName: string, readonly lastName: string, readonly streetAddress1: string, readonly streetAddress2: string, readonly city: string, readonly countryArea: string, readonly postalCode: string, readonly country: { readonly code: string, readonly country: string } };
 
@@ -818,6 +825,36 @@ fragment collectionNavLinkFragment on Collection {
   name
   slug
 }`) as unknown as TypedDocumentString<GetNavCollections, GetNavCollectionsVariables>;
+export const GetCategoryIdsDocument = new TypedDocumentString(`
+    query getCategoryIds($first: Int, $after: String, $filter: CategoryFilterInput) {
+  categories(first: $first, after: $after, filter: $filter) {
+    edges {
+      node {
+        id
+      }
+    }
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+  }
+}
+    `) as unknown as TypedDocumentString<GetCategoryIds, GetCategoryIdsVariables>;
+export const GetCollectionIdsDocument = new TypedDocumentString(`
+    query getCollectionIds($first: Int, $after: String, $filter: CollectionFilterInput, $channel: String) {
+  collections(first: $first, after: $after, filter: $filter, channel: $channel) {
+    edges {
+      node {
+        id
+      }
+    }
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+  }
+}
+    `) as unknown as TypedDocumentString<GetCollectionIds, GetCollectionIdsVariables>;
 export const GetProductsDocument = new TypedDocumentString(`
     query getProducts($first: Int, $after: String, $last: Int, $before: String, $search: String, $filter: ProductFilterInput, $address: AddressInput, $channel: String, $languageCode: LanguageCodeEnum!) {
   products(
@@ -928,30 +965,6 @@ fragment productAttributeValueFragment on AttributeValue {
   name
   slug
 }`) as unknown as TypedDocumentString<GetProductAttributes, GetProductAttributesVariables>;
-export const GetCategoryIdsDocument = new TypedDocumentString(`
-    query getCategoryIds {
-  categories(first: 30) {
-    edges {
-      node {
-        id
-        slug
-      }
-    }
-  }
-}
-    `) as unknown as TypedDocumentString<GetCategoryIds, GetCategoryIdsVariables>;
-export const GetCollectionIdsDocument = new TypedDocumentString(`
-    query getCollectionIds($channel: String) {
-  collections(first: 10, channel: $channel) {
-    edges {
-      node {
-        id
-        slug
-      }
-    }
-  }
-}
-    `) as unknown as TypedDocumentString<GetCollectionIds, GetCollectionIdsVariables>;
 export const UpdateCheckoutBillingAddressDocument = new TypedDocumentString(`
     mutation updateCheckoutBillingAddress($id: ID!, $billingAddress: AddressInput!) {
   checkoutBillingAddressUpdate(id: $id, billingAddress: $billingAddress) {
