@@ -9,6 +9,7 @@ import {getCheckoutId} from '@/modules/checkout/tools/cookies';
 
 import {Breadcrumbs} from '../_components/breadcrumbs';
 import {getRedirectUrl} from '../_tools/get-redirect-url';
+import {goToRoot} from '../_tools/go-to-root';
 import {ShippingMethodSection} from './_components/shipping-method-section';
 import {ShippingReviewTable} from './_components/shipping-review-table';
 
@@ -32,15 +33,13 @@ const ShippingPage_CheckoutQuery = graphql(/* GraphQL */ `
   }
 `);
 
-const ROOT_PATHNAME = formatPathname(APP_ROUTES.ROOT);
-
 export default async function ShippingPage() {
   const checkout =
     (
       await fetchQueryData(
         ShippingPage_CheckoutQuery,
         {
-          id: getCheckoutId() ?? redirect(ROOT_PATHNAME),
+          id: getCheckoutId() ?? goToRoot(),
         },
         {
           fetchOptions: {
@@ -48,10 +47,10 @@ export default async function ShippingPage() {
           },
         },
       )
-    ).checkout ?? redirect(ROOT_PATHNAME);
+    ).checkout ?? goToRoot();
 
   if (!checkout.quantity) {
-    redirect(ROOT_PATHNAME);
+    goToRoot();
   }
   const redirectUrl = getRedirectUrl(
     checkout,

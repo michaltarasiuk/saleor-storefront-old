@@ -9,6 +9,7 @@ import {getCheckoutId} from '@/modules/checkout/tools/cookies';
 
 import {Breadcrumbs} from '../_components/breadcrumbs';
 import {getRedirectUrl} from '../_tools/get-redirect-url';
+import {goToRoot} from '../_tools/go-to-root';
 
 const PaymentPage_CheckoutQuery = graphql(/* GraphQL */ `
   query PaymentPage_CheckoutQuery($id: ID!) {
@@ -28,15 +29,13 @@ const PaymentPage_CheckoutQuery = graphql(/* GraphQL */ `
   }
 `);
 
-const ROOT_PATHNAME = formatPathname(APP_ROUTES.ROOT);
-
 export default async function PaymentPage() {
   const checkout =
     (
       await fetchQueryData(
         PaymentPage_CheckoutQuery,
         {
-          id: getCheckoutId() ?? redirect(ROOT_PATHNAME),
+          id: getCheckoutId() ?? goToRoot(),
         },
         {
           fetchOptions: {
@@ -44,10 +43,10 @@ export default async function PaymentPage() {
           },
         },
       )
-    ).checkout ?? redirect(ROOT_PATHNAME);
+    ).checkout ?? goToRoot();
 
   if (!checkout.quantity) {
-    redirect(ROOT_PATHNAME);
+    goToRoot();
   }
   const redirectUrl = getRedirectUrl(
     checkout,

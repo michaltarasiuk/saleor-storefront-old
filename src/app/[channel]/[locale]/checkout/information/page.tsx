@@ -10,6 +10,7 @@ import {getCheckoutId} from '@/modules/checkout/tools/cookies';
 import {Breadcrumbs} from '../_components/breadcrumbs';
 import {getCountrySearchParam} from '../_tools/get-country-search-param';
 import {getRedirectUrl} from '../_tools/get-redirect-url';
+import {goToRoot} from '../_tools/go-to-root';
 import {InformationSection} from './_components/InformationSection';
 
 const InformationPage_CheckoutQuery = graphql(/* GraphQL */ `
@@ -37,15 +38,13 @@ interface Props {
   };
 }
 
-const ROOT_PATHNAME = formatPathname(APP_ROUTES.ROOT);
-
 export default async function InformationPage({searchParams}: Props) {
   const checkout =
     (
       await fetchQueryData(
         InformationPage_CheckoutQuery,
         {
-          id: getCheckoutId() ?? redirect(ROOT_PATHNAME),
+          id: getCheckoutId() ?? goToRoot(),
         },
         {
           fetchOptions: {
@@ -53,10 +52,10 @@ export default async function InformationPage({searchParams}: Props) {
           },
         },
       )
-    ).checkout ?? redirect(ROOT_PATHNAME);
+    ).checkout ?? goToRoot();
 
   if (!checkout.quantity) {
-    redirect(ROOT_PATHNAME);
+    goToRoot();
   }
   const redirectUrl = getRedirectUrl(
     checkout,
