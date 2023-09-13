@@ -1,4 +1,7 @@
 {
+  "+Ey1vz": {
+    "defaultMessage": "Remove cart item"
+  },
   "+JsDiH": {
     "defaultMessage": "Ship to"
   },
@@ -16,6 +19,9 @@
   },
   "/V1GsM": {
     "defaultMessage": "Country/Region"
+  },
+  "/Zn5+8": {
+    "defaultMessage": "unknown business days"
   },
   "/uUIep": {
     "defaultMessage": "User details"
@@ -41,8 +47,8 @@
   "3P1axg": {
     "defaultMessage": "New email description"
   },
-  "47FYwb": {
-    "defaultMessage": "Cancel"
+  "3ZPs5M": {
+    "defaultMessage": "Increase quantity"
   },
   "48k4Ow": {
     "defaultMessage": "Enter a old password"
@@ -65,8 +71,14 @@
   "8HJxXG": {
     "defaultMessage": "Sign up"
   },
+  "8N2GKa": {
+    "defaultMessage": "Your cart is empty."
+  },
   "8QOEAp": {
     "defaultMessage": "Enter a valid confirm password"
+  },
+  "8lgC6D": {
+    "defaultMessage": "maximum {minimumDeliveryDays} business days"
   },
   "9KlUdb": {
     "defaultMessage": "Enter your email to receive reset link"
@@ -92,6 +104,9 @@
   "BY343C": {
     "defaultMessage": "Change"
   },
+  "CTSLLJ": {
+    "defaultMessage": "My Cart"
+  },
   "DgnS8R": {
     "defaultMessage": "Continue to shipping"
   },
@@ -106,9 +121,6 @@
   },
   "F4lKlM": {
     "defaultMessage": "New password description"
-  },
-  "FbNOxp": {
-    "defaultMessage": "Account deletion"
   },
   "HrdHC1": {
     "defaultMessage": "Request email change"
@@ -194,6 +206,9 @@
   "X7jl6w": {
     "defaultMessage": "Orders"
   },
+  "YYfgYY": {
+    "defaultMessage": "Reduce quantity"
+  },
   "ZpVtCa": {
     "defaultMessage": "Shipping address"
   },
@@ -205,9 +220,6 @@
   },
   "bHEjjM": {
     "defaultMessage": "{minimumDeliveryDays} to {maximumDeliveryDays} business days"
-  },
-  "bhN9Hq": {
-    "defaultMessage": "Delete your account"
   },
   "cPhKTw": {
     "defaultMessage": "Not available"
@@ -284,8 +296,8 @@
   "rHnr4K": {
     "defaultMessage": "ZIP Code"
   },
-  "sGf1iY": {
-    "defaultMessage": "This action cannot be undone. This will permanently delete your account and remove your data from our servers."
+  "rbrahO": {
+    "defaultMessage": "Close"
   },
   "sy+pv5": {
     "defaultMessage": "Email"
@@ -293,14 +305,14 @@
   "tKMlOc": {
     "defaultMessage": "Menu"
   },
+  "tgJ/Sx": {
+    "defaultMessage": "minimum {minimumDeliveryDays} business days"
+  },
   "u1JzBg": {
     "defaultMessage": "Enter a city"
   },
   "uZTXoH": {
     "defaultMessage": "Set password and log in"
-  },
-  "v5ykbS": {
-    "defaultMessage": "Are you absolutely sure?"
   },
   "vDJsvf": {
     "defaultMessage": "Enter a valid new password"
@@ -317,9 +329,6 @@
   "wjh10D": {
     "defaultMessage": "Shopping cart"
   },
-  "wyxJrL": {
-    "defaultMessage": "Delete account"
-  },
   "x9hzVm": {
     "defaultMessage": "Enter a valid ZIP / postal code"
   },
@@ -331,6 +340,9 @@
   },
   "y6WUKS": {
     "defaultMessage": "Enter a first name"
+  },
+  "z3Qj9h": {
+    "defaultMessage": "Proceed to Checkout"
   },
   "zFegDD": {
     "defaultMessage": "Contact"

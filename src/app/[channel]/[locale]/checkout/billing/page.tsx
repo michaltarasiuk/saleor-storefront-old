@@ -5,17 +5,17 @@ import {APP_ROUTES} from '@/lib/consts';
 import {cn} from '@/lib/tools/cn';
 import {formatPathname} from '@/lib/tools/format-pathname';
 import {fetchQueryData} from '@/lib/tools/get-client';
-import {raise} from '@/lib/tools/raise';
 import {getCheckoutId} from '@/modules/checkout/tools/cookies';
 
 import {Breadcrumbs} from '../_components/breadcrumbs';
 import {getCountrySearchParam} from '../_tools/get-country-search-param';
 import {getRedirectUrl} from '../_tools/get-redirect-url';
-import {BillingSection} from './_components/billing-section';
+import {BillingSection} from './_components/BillingSection';
 
 const BillingPage_CheckoutQuery = graphql(/* GraphQL */ `
   query BillingPage_CheckoutQuery($id: ID!) {
     checkout(id: $id) {
+      quantity
       shippingAddress {
         __typename
       }
@@ -33,18 +33,19 @@ const BillingPage_CheckoutQuery = graphql(/* GraphQL */ `
 
 interface Props {
   readonly searchParams?: {
-    readonly country: string;
+    readonly country?: string;
   };
 }
 
+const ROOT_PATHNAME = formatPathname(APP_ROUTES.ROOT);
+
 export default async function BillingPage({searchParams}: Props) {
-  const id = getCheckoutId() ?? redirect(formatPathname(APP_ROUTES.ROOT));
   const checkout =
     (
       await fetchQueryData(
         BillingPage_CheckoutQuery,
         {
-          id,
+          id: getCheckoutId() ?? redirect(ROOT_PATHNAME),
         },
         {
           fetchOptions: {
@@ -52,8 +53,11 @@ export default async function BillingPage({searchParams}: Props) {
           },
         },
       )
-    ).checkout ?? raise('`checkout` is not defined');
+    ).checkout ?? redirect(ROOT_PATHNAME);
 
+  if (!checkout.quantity) {
+    redirect(ROOT_PATHNAME);
+  }
   const redirectUrl = getRedirectUrl(
     checkout,
     formatPathname(...APP_ROUTES.CHECKOUT.BILLING),

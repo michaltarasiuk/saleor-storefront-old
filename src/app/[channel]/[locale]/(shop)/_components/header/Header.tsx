@@ -4,7 +4,7 @@ import {HeaderMenu} from './components/HeaderMenu';
 import {HomeLink} from './components/HomeLink';
 import {MenuButton} from './components/MenuButton';
 import {SearchTextField} from './components/search-text-field/SearchTextField';
-import {ShoppingCartButton} from './components/ShoppingCartButton';
+import {ShoppingCartDialog} from './components/shopping-cart-dialog';
 
 export async function Header() {
   return (
@@ -27,7 +27,7 @@ export async function Header() {
         </div>
       </div>
       <div className={cn('flex flex-1 justify-end')}>
-        <ShoppingCartButton />
+        <ShoppingCartDialog />
       </div>
     </header>
   );

@@ -58,19 +58,17 @@ interface Props {
 }
 
 export async function InformationSection({checkout, country}: Props) {
-  const [channelParam, localeParam] = getBasePath();
-
   const {email, shippingAddress} = getFragment(
     InformationSection_CheckoutFragment,
     checkout,
   );
 
+  const [channelParam, localeParam] = getBasePath();
   const countryCode = findCountryCode(
     country,
     shippingAddress?.country.code,
     localeToCountryCode(localeParam),
   );
-  invariant(countryCode);
 
   const [{channel}, {addressValidationRules}] = await Promise.all([
     fetchQueryData(InformationSection_ChannelQuery, {
@@ -80,8 +78,7 @@ export async function InformationSection({checkout, country}: Props) {
       countryCode,
     }),
   ]);
-  invariant(channel);
-  invariant(addressValidationRules);
+  invariant(channel && addressValidationRules);
 
   return (
     <InformationForm

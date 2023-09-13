@@ -1,4 +1,10 @@
 {
+  "+Ey1vz": [
+    {
+      "type": 0,
+      "value": "Remove cart item"
+    }
+  ],
   "+JsDiH": [
     {
       "type": 0,
@@ -33,6 +39,12 @@
     {
       "type": 0,
       "value": "Country/Region"
+    }
+  ],
+  "/Zn5+8": [
+    {
+      "type": 0,
+      "value": "unknown business days"
     }
   ],
   "/uUIep": [
@@ -91,10 +103,10 @@
       "value": "New email description"
     }
   ],
-  "47FYwb": [
+  "3ZPs5M": [
     {
       "type": 0,
-      "value": "Cancel"
+      "value": "Increase quantity"
     }
   ],
   "48k4Ow": [
@@ -139,10 +151,30 @@
       "value": "Sign up"
     }
   ],
+  "8N2GKa": [
+    {
+      "type": 0,
+      "value": "Your cart is empty."
+    }
+  ],
   "8QOEAp": [
     {
       "type": 0,
       "value": "Enter a valid confirm password"
+    }
+  ],
+  "8lgC6D": [
+    {
+      "type": 0,
+      "value": "maximum "
+    },
+    {
+      "type": 1,
+      "value": "minimumDeliveryDays"
+    },
+    {
+      "type": 0,
+      "value": " business days"
     }
   ],
   "9KlUdb": [
@@ -193,6 +225,12 @@
       "value": "Change"
     }
   ],
+  "CTSLLJ": [
+    {
+      "type": 0,
+      "value": "My Cart"
+    }
+  ],
   "DgnS8R": [
     {
       "type": 0,
@@ -221,12 +259,6 @@
     {
       "type": 0,
       "value": "New password description"
-    }
-  ],
-  "FbNOxp": [
-    {
-      "type": 0,
-      "value": "Account deletion"
     }
   ],
   "HrdHC1": [
@@ -417,6 +449,12 @@
       "value": "Orders"
     }
   ],
+  "YYfgYY": [
+    {
+      "type": 0,
+      "value": "Reduce quantity"
+    }
+  ],
   "ZpVtCa": [
     {
       "type": 0,
@@ -451,12 +489,6 @@
     {
       "type": 0,
       "value": " business days"
-    }
-  ],
-  "bhN9Hq": [
-    {
-      "type": 0,
-      "value": "Delete your account"
     }
   ],
   "cPhKTw": [
@@ -617,10 +649,10 @@
       "value": "ZIP Code"
     }
   ],
-  "sGf1iY": [
+  "rbrahO": [
     {
       "type": 0,
-      "value": "This action cannot be undone. This will permanently delete your account and remove your data from our servers."
+      "value": "Close"
     }
   ],
   "sy+pv5": [
@@ -635,6 +667,20 @@
       "value": "Menu"
     }
   ],
+  "tgJ/Sx": [
+    {
+      "type": 0,
+      "value": "minimum "
+    },
+    {
+      "type": 1,
+      "value": "minimumDeliveryDays"
+    },
+    {
+      "type": 0,
+      "value": " business days"
+    }
+  ],
   "u1JzBg": [
     {
       "type": 0,
@@ -645,12 +691,6 @@
     {
       "type": 0,
       "value": "Set password and log in"
-    }
-  ],
-  "v5ykbS": [
-    {
-      "type": 0,
-      "value": "Are you absolutely sure?"
     }
   ],
   "vDJsvf": [
@@ -683,12 +723,6 @@
       "value": "Shopping cart"
     }
   ],
-  "wyxJrL": [
-    {
-      "type": 0,
-      "value": "Delete account"
-    }
-  ],
   "x9hzVm": [
     {
       "type": 0,
@@ -711,6 +745,12 @@
     {
       "type": 0,
       "value": "Enter a first name"
+    }
+  ],
+  "z3Qj9h": [
+    {
+      "type": 0,
+      "value": "Proceed to Checkout"
     }
   ],
   "zFegDD": [

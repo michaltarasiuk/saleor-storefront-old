@@ -5,7 +5,6 @@ import {APP_ROUTES} from '@/lib/consts';
 import {cn} from '@/lib/tools/cn';
 import {formatPathname} from '@/lib/tools/format-pathname';
 import {fetchQueryData} from '@/lib/tools/get-client';
-import {raise} from '@/lib/tools/raise';
 import {getCheckoutId} from '@/modules/checkout/tools/cookies';
 
 import {Breadcrumbs} from '../_components/breadcrumbs';
@@ -16,6 +15,7 @@ import {ShippingReviewTable} from './_components/shipping-review-table';
 const ShippingPage_CheckoutQuery = graphql(/* GraphQL */ `
   query ShippingPage_CheckoutQuery($id: ID!) {
     checkout(id: $id) {
+      quantity
       shippingAddress {
         __typename
       }
@@ -32,14 +32,15 @@ const ShippingPage_CheckoutQuery = graphql(/* GraphQL */ `
   }
 `);
 
+const ROOT_PATHNAME = formatPathname(APP_ROUTES.ROOT);
+
 export default async function ShippingPage() {
-  const id = getCheckoutId() ?? redirect(formatPathname(APP_ROUTES.ROOT));
   const checkout =
     (
       await fetchQueryData(
         ShippingPage_CheckoutQuery,
         {
-          id,
+          id: getCheckoutId() ?? redirect(ROOT_PATHNAME),
         },
         {
           fetchOptions: {
@@ -47,8 +48,11 @@ export default async function ShippingPage() {
           },
         },
       )
-    ).checkout ?? raise('`checkout` is not defined');
+    ).checkout ?? redirect(ROOT_PATHNAME);
 
+  if (!checkout.quantity) {
+    redirect(ROOT_PATHNAME);
+  }
   const redirectUrl = getRedirectUrl(
     checkout,
     formatPathname(...APP_ROUTES.CHECKOUT.SHIPPING),

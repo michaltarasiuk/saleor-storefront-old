@@ -51,13 +51,13 @@ export function AddressFields({
   addressValidationData,
   disabled,
 }: Props) {
-  const form = useFormContext<AddressFieldsSchema>();
-
   const channelFragment = getFragment(AddressFields_ChannelFragment, channel);
   const {countryAreaChoices} = getFragment(
     AddressFields_AddressValidationDataFragment,
     addressValidationData,
   );
+
+  const form = useFormContext<AddressFieldsSchema>();
 
   const intl = useIntl();
 
