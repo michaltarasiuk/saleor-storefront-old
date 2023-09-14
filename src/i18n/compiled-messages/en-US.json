@@ -41,12 +41,6 @@
       "value": "Country/Region"
     }
   ],
-  "/Zn5+8": [
-    {
-      "type": 0,
-      "value": "unknown business days"
-    }
-  ],
   "/uUIep": [
     {
       "type": 0,
@@ -163,20 +157,6 @@
       "value": "Enter a valid confirm password"
     }
   ],
-  "8lgC6D": [
-    {
-      "type": 0,
-      "value": "maximum "
-    },
-    {
-      "type": 1,
-      "value": "minimumDeliveryDays"
-    },
-    {
-      "type": 0,
-      "value": " business days"
-    }
-  ],
   "9KlUdb": [
     {
       "type": 0,
@@ -259,6 +239,74 @@
     {
       "type": 0,
       "value": "New password description"
+    }
+  ],
+  "GtQk15": [
+    {
+      "options": {
+        "maximum": {
+          "value": [
+            {
+              "type": 0,
+              "value": "maximum "
+            },
+            {
+              "type": 1,
+              "value": "minimumDeliveryDays"
+            },
+            {
+              "type": 0,
+              "value": " business days"
+            }
+          ]
+        },
+        "minimum": {
+          "value": [
+            {
+              "type": 0,
+              "value": "minimum "
+            },
+            {
+              "type": 1,
+              "value": "minimumDeliveryDays"
+            },
+            {
+              "type": 0,
+              "value": " business days"
+            }
+          ]
+        },
+        "other": {
+          "value": [
+            {
+              "type": 0,
+              "value": "unknown business days"
+            }
+          ]
+        },
+        "range": {
+          "value": [
+            {
+              "type": 1,
+              "value": "minimumDeliveryDays"
+            },
+            {
+              "type": 0,
+              "value": " to "
+            },
+            {
+              "type": 1,
+              "value": "maximumDeliveryDays"
+            },
+            {
+              "type": 0,
+              "value": " business days"
+            }
+          ]
+        }
+      },
+      "type": 5,
+      "value": "type"
     }
   ],
   "HrdHC1": [
@@ -473,24 +521,6 @@
       "value": "Confirm password:"
     }
   ],
-  "bHEjjM": [
-    {
-      "type": 1,
-      "value": "minimumDeliveryDays"
-    },
-    {
-      "type": 0,
-      "value": " to "
-    },
-    {
-      "type": 1,
-      "value": "maximumDeliveryDays"
-    },
-    {
-      "type": 0,
-      "value": " business days"
-    }
-  ],
   "cPhKTw": [
     {
       "type": 0,
@@ -665,20 +695,6 @@
     {
       "type": 0,
       "value": "Menu"
-    }
-  ],
-  "tgJ/Sx": [
-    {
-      "type": 0,
-      "value": "minimum "
-    },
-    {
-      "type": 1,
-      "value": "minimumDeliveryDays"
-    },
-    {
-      "type": 0,
-      "value": " business days"
     }
   ],
   "u1JzBg": [

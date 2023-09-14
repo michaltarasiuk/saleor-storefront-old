@@ -29588,15 +29588,9 @@ export type ShippingMethodForm_CheckoutFragmentFragment = {
 } & {' $fragmentName'?: 'ShippingMethodForm_CheckoutFragmentFragment'};
 
 export type DeliveryDays_ShippingMethodFragment = {
-  ' $fragmentRefs'?: {
-    Message_ShippingMethodFragment: Message_ShippingMethodFragment;
-  };
-} & {' $fragmentName'?: 'DeliveryDays_ShippingMethodFragment'};
-
-export type Message_ShippingMethodFragment = {
   minimumDeliveryDays?: number | null;
   maximumDeliveryDays?: number | null;
-} & {' $fragmentName'?: 'Message_ShippingMethodFragment'};
+} & {' $fragmentName'?: 'DeliveryDays_ShippingMethodFragment'};
 
 export type ShippingMethodRadioItem_ShippingMethodFragment = ({
   id: string;
@@ -32729,49 +32723,12 @@ export const InformationForm_AddressValidationDataFragmentFragmentDoc = {
   InformationForm_AddressValidationDataFragmentFragment,
   unknown
 >;
-export const Message_ShippingMethodFragmentDoc = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'FragmentDefinition',
-      name: {kind: 'Name', value: 'Message_ShippingMethod'},
-      typeCondition: {
-        kind: 'NamedType',
-        name: {kind: 'Name', value: 'ShippingMethod'},
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {kind: 'Field', name: {kind: 'Name', value: 'minimumDeliveryDays'}},
-          {kind: 'Field', name: {kind: 'Name', value: 'maximumDeliveryDays'}},
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<Message_ShippingMethodFragment, unknown>;
 export const DeliveryDays_ShippingMethodFragmentDoc = {
   kind: 'Document',
   definitions: [
     {
       kind: 'FragmentDefinition',
       name: {kind: 'Name', value: 'DeliveryDays_ShippingMethod'},
-      typeCondition: {
-        kind: 'NamedType',
-        name: {kind: 'Name', value: 'ShippingMethod'},
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'FragmentSpread',
-            name: {kind: 'Name', value: 'Message_ShippingMethod'},
-          },
-        ],
-      },
-    },
-    {
-      kind: 'FragmentDefinition',
-      name: {kind: 'Name', value: 'Message_ShippingMethod'},
       typeCondition: {
         kind: 'NamedType',
         name: {kind: 'Name', value: 'ShippingMethod'},
@@ -32821,7 +32778,7 @@ export const ShippingMethodRadioItem_ShippingMethodFragmentDoc = {
     },
     {
       kind: 'FragmentDefinition',
-      name: {kind: 'Name', value: 'Message_ShippingMethod'},
+      name: {kind: 'Name', value: 'DeliveryDays_ShippingMethod'},
       typeCondition: {
         kind: 'NamedType',
         name: {kind: 'Name', value: 'ShippingMethod'},
@@ -32831,23 +32788,6 @@ export const ShippingMethodRadioItem_ShippingMethodFragmentDoc = {
         selections: [
           {kind: 'Field', name: {kind: 'Name', value: 'minimumDeliveryDays'}},
           {kind: 'Field', name: {kind: 'Name', value: 'maximumDeliveryDays'}},
-        ],
-      },
-    },
-    {
-      kind: 'FragmentDefinition',
-      name: {kind: 'Name', value: 'DeliveryDays_ShippingMethod'},
-      typeCondition: {
-        kind: 'NamedType',
-        name: {kind: 'Name', value: 'ShippingMethod'},
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'FragmentSpread',
-            name: {kind: 'Name', value: 'Message_ShippingMethod'},
-          },
         ],
       },
     },
@@ -32915,7 +32855,7 @@ export const ShippingMethodForm_CheckoutFragmentFragmentDoc = {
     },
     {
       kind: 'FragmentDefinition',
-      name: {kind: 'Name', value: 'Message_ShippingMethod'},
+      name: {kind: 'Name', value: 'DeliveryDays_ShippingMethod'},
       typeCondition: {
         kind: 'NamedType',
         name: {kind: 'Name', value: 'ShippingMethod'},
@@ -32925,23 +32865,6 @@ export const ShippingMethodForm_CheckoutFragmentFragmentDoc = {
         selections: [
           {kind: 'Field', name: {kind: 'Name', value: 'minimumDeliveryDays'}},
           {kind: 'Field', name: {kind: 'Name', value: 'maximumDeliveryDays'}},
-        ],
-      },
-    },
-    {
-      kind: 'FragmentDefinition',
-      name: {kind: 'Name', value: 'DeliveryDays_ShippingMethod'},
-      typeCondition: {
-        kind: 'NamedType',
-        name: {kind: 'Name', value: 'ShippingMethod'},
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'FragmentSpread',
-            name: {kind: 'Name', value: 'Message_ShippingMethod'},
-          },
         ],
       },
     },
@@ -33002,7 +32925,7 @@ export const ShippingMethodSection_CheckoutFragmentFragmentDoc = {
     },
     {
       kind: 'FragmentDefinition',
-      name: {kind: 'Name', value: 'Message_ShippingMethod'},
+      name: {kind: 'Name', value: 'DeliveryDays_ShippingMethod'},
       typeCondition: {
         kind: 'NamedType',
         name: {kind: 'Name', value: 'ShippingMethod'},
@@ -33012,23 +32935,6 @@ export const ShippingMethodSection_CheckoutFragmentFragmentDoc = {
         selections: [
           {kind: 'Field', name: {kind: 'Name', value: 'minimumDeliveryDays'}},
           {kind: 'Field', name: {kind: 'Name', value: 'maximumDeliveryDays'}},
-        ],
-      },
-    },
-    {
-      kind: 'FragmentDefinition',
-      name: {kind: 'Name', value: 'DeliveryDays_ShippingMethod'},
-      typeCondition: {
-        kind: 'NamedType',
-        name: {kind: 'Name', value: 'ShippingMethod'},
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'FragmentSpread',
-            name: {kind: 'Name', value: 'Message_ShippingMethod'},
-          },
         ],
       },
     },
@@ -37728,7 +37634,7 @@ export const ShippingPage_CheckoutQueryDocument = {
     },
     {
       kind: 'FragmentDefinition',
-      name: {kind: 'Name', value: 'Message_ShippingMethod'},
+      name: {kind: 'Name', value: 'DeliveryDays_ShippingMethod'},
       typeCondition: {
         kind: 'NamedType',
         name: {kind: 'Name', value: 'ShippingMethod'},
@@ -37738,23 +37644,6 @@ export const ShippingPage_CheckoutQueryDocument = {
         selections: [
           {kind: 'Field', name: {kind: 'Name', value: 'minimumDeliveryDays'}},
           {kind: 'Field', name: {kind: 'Name', value: 'maximumDeliveryDays'}},
-        ],
-      },
-    },
-    {
-      kind: 'FragmentDefinition',
-      name: {kind: 'Name', value: 'DeliveryDays_ShippingMethod'},
-      typeCondition: {
-        kind: 'NamedType',
-        name: {kind: 'Name', value: 'ShippingMethod'},
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'FragmentSpread',
-            name: {kind: 'Name', value: 'Message_ShippingMethod'},
-          },
         ],
       },
     },

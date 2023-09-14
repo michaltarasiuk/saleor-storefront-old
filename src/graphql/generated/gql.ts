@@ -139,10 +139,8 @@ const documents = {
     types.ShippingMethodSection_CheckoutFragmentFragmentDoc,
   '\n  fragment ShippingMethodForm_CheckoutFragment on Checkout {\n    shippingMethod: deliveryMethod {\n      ... on ShippingMethod {\n        id\n      }\n    }\n    shippingMethods {\n      id\n      active\n      ...ShippingMethodRadioItem_ShippingMethod\n    }\n  }\n':
     types.ShippingMethodForm_CheckoutFragmentFragmentDoc,
-  '\n  fragment DeliveryDays_ShippingMethod on ShippingMethod {\n    ...Message_ShippingMethod\n  }\n':
+  '\n  fragment DeliveryDays_ShippingMethod on ShippingMethod {\n    minimumDeliveryDays\n    maximumDeliveryDays\n  }\n':
     types.DeliveryDays_ShippingMethodFragmentDoc,
-  '\n  fragment Message_ShippingMethod on ShippingMethod {\n    minimumDeliveryDays\n    maximumDeliveryDays\n  }\n':
-    types.Message_ShippingMethodFragmentDoc,
   '\n  fragment ShippingMethodRadioItem_ShippingMethod on ShippingMethod {\n    id\n    name\n    price {\n      currency\n      amount\n    }\n    ...DeliveryDays_ShippingMethod\n  }\n':
     types.ShippingMethodRadioItem_ShippingMethodFragmentDoc,
   '\n  mutation UpdateCheckoutDeliveryMethodMutation(\n    $id: ID!\n    $deliveryMethodId: ID!\n  ) {\n    checkoutDeliveryMethodUpdate(id: $id, deliveryMethodId: $deliveryMethodId) {\n      errors {\n        field\n        code\n      }\n    }\n  }\n':
@@ -555,14 +553,8 @@ export function graphql(
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(
-  source: '\n  fragment DeliveryDays_ShippingMethod on ShippingMethod {\n    ...Message_ShippingMethod\n  }\n',
-): (typeof documents)['\n  fragment DeliveryDays_ShippingMethod on ShippingMethod {\n    ...Message_ShippingMethod\n  }\n'];
-/**
- * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
- */
-export function graphql(
-  source: '\n  fragment Message_ShippingMethod on ShippingMethod {\n    minimumDeliveryDays\n    maximumDeliveryDays\n  }\n',
-): (typeof documents)['\n  fragment Message_ShippingMethod on ShippingMethod {\n    minimumDeliveryDays\n    maximumDeliveryDays\n  }\n'];
+  source: '\n  fragment DeliveryDays_ShippingMethod on ShippingMethod {\n    minimumDeliveryDays\n    maximumDeliveryDays\n  }\n',
+): (typeof documents)['\n  fragment DeliveryDays_ShippingMethod on ShippingMethod {\n    minimumDeliveryDays\n    maximumDeliveryDays\n  }\n'];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

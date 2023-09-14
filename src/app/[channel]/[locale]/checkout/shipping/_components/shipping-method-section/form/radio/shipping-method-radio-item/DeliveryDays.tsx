@@ -1,82 +1,58 @@
 import type {FragmentType} from '@/graphql/generated/fragment-masking';
 import {getFragment} from '@/graphql/generated/fragment-masking';
 import {graphql} from '@/graphql/generated/gql';
+import type {DeliveryDays_ShippingMethodFragment} from '@/graphql/generated/graphql';
 import {FormattedMessage} from '@/i18n/react-intl';
 import {cn} from '@/lib/tools/cn';
+import {isDefined} from '@/lib/tools/is-defined';
 
 const DeliveryDays_ShippingMethod = graphql(/* GraphQL */ `
   fragment DeliveryDays_ShippingMethod on ShippingMethod {
-    ...Message_ShippingMethod
-  }
-`);
-
-interface DeliveryDaysProps {
-  readonly shippingMethod: FragmentType<typeof DeliveryDays_ShippingMethod>;
-}
-
-export function DeliveryDays({shippingMethod}: DeliveryDaysProps) {
-  return (
-    <p className={cn('text-sm text-grey-light')}>
-      <Message
-        shippingMethod={getFragment(
-          DeliveryDays_ShippingMethod,
-          shippingMethod,
-        )}
-      />
-    </p>
-  );
-}
-
-const Message_ShippingMethod = graphql(/* GraphQL */ `
-  fragment Message_ShippingMethod on ShippingMethod {
     minimumDeliveryDays
     maximumDeliveryDays
   }
 `);
 
-interface MessageProps {
-  readonly shippingMethod: FragmentType<typeof Message_ShippingMethod>;
+interface Props {
+  readonly shippingMethod: FragmentType<typeof DeliveryDays_ShippingMethod>;
 }
 
-function Message({shippingMethod}: MessageProps) {
+export function DeliveryDays({shippingMethod}: Props) {
   const {minimumDeliveryDays, maximumDeliveryDays} = getFragment(
-    Message_ShippingMethod,
+    DeliveryDays_ShippingMethod,
     shippingMethod,
   );
 
-  if (minimumDeliveryDays && maximumDeliveryDays) {
-    return (
-      <FormattedMessage
-        defaultMessage="{minimumDeliveryDays} to {maximumDeliveryDays} business days"
-        values={{
-          minimumDeliveryDays,
-          maximumDeliveryDays,
-        }}
-        id="bHEjjM"
-      />
-    );
-  } else if (minimumDeliveryDays) {
-    return (
-      <FormattedMessage
-        defaultMessage="minimum {minimumDeliveryDays} business days"
-        values={{
-          minimumDeliveryDays,
-        }}
-        id="tgJ/Sx"
-      />
-    );
-  } else if (maximumDeliveryDays) {
-    return (
-      <FormattedMessage
-        defaultMessage="maximum {minimumDeliveryDays} business days"
-        values={{
-          maximumDeliveryDays,
-        }}
-        id="8lgC6D"
-      />
-    );
-  }
   return (
-    <FormattedMessage defaultMessage="unknown business days" id="/Zn5+8" />
+    <p className={cn('text-sm text-grey-light')}>
+      <FormattedMessage
+        defaultMessage="{type, select,
+          range {{minimumDeliveryDays} to {maximumDeliveryDays} business days}
+          minimum {minimum {minimumDeliveryDays} business days}
+          maximum {maximum {minimumDeliveryDays} business days}
+          other {unknown business days}
+        }"
+        id="GtQk15"
+        values={{
+          type: getMessageType(minimumDeliveryDays, maximumDeliveryDays),
+          minimumDeliveryDays,
+          maximumDeliveryDays,
+        }}
+      />
+    </p>
   );
+}
+
+function getMessageType(
+  minimumDeliveryDays: DeliveryDays_ShippingMethodFragment['minimumDeliveryDays'],
+  maximumDeliveryDays: DeliveryDays_ShippingMethodFragment['maximumDeliveryDays'],
+) {
+  if (isDefined(minimumDeliveryDays) && isDefined(maximumDeliveryDays)) {
+    return 'range';
+  } else if (isDefined(minimumDeliveryDays)) {
+    return 'minimum';
+  } else if (isDefined(maximumDeliveryDays)) {
+    return 'maximum';
+  }
+  return 'other';
 }
