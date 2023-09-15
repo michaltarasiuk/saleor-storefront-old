@@ -116,9 +116,6 @@
   "F4lKlM": {
     "defaultMessage": "New password description"
   },
-  "GtQk15": {
-    "defaultMessage": "{type, select, range {{minimumDeliveryDays} to {maximumDeliveryDays} business days} minimum {minimum {minimumDeliveryDays} business days} maximum {maximum {minimumDeliveryDays} business days} other {unknown business days} }"
-  },
   "HrdHC1": {
     "defaultMessage": "Request email change"
   },
@@ -298,6 +295,9 @@
   },
   "tKMlOc": {
     "defaultMessage": "Menu"
+  },
+  "tXQ9ea": {
+    "defaultMessage": "{type, select, range {{minimumDeliveryDays} to {maximumDeliveryDays} business days} minimum {minimum {minimumDeliveryDays} business days} maximum {maximum {maximumDeliveryDays} business days} other {unknown business days} }"
   },
   "u1JzBg": {
     "defaultMessage": "Enter a city"

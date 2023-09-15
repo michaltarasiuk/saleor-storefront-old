@@ -241,74 +241,6 @@
       "value": "New password description"
     }
   ],
-  "GtQk15": [
-    {
-      "options": {
-        "maximum": {
-          "value": [
-            {
-              "type": 0,
-              "value": "maximum "
-            },
-            {
-              "type": 1,
-              "value": "minimumDeliveryDays"
-            },
-            {
-              "type": 0,
-              "value": " business days"
-            }
-          ]
-        },
-        "minimum": {
-          "value": [
-            {
-              "type": 0,
-              "value": "minimum "
-            },
-            {
-              "type": 1,
-              "value": "minimumDeliveryDays"
-            },
-            {
-              "type": 0,
-              "value": " business days"
-            }
-          ]
-        },
-        "other": {
-          "value": [
-            {
-              "type": 0,
-              "value": "unknown business days"
-            }
-          ]
-        },
-        "range": {
-          "value": [
-            {
-              "type": 1,
-              "value": "minimumDeliveryDays"
-            },
-            {
-              "type": 0,
-              "value": " to "
-            },
-            {
-              "type": 1,
-              "value": "maximumDeliveryDays"
-            },
-            {
-              "type": 0,
-              "value": " business days"
-            }
-          ]
-        }
-      },
-      "type": 5,
-      "value": "type"
-    }
-  ],
   "HrdHC1": [
     {
       "type": 0,
@@ -695,6 +627,74 @@
     {
       "type": 0,
       "value": "Menu"
+    }
+  ],
+  "tXQ9ea": [
+    {
+      "options": {
+        "maximum": {
+          "value": [
+            {
+              "type": 0,
+              "value": "maximum "
+            },
+            {
+              "type": 1,
+              "value": "maximumDeliveryDays"
+            },
+            {
+              "type": 0,
+              "value": " business days"
+            }
+          ]
+        },
+        "minimum": {
+          "value": [
+            {
+              "type": 0,
+              "value": "minimum "
+            },
+            {
+              "type": 1,
+              "value": "minimumDeliveryDays"
+            },
+            {
+              "type": 0,
+              "value": " business days"
+            }
+          ]
+        },
+        "other": {
+          "value": [
+            {
+              "type": 0,
+              "value": "unknown business days"
+            }
+          ]
+        },
+        "range": {
+          "value": [
+            {
+              "type": 1,
+              "value": "minimumDeliveryDays"
+            },
+            {
+              "type": 0,
+              "value": " to "
+            },
+            {
+              "type": 1,
+              "value": "maximumDeliveryDays"
+            },
+            {
+              "type": 0,
+              "value": " business days"
+            }
+          ]
+        }
+      },
+      "type": 5,
+      "value": "type"
     }
   ],
   "u1JzBg": [

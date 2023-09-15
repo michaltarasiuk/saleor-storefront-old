@@ -29,10 +29,10 @@ export function DeliveryDays({shippingMethod}: Props) {
         defaultMessage="{type, select,
           range {{minimumDeliveryDays} to {maximumDeliveryDays} business days}
           minimum {minimum {minimumDeliveryDays} business days}
-          maximum {maximum {minimumDeliveryDays} business days}
+          maximum {maximum {maximumDeliveryDays} business days}
           other {unknown business days}
         }"
-        id="GtQk15"
+        id="tXQ9ea"
         values={{
           type: getMessageType(minimumDeliveryDays, maximumDeliveryDays),
           minimumDeliveryDays,
