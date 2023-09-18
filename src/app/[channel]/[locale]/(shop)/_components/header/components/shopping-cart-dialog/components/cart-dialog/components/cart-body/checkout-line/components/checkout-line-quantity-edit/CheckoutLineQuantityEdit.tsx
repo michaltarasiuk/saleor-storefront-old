@@ -1,5 +1,3 @@
-'use client';
-
 import {cn} from '@/lib/tools/cn';
 
 import {EditQuantityButton} from './EditQuantityButton.tsx';
@@ -8,12 +6,16 @@ import {useCheckoutLineQuantityEdit} from './use-checkout-line-quantity-edit/ind
 interface Props {
   readonly lineId: string;
   readonly value: number;
+  readonly onDelete: () => void;
 }
 
-export function CheckoutLineQuantityEdit({lineId, value}: Props) {
+export function CheckoutLineQuantityEdit({lineId, value, onDelete}: Props) {
   const {optimisticQuantity, decreaseQuantity, increaseQuantity} =
     useCheckoutLineQuantityEdit(lineId, value);
 
+  if (optimisticQuantity === 0) {
+    onDelete();
+  }
   return (
     <form
       className={cn(

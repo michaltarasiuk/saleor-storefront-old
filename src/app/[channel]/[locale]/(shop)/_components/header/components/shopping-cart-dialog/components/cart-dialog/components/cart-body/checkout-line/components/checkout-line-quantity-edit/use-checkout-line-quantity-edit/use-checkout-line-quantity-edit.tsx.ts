@@ -4,10 +4,14 @@ import {
   useMemo,
 } from 'react';
 
+import {useStable} from '@/lib/hooks/use-stable';
+
 import {checkoutLineQuantityEditAction} from './checkout-line-quantity-edit-action';
 
 export function useCheckoutLineQuantityEdit(lineId: string, value: number) {
-  const [optimisticQuantity, setOptimisticQuantity] = useOptimistic(value);
+  const stableValue = useStable(value);
+  const [optimisticQuantity, setOptimisticQuantity] =
+    useOptimistic(stableValue);
 
   const updateQuantity = useCallback(
     async (quantity: number) => {

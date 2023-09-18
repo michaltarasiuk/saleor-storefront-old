@@ -1,10 +1,4 @@
 {
-  "+Ey1vz": [
-    {
-      "type": 0,
-      "value": "Remove cart item"
-    }
-  ],
   "+JsDiH": [
     {
       "type": 0,
@@ -353,6 +347,12 @@
     {
       "type": 0,
       "value": "Password changed successfully."
+    }
+  ],
+  "T3mGSH": [
+    {
+      "type": 0,
+      "value": "Delete cart item"
     }
   ],
   "TE4fIS": [

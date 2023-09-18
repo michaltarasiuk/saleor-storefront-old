@@ -1,7 +1,4 @@
 {
-  "+Ey1vz": {
-    "defaultMessage": "Remove cart item"
-  },
   "+JsDiH": {
     "defaultMessage": "Ship to"
   },
@@ -166,6 +163,9 @@
   },
   "St4O02": {
     "defaultMessage": "Password changed successfully."
+  },
+  "T3mGSH": {
+    "defaultMessage": "Delete cart item"
   },
   "TE4fIS": {
     "defaultMessage": "City"

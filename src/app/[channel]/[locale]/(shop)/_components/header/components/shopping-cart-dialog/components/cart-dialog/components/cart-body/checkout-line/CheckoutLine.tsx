@@ -8,8 +8,7 @@ import {useConcatenatedAttributeValues} from '@/modules/checkout/hooks/use-conca
 
 import {Money} from '../../Money';
 import {CheckoutLineQuantityEdit} from './components/checkout-line-quantity-edit';
-import {RemoveCheckoutLine} from './components/RemoveCheckoutLine';
-import {deleteCheckoutLineDeleteAction} from './delete-checkout-line-action';
+import {DeleteCheckoutLine} from './components/delete-checkout-line';
 
 const CheckoutLine_CheckoutFragment = graphql(/* GraphQL */ `
   fragment CheckoutLine_CheckoutFragment on Checkout {
@@ -56,10 +55,10 @@ const CheckoutLine_CheckoutLineFragment = graphql(/* GraphQL */ `
 interface Props {
   readonly checkout: FragmentType<typeof CheckoutLine_CheckoutFragment>;
   readonly checkoutLine: FragmentType<typeof CheckoutLine_CheckoutLineFragment>;
-  readonly onRemove: (id: string) => void;
+  readonly onDelete: (id: string) => void;
 }
 
-export function CheckoutLine({checkout, checkoutLine, onRemove}: Props) {
+export function CheckoutLine({checkout, checkoutLine, onDelete}: Props) {
   const {displayGrossPrices} = getFragment(
     CheckoutLine_CheckoutFragment,
     checkout,
@@ -83,12 +82,7 @@ export function CheckoutLine({checkout, checkoutLine, onRemove}: Props) {
       <div className={cn('flex gap-2')}>
         <div className={cn('relative h-16 w-16 rounded-md border')}>
           <div className={cn('absolute -right-2 -top-3')}>
-            <RemoveCheckoutLine
-              onClick={async () => {
-                onRemove(id);
-                await deleteCheckoutLineDeleteAction(id);
-              }}
-            />
+            <DeleteCheckoutLine lineId={id} onDelete={() => onDelete(id)} />
           </div>
           {image && (
             <Image src={image.url} alt={image.alt} height={64} width={64} />
@@ -109,7 +103,11 @@ export function CheckoutLine({checkout, checkoutLine, onRemove}: Props) {
           currency={totalPrice.currency}
           sm
         />
-        <CheckoutLineQuantityEdit lineId={id} value={quantity} />
+        <CheckoutLineQuantityEdit
+          lineId={id}
+          value={quantity}
+          onDelete={() => onDelete(id)}
+        />
       </div>
     </div>
   );

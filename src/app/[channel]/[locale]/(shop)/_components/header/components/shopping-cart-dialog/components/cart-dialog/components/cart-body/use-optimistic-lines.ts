@@ -5,13 +5,13 @@ import type {CartBody_CheckoutFragmentFragment} from '@/graphql/generated/graphq
 type Lines = CartBody_CheckoutFragmentFragment['lines'];
 
 export function useOptimisticLines(lines: Lines) {
-  const [optimisticLines, removeOptimisticLine] = useOptimistic<Lines, string>(
+  const [optimisticLines, deleteOptimisticLine] = useOptimistic<Lines, string>(
     lines,
     (state, id) => state.filter((line) => line.id !== id),
   );
 
   return {
     optimisticLines,
-    removeOptimisticLine,
+    deleteOptimisticLine,
   };
 }

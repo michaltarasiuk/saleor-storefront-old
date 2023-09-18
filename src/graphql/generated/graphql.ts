@@ -29035,12 +29035,12 @@ export type UpdateCheckoutLinesMutationMutation = {
   } | null;
 };
 
-export type DeleteCheckoutLinesDeleteMutationMutationVariables = Exact<{
+export type DeleteCheckoutLinesMutationMutationVariables = Exact<{
   id: Scalars['ID']['input'];
   linesIds: Array<Scalars['ID']['input']> | Scalars['ID']['input'];
 }>;
 
-export type DeleteCheckoutLinesDeleteMutationMutation = {
+export type DeleteCheckoutLinesMutationMutation = {
   checkoutLinesDelete?: {
     errors: Array<{field?: string | null; code: CheckoutErrorCode}>;
   } | null;
@@ -34635,13 +34635,13 @@ export const UpdateCheckoutLinesMutationDocument = {
   UpdateCheckoutLinesMutationMutation,
   UpdateCheckoutLinesMutationMutationVariables
 >;
-export const DeleteCheckoutLinesDeleteMutationDocument = {
+export const DeleteCheckoutLinesMutationDocument = {
   kind: 'Document',
   definitions: [
     {
       kind: 'OperationDefinition',
       operation: 'mutation',
-      name: {kind: 'Name', value: 'DeleteCheckoutLinesDeleteMutation'},
+      name: {kind: 'Name', value: 'DeleteCheckoutLinesMutation'},
       variableDefinitions: [
         {
           kind: 'VariableDefinition',
@@ -34709,8 +34709,8 @@ export const DeleteCheckoutLinesDeleteMutationDocument = {
     },
   ],
 } as unknown as DocumentNode<
-  DeleteCheckoutLinesDeleteMutationMutation,
-  DeleteCheckoutLinesDeleteMutationMutationVariables
+  DeleteCheckoutLinesMutationMutation,
+  DeleteCheckoutLinesMutationMutationVariables
 >;
 export const GetNavCategoriesQueryDocument = {
   kind: 'Document',

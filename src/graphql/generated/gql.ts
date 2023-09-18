@@ -55,8 +55,8 @@ const documents = {
     types.CheckoutLine_CheckoutLineFragmentFragmentDoc,
   '\n  mutation UpdateCheckoutLinesMutation(\n    $checkoutId: ID!\n    $lines: [CheckoutLineUpdateInput!]!\n  ) {\n    checkoutLinesUpdate(checkoutId: $checkoutId, lines: $lines) {\n      errors {\n        field\n        code\n      }\n    }\n  }\n':
     types.UpdateCheckoutLinesMutationDocument,
-  '\n  mutation DeleteCheckoutLinesDeleteMutation($id: ID!, $linesIds: [ID!]!) {\n    checkoutLinesDelete(id: $id, linesIds: $linesIds) {\n      errors {\n        field\n        code\n      }\n    }\n  }\n':
-    types.DeleteCheckoutLinesDeleteMutationDocument,
+  '\n  mutation DeleteCheckoutLinesMutation($id: ID!, $linesIds: [ID!]!) {\n    checkoutLinesDelete(id: $id, linesIds: $linesIds) {\n      errors {\n        field\n        code\n      }\n    }\n  }\n':
+    types.DeleteCheckoutLinesMutationDocument,
   '\n  fragment CartFooter_CheckoutFragment on Checkout {\n    ...CartTotal_CheckoutFragment\n  }\n':
     types.CartFooter_CheckoutFragmentFragmentDoc,
   '\n  fragment CartTotal_CheckoutFragment on Checkout {\n    subtotalPrice {\n      currency\n      net {\n        amount\n      }\n      gross {\n        amount\n      }\n    }\n    shippingPrice {\n      currency\n      net {\n        amount\n      }\n      gross {\n        amount\n      }\n    }\n    totalPrice {\n      currency\n      net {\n        amount\n      }\n      gross {\n        amount\n      }\n    }\n    displayGrossPrices\n  }\n':
@@ -301,8 +301,8 @@ export function graphql(
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(
-  source: '\n  mutation DeleteCheckoutLinesDeleteMutation($id: ID!, $linesIds: [ID!]!) {\n    checkoutLinesDelete(id: $id, linesIds: $linesIds) {\n      errors {\n        field\n        code\n      }\n    }\n  }\n',
-): (typeof documents)['\n  mutation DeleteCheckoutLinesDeleteMutation($id: ID!, $linesIds: [ID!]!) {\n    checkoutLinesDelete(id: $id, linesIds: $linesIds) {\n      errors {\n        field\n        code\n      }\n    }\n  }\n'];
+  source: '\n  mutation DeleteCheckoutLinesMutation($id: ID!, $linesIds: [ID!]!) {\n    checkoutLinesDelete(id: $id, linesIds: $linesIds) {\n      errors {\n        field\n        code\n      }\n    }\n  }\n',
+): (typeof documents)['\n  mutation DeleteCheckoutLinesMutation($id: ID!, $linesIds: [ID!]!) {\n    checkoutLinesDelete(id: $id, linesIds: $linesIds) {\n      errors {\n        field\n        code\n      }\n    }\n  }\n'];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

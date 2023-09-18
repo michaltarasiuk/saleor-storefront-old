@@ -5,8 +5,8 @@ import {fetchMutationData} from '@/lib/tools/get-client';
 import {raise} from '@/lib/tools/raise';
 import {getCheckoutId} from '@/modules/checkout/tools/cookies';
 
-const DeleteCheckoutLinesDeleteMutation = graphql(/* GraphQL */ `
-  mutation DeleteCheckoutLinesDeleteMutation($id: ID!, $linesIds: [ID!]!) {
+const DeleteCheckoutLinesMutation = graphql(/* GraphQL */ `
+  mutation DeleteCheckoutLinesMutation($id: ID!, $linesIds: [ID!]!) {
     checkoutLinesDelete(id: $id, linesIds: $linesIds) {
       errors {
         field
@@ -16,10 +16,10 @@ const DeleteCheckoutLinesDeleteMutation = graphql(/* GraphQL */ `
   }
 `);
 
-export async function deleteCheckoutLineDeleteAction(lineId: string) {
+export async function deleteCheckoutLineAction(lineId: string) {
   return (
     await fetchMutationData(
-      DeleteCheckoutLinesDeleteMutation,
+      DeleteCheckoutLinesMutation,
       {
         linesIds: [lineId],
         id: getCheckoutId() ?? raise('Checkout id is not defined'),

@@ -1,5 +1,7 @@
 'use client';
 
+import {useMemo} from 'react';
+
 import type {FragmentType} from '@/graphql/generated';
 import {getFragment} from '@/graphql/generated';
 import {graphql} from '@/graphql/generated/gql';
@@ -23,12 +25,12 @@ interface Props {
 }
 
 export function CartBody({checkout}: Props) {
-  const {lines, ...checkoutFragment} = getFragment(
-    CartBody_CheckoutFragment,
-    checkout,
+  const {lines, ...checkoutFragment} = useMemo(
+    () => getFragment(CartBody_CheckoutFragment, checkout),
+    [checkout],
   );
 
-  const {optimisticLines, removeOptimisticLine} = useOptimisticLines(lines);
+  const {optimisticLines, deleteOptimisticLine} = useOptimisticLines(lines);
 
   return (
     <ul className={cn('overflow-scroll py-4')}>
@@ -37,7 +39,7 @@ export function CartBody({checkout}: Props) {
           <CheckoutLine
             checkout={checkoutFragment}
             checkoutLine={checkoutLine}
-            onRemove={removeOptimisticLine}
+            onDelete={deleteOptimisticLine}
           />
         </li>
       ))}
