@@ -29265,8 +29265,23 @@ export type AddressFields_ChannelFragmentFragment = {
 } & {' $fragmentName'?: 'AddressFields_ChannelFragmentFragment'};
 
 export type AddressFields_AddressValidationDataFragmentFragment = {
-  countryAreaChoices: Array<{raw?: string | null; verbose?: string | null}>;
+  ' $fragmentRefs'?: {
+    CityFormField_AddressValidationDataFragmentFragment: CityFormField_AddressValidationDataFragmentFragment;
+    CountryAreaFormField_AddressValidationDataFragmentFragment: CountryAreaFormField_AddressValidationDataFragmentFragment;
+  };
 } & {' $fragmentName'?: 'AddressFields_AddressValidationDataFragmentFragment'};
+
+export type CityFormField_AddressValidationDataFragmentFragment = {
+  cityType: string;
+  cityChoices: Array<{raw?: string | null; verbose?: string | null}>;
+} & {' $fragmentName'?: 'CityFormField_AddressValidationDataFragmentFragment'};
+
+export type CountryAreaFormField_AddressValidationDataFragmentFragment = {
+  countryAreaType: string;
+  countryAreaChoices: Array<{raw?: string | null; verbose?: string | null}>;
+} & {
+  ' $fragmentName'?: 'CountryAreaFormField_AddressValidationDataFragmentFragment';
+};
 
 export type CountrySelect_ChannelFragmentFragment = {
   countries?: Array<{code: string}> | null;
@@ -29383,7 +29398,10 @@ export type BillingSection_AddressValidationRulesQueryQueryVariables = Exact<{
 
 export type BillingSection_AddressValidationRulesQueryQuery = {
   addressValidationRules?:
-    | ({countryAreaChoices: Array<{raw?: string | null}>} & {
+    | ({
+        cityChoices: Array<{raw?: string | null}>;
+        countryAreaChoices: Array<{raw?: string | null}>;
+      } & {
         ' $fragmentRefs'?: {
           BillingAddressForm_AddressValidationDataFragmentFragment: BillingAddressForm_AddressValidationDataFragmentFragment;
         };
@@ -29464,7 +29482,10 @@ export type InformationSection_AddressValidationRulesQueryQueryVariables =
 
 export type InformationSection_AddressValidationRulesQueryQuery = {
   addressValidationRules?:
-    | ({countryAreaChoices: Array<{raw?: string | null}>} & {
+    | ({
+        cityChoices: Array<{raw?: string | null}>;
+        countryAreaChoices: Array<{raw?: string | null}>;
+      } & {
         ' $fragmentRefs'?: {
           InformationForm_AddressValidationDataFragmentFragment: InformationForm_AddressValidationDataFragmentFragment;
         };
@@ -32457,6 +32478,78 @@ export const BillingAddressForm_ChannelFragmentFragmentDoc = {
   BillingAddressForm_ChannelFragmentFragment,
   unknown
 >;
+export const CityFormField_AddressValidationDataFragmentFragmentDoc = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'FragmentDefinition',
+      name: {
+        kind: 'Name',
+        value: 'CityFormField_AddressValidationDataFragment',
+      },
+      typeCondition: {
+        kind: 'NamedType',
+        name: {kind: 'Name', value: 'AddressValidationData'},
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {kind: 'Field', name: {kind: 'Name', value: 'cityType'}},
+          {
+            kind: 'Field',
+            name: {kind: 'Name', value: 'cityChoices'},
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {kind: 'Field', name: {kind: 'Name', value: 'raw'}},
+                {kind: 'Field', name: {kind: 'Name', value: 'verbose'}},
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  CityFormField_AddressValidationDataFragmentFragment,
+  unknown
+>;
+export const CountryAreaFormField_AddressValidationDataFragmentFragmentDoc = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'FragmentDefinition',
+      name: {
+        kind: 'Name',
+        value: 'CountryAreaFormField_AddressValidationDataFragment',
+      },
+      typeCondition: {
+        kind: 'NamedType',
+        name: {kind: 'Name', value: 'AddressValidationData'},
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {kind: 'Field', name: {kind: 'Name', value: 'countryAreaType'}},
+          {
+            kind: 'Field',
+            name: {kind: 'Name', value: 'countryAreaChoices'},
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {kind: 'Field', name: {kind: 'Name', value: 'raw'}},
+                {kind: 'Field', name: {kind: 'Name', value: 'verbose'}},
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  CountryAreaFormField_AddressValidationDataFragmentFragment,
+  unknown
+>;
 export const AddressFields_AddressValidationDataFragmentFragmentDoc = {
   kind: 'Document',
   definitions: [
@@ -32473,6 +32566,65 @@ export const AddressFields_AddressValidationDataFragmentFragmentDoc = {
       selectionSet: {
         kind: 'SelectionSet',
         selections: [
+          {
+            kind: 'FragmentSpread',
+            name: {
+              kind: 'Name',
+              value: 'CityFormField_AddressValidationDataFragment',
+            },
+          },
+          {
+            kind: 'FragmentSpread',
+            name: {
+              kind: 'Name',
+              value: 'CountryAreaFormField_AddressValidationDataFragment',
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: {
+        kind: 'Name',
+        value: 'CityFormField_AddressValidationDataFragment',
+      },
+      typeCondition: {
+        kind: 'NamedType',
+        name: {kind: 'Name', value: 'AddressValidationData'},
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {kind: 'Field', name: {kind: 'Name', value: 'cityType'}},
+          {
+            kind: 'Field',
+            name: {kind: 'Name', value: 'cityChoices'},
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {kind: 'Field', name: {kind: 'Name', value: 'raw'}},
+                {kind: 'Field', name: {kind: 'Name', value: 'verbose'}},
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: {
+        kind: 'Name',
+        value: 'CountryAreaFormField_AddressValidationDataFragment',
+      },
+      typeCondition: {
+        kind: 'NamedType',
+        name: {kind: 'Name', value: 'AddressValidationData'},
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {kind: 'Field', name: {kind: 'Name', value: 'countryAreaType'}},
           {
             kind: 'Field',
             name: {kind: 'Name', value: 'countryAreaChoices'},
@@ -32524,6 +32676,62 @@ export const BillingAddressForm_AddressValidationDataFragmentFragmentDoc = {
       kind: 'FragmentDefinition',
       name: {
         kind: 'Name',
+        value: 'CityFormField_AddressValidationDataFragment',
+      },
+      typeCondition: {
+        kind: 'NamedType',
+        name: {kind: 'Name', value: 'AddressValidationData'},
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {kind: 'Field', name: {kind: 'Name', value: 'cityType'}},
+          {
+            kind: 'Field',
+            name: {kind: 'Name', value: 'cityChoices'},
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {kind: 'Field', name: {kind: 'Name', value: 'raw'}},
+                {kind: 'Field', name: {kind: 'Name', value: 'verbose'}},
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: {
+        kind: 'Name',
+        value: 'CountryAreaFormField_AddressValidationDataFragment',
+      },
+      typeCondition: {
+        kind: 'NamedType',
+        name: {kind: 'Name', value: 'AddressValidationData'},
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {kind: 'Field', name: {kind: 'Name', value: 'countryAreaType'}},
+          {
+            kind: 'Field',
+            name: {kind: 'Name', value: 'countryAreaChoices'},
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {kind: 'Field', name: {kind: 'Name', value: 'raw'}},
+                {kind: 'Field', name: {kind: 'Name', value: 'verbose'}},
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: {
+        kind: 'Name',
         value: 'AddressFields_AddressValidationDataFragment',
       },
       typeCondition: {
@@ -32534,14 +32742,17 @@ export const BillingAddressForm_AddressValidationDataFragmentFragmentDoc = {
         kind: 'SelectionSet',
         selections: [
           {
-            kind: 'Field',
-            name: {kind: 'Name', value: 'countryAreaChoices'},
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {kind: 'Field', name: {kind: 'Name', value: 'raw'}},
-                {kind: 'Field', name: {kind: 'Name', value: 'verbose'}},
-              ],
+            kind: 'FragmentSpread',
+            name: {
+              kind: 'Name',
+              value: 'CityFormField_AddressValidationDataFragment',
+            },
+          },
+          {
+            kind: 'FragmentSpread',
+            name: {
+              kind: 'Name',
+              value: 'CountryAreaFormField_AddressValidationDataFragment',
             },
           },
         ],
@@ -32695,6 +32906,62 @@ export const InformationForm_AddressValidationDataFragmentFragmentDoc = {
       kind: 'FragmentDefinition',
       name: {
         kind: 'Name',
+        value: 'CityFormField_AddressValidationDataFragment',
+      },
+      typeCondition: {
+        kind: 'NamedType',
+        name: {kind: 'Name', value: 'AddressValidationData'},
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {kind: 'Field', name: {kind: 'Name', value: 'cityType'}},
+          {
+            kind: 'Field',
+            name: {kind: 'Name', value: 'cityChoices'},
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {kind: 'Field', name: {kind: 'Name', value: 'raw'}},
+                {kind: 'Field', name: {kind: 'Name', value: 'verbose'}},
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: {
+        kind: 'Name',
+        value: 'CountryAreaFormField_AddressValidationDataFragment',
+      },
+      typeCondition: {
+        kind: 'NamedType',
+        name: {kind: 'Name', value: 'AddressValidationData'},
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {kind: 'Field', name: {kind: 'Name', value: 'countryAreaType'}},
+          {
+            kind: 'Field',
+            name: {kind: 'Name', value: 'countryAreaChoices'},
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {kind: 'Field', name: {kind: 'Name', value: 'raw'}},
+                {kind: 'Field', name: {kind: 'Name', value: 'verbose'}},
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: {
+        kind: 'Name',
         value: 'AddressFields_AddressValidationDataFragment',
       },
       typeCondition: {
@@ -32705,14 +32972,17 @@ export const InformationForm_AddressValidationDataFragmentFragmentDoc = {
         kind: 'SelectionSet',
         selections: [
           {
-            kind: 'Field',
-            name: {kind: 'Name', value: 'countryAreaChoices'},
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {kind: 'Field', name: {kind: 'Name', value: 'raw'}},
-                {kind: 'Field', name: {kind: 'Name', value: 'verbose'}},
-              ],
+            kind: 'FragmentSpread',
+            name: {
+              kind: 'Name',
+              value: 'CityFormField_AddressValidationDataFragment',
+            },
+          },
+          {
+            kind: 'FragmentSpread',
+            name: {
+              kind: 'Name',
+              value: 'CountryAreaFormField_AddressValidationDataFragment',
             },
           },
         ],
@@ -36513,6 +36783,16 @@ export const BillingSection_AddressValidationRulesQueryDocument = {
               selections: [
                 {
                   kind: 'Field',
+                  name: {kind: 'Name', value: 'cityChoices'},
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {kind: 'Field', name: {kind: 'Name', value: 'raw'}},
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
                   name: {kind: 'Name', value: 'countryAreaChoices'},
                   selectionSet: {
                     kind: 'SelectionSet',
@@ -36538,6 +36818,62 @@ export const BillingSection_AddressValidationRulesQueryDocument = {
       kind: 'FragmentDefinition',
       name: {
         kind: 'Name',
+        value: 'CityFormField_AddressValidationDataFragment',
+      },
+      typeCondition: {
+        kind: 'NamedType',
+        name: {kind: 'Name', value: 'AddressValidationData'},
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {kind: 'Field', name: {kind: 'Name', value: 'cityType'}},
+          {
+            kind: 'Field',
+            name: {kind: 'Name', value: 'cityChoices'},
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {kind: 'Field', name: {kind: 'Name', value: 'raw'}},
+                {kind: 'Field', name: {kind: 'Name', value: 'verbose'}},
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: {
+        kind: 'Name',
+        value: 'CountryAreaFormField_AddressValidationDataFragment',
+      },
+      typeCondition: {
+        kind: 'NamedType',
+        name: {kind: 'Name', value: 'AddressValidationData'},
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {kind: 'Field', name: {kind: 'Name', value: 'countryAreaType'}},
+          {
+            kind: 'Field',
+            name: {kind: 'Name', value: 'countryAreaChoices'},
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {kind: 'Field', name: {kind: 'Name', value: 'raw'}},
+                {kind: 'Field', name: {kind: 'Name', value: 'verbose'}},
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: {
+        kind: 'Name',
         value: 'AddressFields_AddressValidationDataFragment',
       },
       typeCondition: {
@@ -36548,14 +36884,17 @@ export const BillingSection_AddressValidationRulesQueryDocument = {
         kind: 'SelectionSet',
         selections: [
           {
-            kind: 'Field',
-            name: {kind: 'Name', value: 'countryAreaChoices'},
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {kind: 'Field', name: {kind: 'Name', value: 'raw'}},
-                {kind: 'Field', name: {kind: 'Name', value: 'verbose'}},
-              ],
+            kind: 'FragmentSpread',
+            name: {
+              kind: 'Name',
+              value: 'CityFormField_AddressValidationDataFragment',
+            },
+          },
+          {
+            kind: 'FragmentSpread',
+            name: {
+              kind: 'Name',
+              value: 'CountryAreaFormField_AddressValidationDataFragment',
             },
           },
         ],
@@ -36928,6 +37267,16 @@ export const InformationSection_AddressValidationRulesQueryDocument = {
               selections: [
                 {
                   kind: 'Field',
+                  name: {kind: 'Name', value: 'cityChoices'},
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {kind: 'Field', name: {kind: 'Name', value: 'raw'}},
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
                   name: {kind: 'Name', value: 'countryAreaChoices'},
                   selectionSet: {
                     kind: 'SelectionSet',
@@ -36953,6 +37302,62 @@ export const InformationSection_AddressValidationRulesQueryDocument = {
       kind: 'FragmentDefinition',
       name: {
         kind: 'Name',
+        value: 'CityFormField_AddressValidationDataFragment',
+      },
+      typeCondition: {
+        kind: 'NamedType',
+        name: {kind: 'Name', value: 'AddressValidationData'},
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {kind: 'Field', name: {kind: 'Name', value: 'cityType'}},
+          {
+            kind: 'Field',
+            name: {kind: 'Name', value: 'cityChoices'},
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {kind: 'Field', name: {kind: 'Name', value: 'raw'}},
+                {kind: 'Field', name: {kind: 'Name', value: 'verbose'}},
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: {
+        kind: 'Name',
+        value: 'CountryAreaFormField_AddressValidationDataFragment',
+      },
+      typeCondition: {
+        kind: 'NamedType',
+        name: {kind: 'Name', value: 'AddressValidationData'},
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {kind: 'Field', name: {kind: 'Name', value: 'countryAreaType'}},
+          {
+            kind: 'Field',
+            name: {kind: 'Name', value: 'countryAreaChoices'},
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {kind: 'Field', name: {kind: 'Name', value: 'raw'}},
+                {kind: 'Field', name: {kind: 'Name', value: 'verbose'}},
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: {
+        kind: 'Name',
         value: 'AddressFields_AddressValidationDataFragment',
       },
       typeCondition: {
@@ -36963,14 +37368,17 @@ export const InformationSection_AddressValidationRulesQueryDocument = {
         kind: 'SelectionSet',
         selections: [
           {
-            kind: 'Field',
-            name: {kind: 'Name', value: 'countryAreaChoices'},
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {kind: 'Field', name: {kind: 'Name', value: 'raw'}},
-                {kind: 'Field', name: {kind: 'Name', value: 'verbose'}},
-              ],
+            kind: 'FragmentSpread',
+            name: {
+              kind: 'Name',
+              value: 'CityFormField_AddressValidationDataFragment',
+            },
+          },
+          {
+            kind: 'FragmentSpread',
+            name: {
+              kind: 'Name',
+              value: 'CountryAreaFormField_AddressValidationDataFragment',
             },
           },
         ],

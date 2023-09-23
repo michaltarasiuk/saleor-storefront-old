@@ -25,6 +25,9 @@ const InformationSection_AddressValidationRulesQuery = graphql(/* GraphQL */ `
     $countryCode: CountryCode!
   ) {
     addressValidationRules(countryCode: $countryCode) {
+      cityChoices {
+        raw
+      }
       countryAreaChoices {
         raw
       }

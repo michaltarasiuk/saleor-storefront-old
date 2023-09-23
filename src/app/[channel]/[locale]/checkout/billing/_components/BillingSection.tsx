@@ -25,6 +25,9 @@ const BillingSection_ChannelQuery = graphql(/* GraphQL */ `
 const BillingSection_AddressValidationRulesQuery = graphql(/* GraphQL */ `
   query BillingSection_AddressValidationRulesQuery($countryCode: CountryCode!) {
     addressValidationRules(countryCode: $countryCode) {
+      cityChoices {
+        raw
+      }
       countryAreaChoices {
         raw
       }

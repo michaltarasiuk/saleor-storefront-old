@@ -87,8 +87,12 @@ const documents = {
     types.ProductAttributesDropdown_AttributeFragmentFragmentDoc,
   '\n  fragment AddressFields_ChannelFragment on Channel {\n    ...CountrySelect_ChannelFragment\n  }\n':
     types.AddressFields_ChannelFragmentFragmentDoc,
-  '\n  fragment AddressFields_AddressValidationDataFragment on AddressValidationData {\n    countryAreaChoices {\n      raw\n      verbose\n    }\n  }\n':
+  '\n  fragment AddressFields_AddressValidationDataFragment on AddressValidationData {\n    ...CityFormField_AddressValidationDataFragment\n    ...CountryAreaFormField_AddressValidationDataFragment\n  }\n':
     types.AddressFields_AddressValidationDataFragmentFragmentDoc,
+  '\n  fragment CityFormField_AddressValidationDataFragment on AddressValidationData {\n    cityType\n    cityChoices {\n      raw\n      verbose\n    }\n  }\n':
+    types.CityFormField_AddressValidationDataFragmentFragmentDoc,
+  '\n    fragment CountryAreaFormField_AddressValidationDataFragment on AddressValidationData {\n      countryAreaType\n      countryAreaChoices {\n        raw\n        verbose\n      }\n    }\n  ':
+    types.CountryAreaFormField_AddressValidationDataFragmentFragmentDoc,
   '\n  fragment CountrySelect_ChannelFragment on Channel {\n    countries {\n      code\n    }\n  }\n':
     types.CountrySelect_ChannelFragmentFragmentDoc,
   '\n  fragment Breadcrumbs_CheckoutFragment on Checkout {\n    shippingAddress {\n      __typename\n    }\n    deliveryMethod {\n      __typename\n    }\n    billingAddress {\n      __typename\n    }\n  }\n':
@@ -107,7 +111,7 @@ const documents = {
     types.UpdateCheckoutBillingAddressMutationDocument,
   '\n  query BillingSection_ChannelQuery($channel: String!) {\n    channel(slug: $channel) {\n      ...BillingAddressForm_ChannelFragment\n    }\n  }\n':
     types.BillingSection_ChannelQueryDocument,
-  '\n  query BillingSection_AddressValidationRulesQuery($countryCode: CountryCode!) {\n    addressValidationRules(countryCode: $countryCode) {\n      countryAreaChoices {\n        raw\n      }\n      ...BillingAddressForm_AddressValidationDataFragment\n    }\n  }\n':
+  '\n  query BillingSection_AddressValidationRulesQuery($countryCode: CountryCode!) {\n    addressValidationRules(countryCode: $countryCode) {\n      cityChoices {\n        raw\n      }\n      countryAreaChoices {\n        raw\n      }\n      ...BillingAddressForm_AddressValidationDataFragment\n    }\n  }\n':
     types.BillingSection_AddressValidationRulesQueryDocument,
   '\n  fragment BillingSection_CheckoutFragment on Checkout {\n    email\n    billingAddress {\n      country {\n        code\n        country\n      }\n      firstName\n      lastName\n      streetAddress1\n      streetAddress2\n      city\n      countryArea\n      postalCode\n    }\n  }\n':
     types.BillingSection_CheckoutFragmentFragmentDoc,
@@ -119,7 +123,7 @@ const documents = {
     types.BillingPage_CheckoutQueryDocument,
   '\n  query InformationSection_ChannelQuery($channel: String!) {\n    channel(slug: $channel) {\n      ...InformationForm_ChannelFragment\n    }\n  }\n':
     types.InformationSection_ChannelQueryDocument,
-  '\n  query InformationSection_AddressValidationRulesQuery(\n    $countryCode: CountryCode!\n  ) {\n    addressValidationRules(countryCode: $countryCode) {\n      countryAreaChoices {\n        raw\n      }\n      ...InformationForm_AddressValidationDataFragment\n    }\n  }\n':
+  '\n  query InformationSection_AddressValidationRulesQuery(\n    $countryCode: CountryCode!\n  ) {\n    addressValidationRules(countryCode: $countryCode) {\n      cityChoices {\n        raw\n      }\n      countryAreaChoices {\n        raw\n      }\n      ...InformationForm_AddressValidationDataFragment\n    }\n  }\n':
     types.InformationSection_AddressValidationRulesQueryDocument,
   '\n  fragment InformationSection_CheckoutFragment on Checkout {\n    email\n    shippingAddress {\n      country {\n        code\n        country\n      }\n      firstName\n      lastName\n      streetAddress1\n      streetAddress2\n      city\n      countryArea\n      postalCode\n    }\n  }\n':
     types.InformationSection_CheckoutFragmentFragmentDoc,
@@ -397,8 +401,20 @@ export function graphql(
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(
-  source: '\n  fragment AddressFields_AddressValidationDataFragment on AddressValidationData {\n    countryAreaChoices {\n      raw\n      verbose\n    }\n  }\n',
-): (typeof documents)['\n  fragment AddressFields_AddressValidationDataFragment on AddressValidationData {\n    countryAreaChoices {\n      raw\n      verbose\n    }\n  }\n'];
+  source: '\n  fragment AddressFields_AddressValidationDataFragment on AddressValidationData {\n    ...CityFormField_AddressValidationDataFragment\n    ...CountryAreaFormField_AddressValidationDataFragment\n  }\n',
+): (typeof documents)['\n  fragment AddressFields_AddressValidationDataFragment on AddressValidationData {\n    ...CityFormField_AddressValidationDataFragment\n    ...CountryAreaFormField_AddressValidationDataFragment\n  }\n'];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(
+  source: '\n  fragment CityFormField_AddressValidationDataFragment on AddressValidationData {\n    cityType\n    cityChoices {\n      raw\n      verbose\n    }\n  }\n',
+): (typeof documents)['\n  fragment CityFormField_AddressValidationDataFragment on AddressValidationData {\n    cityType\n    cityChoices {\n      raw\n      verbose\n    }\n  }\n'];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(
+  source: '\n    fragment CountryAreaFormField_AddressValidationDataFragment on AddressValidationData {\n      countryAreaType\n      countryAreaChoices {\n        raw\n        verbose\n      }\n    }\n  ',
+): (typeof documents)['\n    fragment CountryAreaFormField_AddressValidationDataFragment on AddressValidationData {\n      countryAreaType\n      countryAreaChoices {\n        raw\n        verbose\n      }\n    }\n  '];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
@@ -457,8 +473,8 @@ export function graphql(
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(
-  source: '\n  query BillingSection_AddressValidationRulesQuery($countryCode: CountryCode!) {\n    addressValidationRules(countryCode: $countryCode) {\n      countryAreaChoices {\n        raw\n      }\n      ...BillingAddressForm_AddressValidationDataFragment\n    }\n  }\n',
-): (typeof documents)['\n  query BillingSection_AddressValidationRulesQuery($countryCode: CountryCode!) {\n    addressValidationRules(countryCode: $countryCode) {\n      countryAreaChoices {\n        raw\n      }\n      ...BillingAddressForm_AddressValidationDataFragment\n    }\n  }\n'];
+  source: '\n  query BillingSection_AddressValidationRulesQuery($countryCode: CountryCode!) {\n    addressValidationRules(countryCode: $countryCode) {\n      cityChoices {\n        raw\n      }\n      countryAreaChoices {\n        raw\n      }\n      ...BillingAddressForm_AddressValidationDataFragment\n    }\n  }\n',
+): (typeof documents)['\n  query BillingSection_AddressValidationRulesQuery($countryCode: CountryCode!) {\n    addressValidationRules(countryCode: $countryCode) {\n      cityChoices {\n        raw\n      }\n      countryAreaChoices {\n        raw\n      }\n      ...BillingAddressForm_AddressValidationDataFragment\n    }\n  }\n'];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
@@ -493,8 +509,8 @@ export function graphql(
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(
-  source: '\n  query InformationSection_AddressValidationRulesQuery(\n    $countryCode: CountryCode!\n  ) {\n    addressValidationRules(countryCode: $countryCode) {\n      countryAreaChoices {\n        raw\n      }\n      ...InformationForm_AddressValidationDataFragment\n    }\n  }\n',
-): (typeof documents)['\n  query InformationSection_AddressValidationRulesQuery(\n    $countryCode: CountryCode!\n  ) {\n    addressValidationRules(countryCode: $countryCode) {\n      countryAreaChoices {\n        raw\n      }\n      ...InformationForm_AddressValidationDataFragment\n    }\n  }\n'];
+  source: '\n  query InformationSection_AddressValidationRulesQuery(\n    $countryCode: CountryCode!\n  ) {\n    addressValidationRules(countryCode: $countryCode) {\n      cityChoices {\n        raw\n      }\n      countryAreaChoices {\n        raw\n      }\n      ...InformationForm_AddressValidationDataFragment\n    }\n  }\n',
+): (typeof documents)['\n  query InformationSection_AddressValidationRulesQuery(\n    $countryCode: CountryCode!\n  ) {\n    addressValidationRules(countryCode: $countryCode) {\n      cityChoices {\n        raw\n      }\n      countryAreaChoices {\n        raw\n      }\n      ...InformationForm_AddressValidationDataFragment\n    }\n  }\n'];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

@@ -26,6 +26,9 @@
   "0MqfPh": {
     "defaultMessage": "Apartment, suit, etc. (optional)"
   },
+  "0ZmUBu": {
+    "defaultMessage": "{cityType, select, city {City} other {Other} }"
+  },
   "0s5kDf": {
     "defaultMessage": "Continue to billing"
   },
@@ -167,9 +170,6 @@
   "T3mGSH": {
     "defaultMessage": "Delete cart item"
   },
-  "TE4fIS": {
-    "defaultMessage": "City"
-  },
   "TZm4bq": {
     "defaultMessage": "Enter a valid password"
   },
@@ -224,6 +224,9 @@
   "e6Ph5+": {
     "defaultMessage": "Address"
   },
+  "eeFogF": {
+    "defaultMessage": "Enter a valid country area"
+  },
   "fbQ+L1": {
     "defaultMessage": "Enter a valid old password"
   },
@@ -257,11 +260,11 @@
   "kFjJxN": {
     "defaultMessage": "Update your user details settings."
   },
-  "ku+mDU": {
-    "defaultMessage": "State"
-  },
   "lBENL4": {
     "defaultMessage": "request email change"
+  },
+  "mwAM9U": {
+    "defaultMessage": "Enter a country area"
   },
   "pJU6x5": {
     "defaultMessage": "Confirmation link was sent to {newEmail} mailbox"
@@ -292,6 +295,9 @@
   },
   "sy+pv5": {
     "defaultMessage": "Email"
+  },
+  "tD8gJ0": {
+    "defaultMessage": "{countryAreaType, select, state {State} province {Province} island {Island} oblast {Oblast} other {Other} }"
   },
   "tKMlOc": {
     "defaultMessage": "Menu"
