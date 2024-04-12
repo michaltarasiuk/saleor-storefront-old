@@ -35,7 +35,6 @@ export async function Breadcrumbs({checkout}: Props) {
     Breadcrumbs_CheckoutFragment,
     checkout,
   );
-
   const intl = await getIntl(getLocale());
 
   return (

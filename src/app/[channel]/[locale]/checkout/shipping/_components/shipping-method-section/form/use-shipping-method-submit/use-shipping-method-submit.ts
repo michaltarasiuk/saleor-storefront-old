@@ -18,7 +18,6 @@ export function useShippingMethodSubmit(
     async ({deliveryMethodId}: ShippingMethodSchema) => {
       try {
         const isDirty = form.getFieldState('deliveryMethodId').isDirty;
-
         if (isDirty) {
           const {errors} =
             (await updateCheckoutDeliveryMethodAction(deliveryMethodId)) ?? {};

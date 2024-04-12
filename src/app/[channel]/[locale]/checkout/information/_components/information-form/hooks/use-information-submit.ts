@@ -31,33 +31,30 @@ export function useInformationSubmit(
           ...restAddressFields,
         };
 
-        const [checkoutShippingAddress, checkoutBillingAddress, checkoutEmail] =
-          await Promise.all([
-            ADDRESS_FIELDS_NAMES.some(
-              (addressFieldName) =>
-                form.getFieldState(addressFieldName).isDirty,
-            )
-              ? updateCheckoutShippingAddressAction(addressInput)
-              : null,
-            useShippingAsBillingAddress
-              ? updateCheckoutBillingAddressAction(addressInput)
-              : null,
-            form.getFieldState('email').isDirty
-              ? updateCheckoutEmailAction(email)
-              : null,
-          ]);
-
-        if (
-          checkoutShippingAddress?.errors.length ||
-          checkoutBillingAddress?.errors.length ||
-          checkoutEmail?.errors.length
-        ) {
-        } else {
-          startTransition(() => {
-            intlRouter.push(formatPathname(...APP_ROUTES.CHECKOUT.SHIPPING));
-            intlRouter.refresh();
-          });
+        const hasDirtyAddressField = ADDRESS_FIELDS_NAMES.some(
+          (addressFieldName) => form.getFieldState(addressFieldName).isDirty,
+        );
+        if (hasDirtyAddressField) {
+          const {errors} =
+            (await updateCheckoutShippingAddressAction(addressInput)) ?? {};
+          if (errors?.length) return;
         }
+
+        if (useShippingAsBillingAddress) {
+          const {errors} =
+            (await updateCheckoutBillingAddressAction(addressInput)) ?? {};
+          if (errors?.length) return;
+        }
+
+        if (form.getFieldState('email').isDirty) {
+          const {errors} = (await updateCheckoutEmailAction(email)) ?? {};
+          if (errors?.length) return;
+        }
+
+        startTransition(() => {
+          intlRouter.push(formatPathname(...APP_ROUTES.CHECKOUT.SHIPPING));
+          intlRouter.refresh();
+        });
       } catch (error) {
         console.error(error);
       }

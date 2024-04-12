@@ -21,7 +21,6 @@ export function useBillingAddressSubmit(
         const hasDirtyField = ADDRESS_FIELDS_NAMES.some(
           (addressFieldName) => form.getFieldState(addressFieldName).isDirty,
         );
-
         if (hasDirtyField) {
           const {errors} =
             (await updateCheckoutBillingAddressAction({
