@@ -20,6 +20,9 @@
   "/uUIep": {
     "defaultMessage": "User details"
   },
+  "00LcfG": {
+    "defaultMessage": "Load more"
+  },
   "06/qxx": {
     "defaultMessage": "Reset link was sent to {email} mailbox"
   },
@@ -83,6 +86,9 @@
   "A4RrFD": {
     "defaultMessage": "Password description"
   },
+  "ADKef8": {
+    "defaultMessage": "Add to cart"
+  },
   "Akc1Gk": {
     "defaultMessage": "Return to shipping"
   },
@@ -110,9 +116,6 @@
   "E80WrK": {
     "defaultMessage": "Information"
   },
-  "EFT4+S": {
-    "defaultMessage": "Saleor logo"
-  },
   "F4lKlM": {
     "defaultMessage": "New password description"
   },
@@ -125,6 +128,9 @@
   "Jl/tSJ": {
     "defaultMessage": "Enter a valid new email"
   },
+  "KN7zKn": {
+    "defaultMessage": "Error"
+  },
   "L4nXIc": {
     "defaultMessage": "Change password"
   },
@@ -133,9 +139,6 @@
   },
   "MJ2jZQ": {
     "defaultMessage": "Total"
-  },
-  "MOC4lx": {
-    "defaultMessage": "Subcategories of {category}"
   },
   "Nau+P4": {
     "defaultMessage": "Enter a last name"
@@ -157,6 +160,9 @@
   },
   "PRlD0A": {
     "defaultMessage": "Shipping"
+  },
+  "PlBReU": {
+    "defaultMessage": "Log out"
   },
   "QOiG4E": {
     "defaultMessage": "Set password"
@@ -212,8 +218,11 @@
   "atD3r4": {
     "defaultMessage": "Confirm password:"
   },
-  "cPhKTw": {
-    "defaultMessage": "Not available"
+  "bUnGvj": {
+    "defaultMessage": "Failed to sign up"
+  },
+  "ccXLVi": {
+    "defaultMessage": "Category"
   },
   "cyR7Kh": {
     "defaultMessage": "Back"
@@ -236,9 +245,6 @@
   "gCsYTJ": {
     "defaultMessage": "New password:"
   },
-  "gUIhhI": {
-    "defaultMessage": "Search for products"
-  },
   "h/zqNr": {
     "defaultMessage": "Enter your new password"
   },
@@ -260,6 +266,9 @@
   "kFjJxN": {
     "defaultMessage": "Update your user details settings."
   },
+  "l3CDSb": {
+    "defaultMessage": "Controls"
+  },
   "lBENL4": {
     "defaultMessage": "request email change"
   },
@@ -271,6 +280,9 @@
   },
   "pJi/8z": {
     "defaultMessage": "Enter a ZIP / postal code"
+  },
+  "phAZoj": {
+    "defaultMessage": "Collection"
   },
   "pmu7Ih": {
     "defaultMessage": "Sign up with email"
@@ -299,9 +311,6 @@
   "tD8gJ0": {
     "defaultMessage": "{countryAreaType, select, state {State} province {Province} island {Island} oblast {Oblast} other {Other} }"
   },
-  "tKMlOc": {
-    "defaultMessage": "Menu"
-  },
   "tXQ9ea": {
     "defaultMessage": "{type, select, range {{minimumDeliveryDays} to {maximumDeliveryDays} business days} minimum {minimum {minimumDeliveryDays} business days} maximum {maximum {maximumDeliveryDays} business days} other {unknown business days} }"
   },
@@ -310,6 +319,9 @@
   },
   "uZTXoH": {
     "defaultMessage": "Set password and log in"
+  },
+  "un+VWt": {
+    "defaultMessage": "Search products"
   },
   "vDJsvf": {
     "defaultMessage": "Enter a valid new password"

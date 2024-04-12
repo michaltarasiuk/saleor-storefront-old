@@ -1,14 +1,33 @@
+import '@/styles/globals.css';
+import './styles/globals.css';
+import '../polyfills';
+
+import type {AvailableChannel, AvailableLocale} from '@/i18n/consts';
 import type {PropsWithChildren} from '@/lib/types/react';
+import {fontSans} from '@/styles/fonts';
 
-import {Footer} from './_components/footer';
-import {Header} from './_components/header';
+import {Providers} from '../_components/Providers';
+import {Toaster} from '../_components/Toaster';
 
-export default function ShopLayout({children}: PropsWithChildren) {
+interface Props {
+  readonly params: {
+    readonly channel: AvailableChannel;
+    readonly locale: AvailableLocale;
+  };
+}
+
+export default function HomeLayout({
+  children,
+  params: {channel, locale},
+}: PropsWithChildren<Props>) {
   return (
-    <>
-      <Header />
-      {children}
-      <Footer />
-    </>
+    <html lang={locale} className={fontSans.className}>
+      <body>
+        <Providers channel={channel} locale={locale}>
+          {children}
+        </Providers>
+        <Toaster expand />
+      </body>
+    </html>
   );
 }

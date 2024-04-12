@@ -2,14 +2,16 @@ import type {NextRequest} from 'next/server';
 
 import {basePathHandler} from './middleware/base-path-handler';
 import {createMiddleware} from './middleware/create-middleware';
+import {preventFromVisitingHomePageHandler} from './middleware/prevent-from-visiting-home-page-handler';
 import {setBasePathHeadersHandler} from './middleware/set-base-path-headers-handler';
 
 export default async function middleware(req: NextRequest) {
-  const {use, middleware} = createMiddleware();
+  const {middleware, use} = createMiddleware();
   use(basePathHandler);
+  use(preventFromVisitingHomePageHandler);
   use(setBasePathHeadersHandler);
 
-  return await middleware(req);
+  return middleware(req);
 }
 
 export const config = {

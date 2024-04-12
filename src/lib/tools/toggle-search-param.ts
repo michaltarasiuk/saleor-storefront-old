@@ -1,11 +1,15 @@
-import {hasSearchParam} from './has-search-param';
+import type {ReadonlyURLSearchParams} from 'next/navigation';
 
 export function toggleSearchParam(
-  searchParams: URLSearchParams,
+  searchParams: URLSearchParams | ReadonlyURLSearchParams,
   name: string,
   value: string,
 ) {
-  hasSearchParam(searchParams, name, value)
-    ? searchParams.delete(name, value)
-    : searchParams.append(name, value);
+  const updatedSearchParams = new URLSearchParams(searchParams);
+
+  updatedSearchParams.has(name, value)
+    ? updatedSearchParams.delete(name, value)
+    : updatedSearchParams.append(name, value);
+
+  return updatedSearchParams;
 }

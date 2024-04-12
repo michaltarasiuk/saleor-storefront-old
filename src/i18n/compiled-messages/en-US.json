@@ -41,6 +41,12 @@
       "value": "User details"
     }
   ],
+  "00LcfG": [
+    {
+      "type": 0,
+      "value": "Load more"
+    }
+  ],
   "06/qxx": [
     {
       "type": 0,
@@ -193,6 +199,12 @@
       "value": "Password description"
     }
   ],
+  "ADKef8": [
+    {
+      "type": 0,
+      "value": "Add to cart"
+    }
+  ],
   "Akc1Gk": [
     {
       "type": 0,
@@ -247,12 +259,6 @@
       "value": "Information"
     }
   ],
-  "EFT4+S": [
-    {
-      "type": 0,
-      "value": "Saleor logo"
-    }
-  ],
   "F4lKlM": [
     {
       "type": 0,
@@ -277,6 +283,12 @@
       "value": "Enter a valid new email"
     }
   ],
+  "KN7zKn": [
+    {
+      "type": 0,
+      "value": "Error"
+    }
+  ],
   "L4nXIc": [
     {
       "type": 0,
@@ -293,16 +305,6 @@
     {
       "type": 0,
       "value": "Total"
-    }
-  ],
-  "MOC4lx": [
-    {
-      "type": 0,
-      "value": "Subcategories of "
-    },
-    {
-      "type": 1,
-      "value": "category"
     }
   ],
   "Nau+P4": [
@@ -353,6 +355,12 @@
     {
       "type": 0,
       "value": "Shipping"
+    }
+  ],
+  "PlBReU": [
+    {
+      "type": 0,
+      "value": "Log out"
     }
   ],
   "QOiG4E": [
@@ -471,10 +479,16 @@
       "value": "Confirm password:"
     }
   ],
-  "cPhKTw": [
+  "bUnGvj": [
     {
       "type": 0,
-      "value": "Not available"
+      "value": "Failed to sign up"
+    }
+  ],
+  "ccXLVi": [
+    {
+      "type": 0,
+      "value": "Category"
     }
   ],
   "cyR7Kh": [
@@ -519,12 +533,6 @@
       "value": "New password:"
     }
   ],
-  "gUIhhI": [
-    {
-      "type": 0,
-      "value": "Search for products"
-    }
-  ],
   "h/zqNr": [
     {
       "type": 0,
@@ -567,6 +575,12 @@
       "value": "Update your user details settings."
     }
   ],
+  "l3CDSb": [
+    {
+      "type": 0,
+      "value": "Controls"
+    }
+  ],
   "lBENL4": [
     {
       "type": 0,
@@ -597,6 +611,12 @@
     {
       "type": 0,
       "value": "Enter a ZIP / postal code"
+    }
+  ],
+  "phAZoj": [
+    {
+      "type": 0,
+      "value": "Collection"
     }
   ],
   "pmu7Ih": [
@@ -695,12 +715,6 @@
       "value": "countryAreaType"
     }
   ],
-  "tKMlOc": [
-    {
-      "type": 0,
-      "value": "Menu"
-    }
-  ],
   "tXQ9ea": [
     {
       "options": {
@@ -779,6 +793,12 @@
     {
       "type": 0,
       "value": "Set password and log in"
+    }
+  ],
+  "un+VWt": [
+    {
+      "type": 0,
+      "value": "Search products"
     }
   ],
   "vDJsvf": [

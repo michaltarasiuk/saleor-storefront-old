@@ -2172,6 +2172,7 @@ export type AttributeSortingInput = {
   field: AttributeSortField;
 };
 
+/** Represents attribute's original translatable fields and related translations. */
 export type AttributeTranslatableContent = Node & {
   /**
    * Custom attribute of a product.
@@ -2186,6 +2187,7 @@ export type AttributeTranslatableContent = Node & {
   translation?: Maybe<AttributeTranslation>;
 };
 
+/** Represents attribute's original translatable fields and related translations. */
 export type AttributeTranslatableContentTranslationArgs = {
   languageCode: LanguageCodeEnum;
 };
@@ -2210,6 +2212,7 @@ export enum AttributeTranslateErrorCode {
   Required = 'REQUIRED',
 }
 
+/** Represents attribute translations. */
 export type AttributeTranslation = Node & {
   /** The ID of the attribute translation. */
   id: Scalars['ID']['output'];
@@ -2542,6 +2545,7 @@ export type AttributeValueDeleted = Event & {
 export type AttributeValueFilterInput = {
   ids?: InputMaybe<Array<Scalars['ID']['input']>>;
   search?: InputMaybe<Scalars['String']['input']>;
+  slugs?: InputMaybe<Array<Scalars['String']['input']>>;
 };
 
 export type AttributeValueInput = {
@@ -2619,6 +2623,7 @@ export type AttributeValueSelectableTypeInput = {
   value?: InputMaybe<Scalars['String']['input']>;
 };
 
+/** Represents attribute value's original translatable fields and related translations. */
 export type AttributeValueTranslatableContent = Node & {
   /**
    * Associated attribute that can be translated.
@@ -2647,6 +2652,7 @@ export type AttributeValueTranslatableContent = Node & {
   translation?: Maybe<AttributeValueTranslation>;
 };
 
+/** Represents attribute value's original translatable fields and related translations. */
 export type AttributeValueTranslatableContentTranslationArgs = {
   languageCode: LanguageCodeEnum;
 };
@@ -2671,6 +2677,7 @@ export enum AttributeValueTranslateErrorCode {
   Required = 'REQUIRED',
 }
 
+/** Represents attribute value translations. */
 export type AttributeValueTranslation = Node & {
   /** The ID of the attribute value translation. */
   id: Scalars['ID']['output'];
@@ -2951,6 +2958,21 @@ export type CatalogueInput = {
   variants?: InputMaybe<Array<Scalars['ID']['input']>>;
 };
 
+export type CataloguePredicateInput = {
+  /** List of conditions that must be met. */
+  AND?: InputMaybe<Array<CataloguePredicateInput>>;
+  /** A list of conditions of which at least one must be met. */
+  OR?: InputMaybe<Array<CataloguePredicateInput>>;
+  /** Defines the category conditions to be met. */
+  categoryPredicate?: InputMaybe<CategoryWhereInput>;
+  /** Defines the collection conditions to be met. */
+  collectionPredicate?: InputMaybe<CollectionWhereInput>;
+  /** Defines the product conditions to be met. */
+  productPredicate?: InputMaybe<ProductWhereInput>;
+  /** Defines the product variant conditions to be met. */
+  variantPredicate?: InputMaybe<ProductVariantWhereInput>;
+};
+
 /** Represents a single category of products. Categories allow to organize products in a tree-hierarchies which can be used for navigation in the storefront. */
 export type Category = Node &
   ObjectWithMetadata & {
@@ -3023,6 +3045,12 @@ export type Category = Node &
     slug: Scalars['String']['output'];
     /** Returns translated category fields for the given language code. */
     translation?: Maybe<CategoryTranslation>;
+    /**
+     * The date and time when the category was last updated.
+     *
+     * Added in Saleor 3.17.
+     */
+    updatedAt: Scalars['DateTime']['output'];
   };
 
 /** Represents a single category of products. Categories allow to organize products in a tree-hierarchies which can be used for navigation in the storefront. */
@@ -3177,6 +3205,12 @@ export type CategoryFilterInput = {
   metadata?: InputMaybe<Array<MetadataFilter>>;
   search?: InputMaybe<Scalars['String']['input']>;
   slugs?: InputMaybe<Array<Scalars['String']['input']>>;
+  /**
+   * Filter by when was the most recent update.
+   *
+   * Added in Saleor 3.17.
+   */
+  updatedAt?: InputMaybe<DateTimeRangeInput>;
 };
 
 export type CategoryInput = {
@@ -3232,6 +3266,7 @@ export type CategorySortingInput = {
   field: CategorySortField;
 };
 
+/** Represents category original translatable fields and related translations. */
 export type CategoryTranslatableContent = Node & {
   /**
    * Represents a single category of products.
@@ -3263,6 +3298,7 @@ export type CategoryTranslatableContent = Node & {
   translation?: Maybe<CategoryTranslation>;
 };
 
+/** Represents category original translatable fields and related translations. */
 export type CategoryTranslatableContentTranslationArgs = {
   languageCode: LanguageCodeEnum;
 };
@@ -3279,6 +3315,7 @@ export type CategoryTranslate = {
   translationErrors: Array<TranslationError>;
 };
 
+/** Represents category translations. */
 export type CategoryTranslation = Node & {
   /**
    * Translated description of the category.
@@ -3434,6 +3471,16 @@ export type Channel = Node &
      */
     orderSettings: OrderSettings;
     /**
+     * Channel-specific payment settings.
+     *
+     * Added in Saleor 3.16.
+     *
+     * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+     *
+     * Requires one of the following permissions: MANAGE_CHANNELS, HANDLE_PAYMENTS.
+     */
+    paymentSettings: PaymentSettings;
+    /**
      * List of private metadata items. Requires staff permissions to access.
      *
      * Added in Saleor 3.15.
@@ -3570,6 +3617,14 @@ export type ChannelCreateInput = {
    * Added in Saleor 3.12.
    */
   orderSettings?: InputMaybe<OrderSettingsInput>;
+  /**
+   * The channel payment settings
+   *
+   * Added in Saleor 3.16.
+   *
+   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+   */
+  paymentSettings?: InputMaybe<PaymentSettingsInput>;
   /**
    * Channel private metadata.
    *
@@ -3748,7 +3803,9 @@ export type ChannelStatusChanged = Event & {
  * Update a channel.
  *
  * Requires one of the following permissions: MANAGE_CHANNELS.
- * Requires one of the following permissions when updating only `orderSettings` field: MANAGE_CHANNELS, MANAGE_ORDERS.Requires one of the following permissions when updating only `checkoutSettings` field: MANAGE_CHANNELS, MANAGE_CHECKOUTS.
+ * Requires one of the following permissions when updating only `orderSettings` field: `MANAGE_CHANNELS`, `MANAGE_ORDERS`.
+ * Requires one of the following permissions when updating only `checkoutSettings` field: `MANAGE_CHANNELS`, `MANAGE_CHECKOUTS`.
+ * Requires one of the following permissions when updating only `paymentSettings` field: `MANAGE_CHANNELS`, `HANDLE_PAYMENTS`.
  *
  * Triggers the following webhook events:
  * - CHANNEL_UPDATED (async): A channel was updated.
@@ -3800,6 +3857,14 @@ export type ChannelUpdateInput = {
    * Added in Saleor 3.12.
    */
   orderSettings?: InputMaybe<OrderSettingsInput>;
+  /**
+   * The channel payment settings
+   *
+   * Added in Saleor 3.16.
+   *
+   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+   */
+  paymentSettings?: InputMaybe<PaymentSettingsInput>;
   /**
    * Channel private metadata.
    *
@@ -3910,7 +3975,7 @@ export type Checkout = Node &
     /** The name of voucher assigned to the checkout. */
     discountName?: Maybe<Scalars['String']['output']>;
     /**
-     * Determines whether checkout prices should include taxes when displayed in a storefront.
+     * Determines whether displayed prices should include taxes.
      *
      * Added in Saleor 3.9.
      */
@@ -4062,8 +4127,16 @@ export type Checkout = Node &
      * Added in Saleor 3.13.
      */
     updatedAt: Scalars['DateTime']['output'];
-    /** The user assigned to the checkout. */
+    /** The user assigned to the checkout. Requires one of the following permissions: MANAGE_USERS, HANDLE_PAYMENTS, OWNER. */
     user?: Maybe<User>;
+    /**
+     * The voucher assigned to the checkout.
+     *
+     * Added in Saleor 3.18.
+     *
+     * Requires one of the following permissions: MANAGE_DISCOUNTS.
+     */
+    voucher?: Maybe<Voucher>;
     /** The code of voucher assigned to the checkout. */
     voucherCode?: Maybe<Scalars['String']['output']>;
   };
@@ -5419,6 +5492,7 @@ export type CollectionSortingInput = {
   field: CollectionSortField;
 };
 
+/** Represents collection's original translatable fields and related translations. */
 export type CollectionTranslatableContent = Node & {
   /**
    * Represents a collection of products.
@@ -5450,6 +5524,7 @@ export type CollectionTranslatableContent = Node & {
   translation?: Maybe<CollectionTranslation>;
 };
 
+/** Represents collection's original translatable fields and related translations. */
 export type CollectionTranslatableContentTranslationArgs = {
   languageCode: LanguageCodeEnum;
 };
@@ -5466,6 +5541,7 @@ export type CollectionTranslate = {
   translationErrors: Array<TranslationError>;
 };
 
+/** Represents collection translations. */
 export type CollectionTranslation = Node & {
   /**
    * Translated description of the collection.
@@ -6200,6 +6276,22 @@ export type DateRangeInput = {
   lte?: InputMaybe<Scalars['Date']['input']>;
 };
 
+/**
+ * Define the filtering options for date time fields.
+ *
+ * Added in Saleor 3.11.
+ *
+ * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+ */
+export type DateTimeFilterInput = {
+  /** The value equal to. */
+  eq?: InputMaybe<Scalars['DateTime']['input']>;
+  /** The value included in. */
+  oneOf?: InputMaybe<Array<Scalars['DateTime']['input']>>;
+  /** The value in range. */
+  range?: InputMaybe<DateTimeRangeInput>;
+};
+
 export type DateTimeRangeInput = {
   /** Start date. */
   gte?: InputMaybe<Scalars['DateTime']['input']>;
@@ -6483,6 +6575,12 @@ export type DiscountError = {
   message?: Maybe<Scalars['String']['output']>;
   /** List of products IDs which causes the error. */
   products?: Maybe<Array<Scalars['ID']['output']>>;
+  /**
+   * List of voucher codes which causes the error.
+   *
+   * Added in Saleor 3.18.
+   */
+  voucherCodes?: Maybe<Array<Scalars['String']['output']>>;
 };
 
 /** An enumeration. */
@@ -6495,6 +6593,7 @@ export enum DiscountErrorCode {
   NotFound = 'NOT_FOUND',
   Required = 'REQUIRED',
   Unique = 'UNIQUE',
+  VoucherAlreadyUsed = 'VOUCHER_ALREADY_USED',
 }
 
 export enum DiscountStatusEnum {
@@ -6520,13 +6619,13 @@ export enum DistanceUnitsEnum {
   Yd = 'YD',
 }
 
-/** Represents shop's domain. */
+/** Represents API domain. */
 export type Domain = {
   /** The host name of the domain. */
   host: Scalars['String']['output'];
   /** Inform if SSL is enabled. */
   sslEnabled: Scalars['Boolean']['output'];
-  /** Shop's absolute URL. */
+  /** The absolute URL of the API. */
   url: Scalars['String']['output'];
 };
 
@@ -6597,6 +6696,12 @@ export type DraftOrderCreateInput = {
   userEmail?: InputMaybe<Scalars['String']['input']>;
   /** ID of the voucher associated with the order. */
   voucher?: InputMaybe<Scalars['ID']['input']>;
+  /**
+   * A code of the voucher associated with the order.
+   *
+   * Added in Saleor 3.18.
+   */
+  voucherCode?: InputMaybe<Scalars['String']['input']>;
 };
 
 /**
@@ -6674,6 +6779,12 @@ export type DraftOrderInput = {
   userEmail?: InputMaybe<Scalars['String']['input']>;
   /** ID of the voucher associated with the order. */
   voucher?: InputMaybe<Scalars['ID']['input']>;
+  /**
+   * A code of the voucher associated with the order.
+   *
+   * Added in Saleor 3.18.
+   */
+  voucherCode?: InputMaybe<Scalars['String']['input']>;
 };
 
 /**
@@ -6974,6 +7085,7 @@ export type ExportFileSortingInput = {
  *
  * Triggers the following webhook events:
  * - NOTIFY_USER (async): A notification for the exported file.
+ * - GIFT_CARD_EXPORT_COMPLETED (async): A notification for the exported file.
  */
 export type ExportGiftCards = {
   errors: Array<ExportError>;
@@ -7010,6 +7122,7 @@ export type ExportInfoInput = {
  *
  * Triggers the following webhook events:
  * - NOTIFY_USER (async): A notification for the exported file.
+ * - PRODUCT_EXPORT_COMPLETED (async): A notification for the exported file.
  */
 export type ExportProducts = {
   errors: Array<ExportError>;
@@ -7040,6 +7153,33 @@ export enum ExportScope {
   /** Export products with given ids. */
   Ids = 'IDS',
 }
+
+/**
+ * Export voucher codes to csv/xlsx file.
+ *
+ * Added in Saleor 3.18.
+ *
+ * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+ *
+ * Requires one of the following permissions: MANAGE_DISCOUNTS.
+ *
+ * Triggers the following webhook events:
+ * - VOUCHER_CODE_EXPORT_COMPLETED (async): A notification for the exported file.
+ */
+export type ExportVoucherCodes = {
+  errors: Array<ExportError>;
+  /** The newly created export file job which is responsible for export data. */
+  exportFile?: Maybe<ExportFile>;
+};
+
+export type ExportVoucherCodesInput = {
+  /** Type of exported file. */
+  fileType: FileTypesEnum;
+  /** List of voucher code IDs to export. */
+  ids?: InputMaybe<Array<Scalars['ID']['input']>>;
+  /** The ID of the voucher. If provided, exports all codes belonging to the voucher. */
+  voucherId?: InputMaybe<Scalars['ID']['input']>;
+};
 
 /** External authentication plugin. */
 export type ExternalAuthentication = {
@@ -7210,9 +7350,21 @@ export type Fulfillment = Node &
      * Added in Saleor 3.3.
      */
     privateMetafields?: Maybe<Scalars['Metadata']['output']>;
+    /**
+     * Amount of refunded shipping price.
+     *
+     * Added in Saleor 3.14.
+     */
+    shippingRefundedAmount?: Maybe<Money>;
     status: FulfillmentStatus;
     /** User-friendly fulfillment status. */
     statusDisplay?: Maybe<Scalars['String']['output']>;
+    /**
+     * Total refunded amount assigned to this fulfillment.
+     *
+     * Added in Saleor 3.14.
+     */
+    totalRefundedAmount?: Maybe<Money>;
     trackingNumber: Scalars['String']['output'];
     /** Warehouse from fulfillment was fulfilled. */
     warehouse?: Maybe<Warehouse>;
@@ -7244,6 +7396,9 @@ export type FulfillmentPrivateMetafieldsArgs = {
  * Added in Saleor 3.1.
  *
  * Requires one of the following permissions: MANAGE_ORDERS.
+ *
+ * Triggers the following webhook events:
+ * - FULFILLMENT_APPROVED (async): Fulfillment is approved.
  */
 export type FulfillmentApprove = {
   errors: Array<OrderError>;
@@ -7267,6 +7422,12 @@ export type FulfillmentApproved = Event & {
   issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
   issuingPrincipal?: Maybe<IssuingPrincipal>;
+  /**
+   * If true, send a notification to the customer.
+   *
+   * Added in Saleor 3.16.
+   */
+  notifyCustomer: Scalars['Boolean']['output'];
   /** The order the fulfillment belongs to. */
   order?: Maybe<Order>;
   /** The application receiving the webhook. */
@@ -7327,6 +7488,12 @@ export type FulfillmentCreated = Event & {
   issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
   issuingPrincipal?: Maybe<IssuingPrincipal>;
+  /**
+   * If true, the app should send a notification to the customer.
+   *
+   * Added in Saleor 3.16.
+   */
+  notifyCustomer: Scalars['Boolean']['output'];
   /** The order the fulfillment belongs to. */
   order?: Maybe<Order>;
   /** The application receiving the webhook. */
@@ -7408,9 +7575,32 @@ export enum FulfillmentStatus {
 }
 
 /**
+ * Event sent when the tracking number is updated.
+ *
+ * Added in Saleor 3.16.
+ */
+export type FulfillmentTrackingNumberUpdated = Event & {
+  /** The fulfillment the event relates to. */
+  fulfillment?: Maybe<Fulfillment>;
+  /** Time of the event. */
+  issuedAt?: Maybe<Scalars['DateTime']['output']>;
+  /** The user or application that triggered the event. */
+  issuingPrincipal?: Maybe<IssuingPrincipal>;
+  /** The order the fulfillment belongs to. */
+  order?: Maybe<Order>;
+  /** The application receiving the webhook. */
+  recipient?: Maybe<App>;
+  /** Saleor version that triggered the event. */
+  version?: Maybe<Scalars['String']['output']>;
+};
+
+/**
  * Updates a fulfillment for an order.
  *
  * Requires one of the following permissions: MANAGE_ORDERS.
+ *
+ * Triggers the following webhook events:
+ * - FULFILLMENT_TRACKING_NUMBER_UPDATED (async): Fulfillment tracking number is updated.
  */
 export type FulfillmentUpdateTracking = {
   errors: Array<OrderError>;
@@ -7454,7 +7644,11 @@ export type GiftCard = Node &
      * Added in Saleor 3.1.
      */
     boughtInChannel?: Maybe<Scalars['String']['output']>;
-    /** Gift card code. Can be fetched by a staff member with MANAGE_GIFT_CARD when gift card wasn't yet used and by the gift card owner. */
+    /**
+     * Gift card code. It can be fetched both by a staff member with 'MANAGE_GIFT_CARD' when gift card hasn't been used yet or a user who bought or issued the gift card.
+     *
+     * Requires one of the following permissions: MANAGE_GIFT_CARD, OWNER.
+     */
     code: Scalars['String']['output'];
     created: Scalars['DateTime']['output'];
     /**
@@ -7955,6 +8149,24 @@ export enum GiftCardEventsEnum {
   UsedInOrder = 'USED_IN_ORDER',
 }
 
+/**
+ * Event sent when gift card export is completed.
+ *
+ * Added in Saleor 3.16.
+ */
+export type GiftCardExportCompleted = Event & {
+  /** The export file for gift cards. */
+  export?: Maybe<ExportFile>;
+  /** Time of the event. */
+  issuedAt?: Maybe<Scalars['DateTime']['output']>;
+  /** The user or application that triggered the event. */
+  issuingPrincipal?: Maybe<IssuingPrincipal>;
+  /** The application receiving the webhook. */
+  recipient?: Maybe<App>;
+  /** Saleor version that triggered the event. */
+  version?: Maybe<Scalars['String']['output']>;
+};
+
 export type GiftCardFilterInput = {
   code?: InputMaybe<Scalars['String']['input']>;
   createdByEmail?: InputMaybe<Scalars['String']['input']>;
@@ -8315,7 +8527,10 @@ export type Invoice = Job &
   ObjectWithMetadata & {
     /** Date and time at which invoice was created. */
     createdAt: Scalars['DateTime']['output'];
-    /** URL to view an invoice. */
+    /**
+     * URL to view an invoice.
+     * @deprecated This field will be removed in Saleor 4.0. Use `url` field.This field will be removed in 4.0
+     */
     externalUrl?: Maybe<Scalars['String']['output']>;
     /** The ID of the object. */
     id: Scalars['ID']['output'];
@@ -8365,7 +8580,7 @@ export type Invoice = Job &
     status: JobStatusEnum;
     /** Date and time at which invoice was updated. */
     updatedAt: Scalars['DateTime']['output'];
-    /** URL to download an invoice. */
+    /** URL to view/download an invoice. This can be an internal URL if the Invoicing Plugin was used or an external URL if it has been provided. */
     url?: Maybe<Scalars['String']['output']>;
   };
 
@@ -10092,6 +10307,7 @@ export type MenuItemSortingInput = {
   field: MenuItemsSortField;
 };
 
+/** Represents menu item's original translatable fields and related translations. */
 export type MenuItemTranslatableContent = Node & {
   /** The ID of the menu item translatable content. */
   id: Scalars['ID']['output'];
@@ -10106,6 +10322,7 @@ export type MenuItemTranslatableContent = Node & {
   translation?: Maybe<MenuItemTranslation>;
 };
 
+/** Represents menu item's original translatable fields and related translations. */
 export type MenuItemTranslatableContentTranslationArgs = {
   languageCode: LanguageCodeEnum;
 };
@@ -10122,6 +10339,7 @@ export type MenuItemTranslate = {
   translationErrors: Array<TranslationError>;
 };
 
+/** Represents menu item translations. */
 export type MenuItemTranslation = Node & {
   /** The ID of the menu item translation. */
   id: Scalars['ID']['output'];
@@ -10721,7 +10939,9 @@ export type Mutation = {
    * Update a channel.
    *
    * Requires one of the following permissions: MANAGE_CHANNELS.
-   * Requires one of the following permissions when updating only `orderSettings` field: MANAGE_CHANNELS, MANAGE_ORDERS.Requires one of the following permissions when updating only `checkoutSettings` field: MANAGE_CHANNELS, MANAGE_CHECKOUTS.
+   * Requires one of the following permissions when updating only `orderSettings` field: `MANAGE_CHANNELS`, `MANAGE_ORDERS`.
+   * Requires one of the following permissions when updating only `checkoutSettings` field: `MANAGE_CHANNELS`, `MANAGE_CHECKOUTS`.
+   * Requires one of the following permissions when updating only `paymentSettings` field: `MANAGE_CHANNELS`, `HANDLE_PAYMENTS`.
    *
    * Triggers the following webhook events:
    * - CHANNEL_UPDATED (async): A channel was updated.
@@ -11087,6 +11307,7 @@ export type Mutation = {
    *
    * Triggers the following webhook events:
    * - NOTIFY_USER (async): A notification for the exported file.
+   * - GIFT_CARD_EXPORT_COMPLETED (async): A notification for the exported file.
    */
   exportGiftCards?: Maybe<ExportGiftCards>;
   /**
@@ -11096,8 +11317,22 @@ export type Mutation = {
    *
    * Triggers the following webhook events:
    * - NOTIFY_USER (async): A notification for the exported file.
+   * - PRODUCT_EXPORT_COMPLETED (async): A notification for the exported file.
    */
   exportProducts?: Maybe<ExportProducts>;
+  /**
+   * Export voucher codes to csv/xlsx file.
+   *
+   * Added in Saleor 3.18.
+   *
+   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+   *
+   * Requires one of the following permissions: MANAGE_DISCOUNTS.
+   *
+   * Triggers the following webhook events:
+   * - VOUCHER_CODE_EXPORT_COMPLETED (async): A notification for the exported file.
+   */
+  exportVoucherCodes?: Maybe<ExportVoucherCodes>;
   /** Prepare external authentication URL for user by custom plugin. */
   externalAuthenticationUrl?: Maybe<ExternalAuthenticationUrl>;
   /** Logout user by custom plugin. */
@@ -11106,6 +11341,9 @@ export type Mutation = {
    * Trigger sending a notification with the notify plugin method. Serializes nodes provided as ids parameter and includes this data in the notification payload.
    *
    * Added in Saleor 3.1.
+   * @deprecated
+   *
+   * DEPRECATED: this mutation will be removed in Saleor 4.0.
    */
   externalNotificationTrigger?: Maybe<ExternalNotificationTrigger>;
   /** Obtain external access tokens for user by custom plugin. */
@@ -11457,6 +11695,12 @@ export type Mutation = {
    * Creates new fulfillments for an order.
    *
    * Requires one of the following permissions: MANAGE_ORDERS.
+   *
+   * Triggers the following webhook events:
+   * - FULFILLMENT_CREATED (async): A new fulfillment is created.
+   * - ORDER_FULFILLED (async): Order is fulfilled.
+   * - FULFILLMENT_TRACKING_NUMBER_UPDATED (async): Sent when fulfillment tracking number is updated.
+   * - FULFILLMENT_APPROVED (async): A fulfillment is approved.
    */
   orderFulfill?: Maybe<OrderFulfill>;
   /**
@@ -11465,6 +11709,9 @@ export type Mutation = {
    * Added in Saleor 3.1.
    *
    * Requires one of the following permissions: MANAGE_ORDERS.
+   *
+   * Triggers the following webhook events:
+   * - FULFILLMENT_APPROVED (async): Fulfillment is approved.
    */
   orderFulfillmentApprove?: Maybe<FulfillmentApprove>;
   /**
@@ -11489,6 +11736,9 @@ export type Mutation = {
    * Updates a fulfillment for an order.
    *
    * Requires one of the following permissions: MANAGE_ORDERS.
+   *
+   * Triggers the following webhook events:
+   * - FULFILLMENT_TRACKING_NUMBER_UPDATED (async): Fulfillment tracking number is updated.
    */
   orderFulfillmentUpdateTracking?: Maybe<FulfillmentUpdateTracking>;
   /**
@@ -11706,8 +11956,47 @@ export type Mutation = {
    * Note: this API is currently in Feature Preview and can be subject to changes at later point.
    */
   paymentGatewayInitialize?: Maybe<PaymentGatewayInitialize>;
+  /**
+   * Initializes payment gateway for tokenizing payment method session.
+   *
+   * Added in Saleor 3.16.
+   *
+   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+   *
+   * Requires one of the following permissions: AUTHENTICATED_USER.
+   *
+   * Triggers the following webhook events:
+   * - PAYMENT_GATEWAY_INITIALIZE_TOKENIZATION_SESSION (sync): The customer requested to initialize payment gateway for tokenization.
+   */
+  paymentGatewayInitializeTokenization?: Maybe<PaymentGatewayInitializeTokenization>;
   /** Initializes payment process when it is required by gateway. */
   paymentInitialize?: Maybe<PaymentInitialize>;
+  /**
+   * Tokenize payment method.
+   *
+   * Added in Saleor 3.16.
+   *
+   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+   *
+   * Requires one of the following permissions: AUTHENTICATED_USER.
+   *
+   * Triggers the following webhook events:
+   * - PAYMENT_METHOD_INITIALIZE_TOKENIZATION_SESSION (sync): The customer requested to tokenize payment method.
+   */
+  paymentMethodInitializeTokenization?: Maybe<PaymentMethodInitializeTokenization>;
+  /**
+   * Tokenize payment method.
+   *
+   * Added in Saleor 3.16.
+   *
+   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+   *
+   * Requires one of the following permissions: AUTHENTICATED_USER.
+   *
+   * Triggers the following webhook events:
+   * - PAYMENT_METHOD_PROCESS_TOKENIZATION_SESSION (sync): The customer continues payment method tokenization.
+   */
+  paymentMethodProcessTokenization?: Maybe<PaymentMethodProcessTokenization>;
   /**
    * Refunds the captured payment amount.
    *
@@ -12010,6 +12299,116 @@ export type Mutation = {
    */
   productVariantUpdate?: Maybe<ProductVariantUpdate>;
   /**
+   * Deletes promotions.
+   *
+   * Added in Saleor 3.17.
+   *
+   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+   *
+   * Requires one of the following permissions: MANAGE_DISCOUNTS.
+   *
+   * Triggers the following webhook events:
+   * - PROMOTION_DELETED (async): A promotion was deleted.
+   */
+  promotionBulkDelete?: Maybe<PromotionBulkDelete>;
+  /**
+   * Creates a new promotion.
+   *
+   * Added in Saleor 3.17.
+   *
+   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+   *
+   * Requires one of the following permissions: MANAGE_DISCOUNTS.
+   *
+   * Triggers the following webhook events:
+   * - PROMOTION_CREATED (async): A promotion was created.
+   * - PROMOTION_STARTED (async): Optionally called if promotion was started.
+   */
+  promotionCreate?: Maybe<PromotionCreate>;
+  /**
+   * Deletes a promotion.
+   *
+   * Added in Saleor 3.17.
+   *
+   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+   *
+   * Requires one of the following permissions: MANAGE_DISCOUNTS.
+   *
+   * Triggers the following webhook events:
+   * - PROMOTION_DELETED (async): A promotion was deleted.
+   */
+  promotionDelete?: Maybe<PromotionDelete>;
+  /**
+   * Creates a new promotion rule.
+   *
+   * Added in Saleor 3.17.
+   *
+   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+   *
+   * Requires one of the following permissions: MANAGE_DISCOUNTS.
+   *
+   * Triggers the following webhook events:
+   * - PROMOTION_RULE_CREATED (async): A promotion rule was created.
+   */
+  promotionRuleCreate?: Maybe<PromotionRuleCreate>;
+  /**
+   * Deletes a promotion rule.
+   *
+   * Added in Saleor 3.17.
+   *
+   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+   *
+   * Requires one of the following permissions: MANAGE_DISCOUNTS.
+   *
+   * Triggers the following webhook events:
+   * - PROMOTION_RULE_DELETED (async): A promotion rule was deleted.
+   */
+  promotionRuleDelete?: Maybe<PromotionRuleDelete>;
+  /**
+   * Creates/updates translations for a promotion rule.
+   *
+   * Added in Saleor 3.17.
+   *
+   * Requires one of the following permissions: MANAGE_TRANSLATIONS.
+   */
+  promotionRuleTranslate?: Maybe<PromotionRuleTranslate>;
+  /**
+   * Updates an existing promotion rule.
+   *
+   * Added in Saleor 3.17.
+   *
+   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+   *
+   * Requires one of the following permissions: MANAGE_DISCOUNTS.
+   *
+   * Triggers the following webhook events:
+   * - PROMOTION_RULE_UPDATED (async): A promotion rule was updated.
+   */
+  promotionRuleUpdate?: Maybe<PromotionRuleUpdate>;
+  /**
+   * Creates/updates translations for a promotion.
+   *
+   * Added in Saleor 3.17.
+   *
+   * Requires one of the following permissions: MANAGE_TRANSLATIONS.
+   */
+  promotionTranslate?: Maybe<PromotionTranslate>;
+  /**
+   * Updates an existing promotion.
+   *
+   * Added in Saleor 3.17.
+   *
+   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+   *
+   * Requires one of the following permissions: MANAGE_DISCOUNTS.
+   *
+   * Triggers the following webhook events:
+   * - PROMOTION_UPDATED (async): A promotion was updated.
+   * - PROMOTION_STARTED (async): Optionally called if promotion was started.
+   * - PROMOTION_ENDED (async): Optionally called if promotion was ended.
+   */
+  promotionUpdate?: Maybe<PromotionUpdate>;
+  /**
    * Request email change of the logged in user.
    *
    * Requires one of the following permissions: AUTHENTICATED_USER.
@@ -12038,7 +12437,9 @@ export type Mutation = {
    */
   saleBulkDelete?: Maybe<SaleBulkDelete>;
   /**
-   * Adds products, categories, collections to a voucher.
+   * Adds products, categories, collections to a sale.
+   *
+   * DEPRECATED: this mutation will be removed in Saleor 4.0. Use `promotionRuleCreate` mutation instead.
    *
    * Requires one of the following permissions: MANAGE_DISCOUNTS.
    *
@@ -12049,6 +12450,8 @@ export type Mutation = {
   /**
    * Removes products, categories, collections from a sale.
    *
+   * DEPRECATED: this mutation will be removed in Saleor 4.0. Use `promotionRuleUpdate` or `promotionRuleDelete` mutations instead.
+   *
    * Requires one of the following permissions: MANAGE_DISCOUNTS.
    *
    * Triggers the following webhook events:
@@ -12058,11 +12461,15 @@ export type Mutation = {
   /**
    * Manage sale's availability in channels.
    *
+   * DEPRECATED: this mutation will be removed in Saleor 4.0. Use `promotionRuleCreate` or `promotionRuleUpdate` mutations instead.
+   *
    * Requires one of the following permissions: MANAGE_DISCOUNTS.
    */
   saleChannelListingUpdate?: Maybe<SaleChannelListingUpdate>;
   /**
    * Creates a new sale.
+   *
+   * DEPRECATED: this mutation will be removed in Saleor 4.0. Use `promotionCreate` mutation instead.
    *
    * Requires one of the following permissions: MANAGE_DISCOUNTS.
    *
@@ -12073,6 +12480,8 @@ export type Mutation = {
   /**
    * Deletes a sale.
    *
+   * DEPRECATED: this mutation will be removed in Saleor 4.0. Use `promotionDelete` mutation instead.
+   *
    * Requires one of the following permissions: MANAGE_DISCOUNTS.
    *
    * Triggers the following webhook events:
@@ -12082,11 +12491,15 @@ export type Mutation = {
   /**
    * Creates/updates translations for a sale.
    *
+   * DEPRECATED: this mutation will be removed in Saleor 4.0. Use `PromotionTranslate` mutation instead.
+   *
    * Requires one of the following permissions: MANAGE_TRANSLATIONS.
    */
   saleTranslate?: Maybe<SaleTranslate>;
   /**
    * Updates a sale.
+   *
+   * DEPRECATED: this mutation will be removed in Saleor 4.0. Use `promotionUpdate` mutation instead.
    *
    * Requires one of the following permissions: MANAGE_DISCOUNTS.
    *
@@ -12192,7 +12605,12 @@ export type Mutation = {
   /**
    * Updates site domain of the shop.
    *
+   * DEPRECATED: this mutation will be removed in Saleor 4.0. Use `PUBLIC_URL` environment variable instead.
+   *
    * Requires one of the following permissions: MANAGE_SETTINGS.
+   * @deprecated
+   *
+   * DEPRECATED: this mutation will be removed in Saleor 4.0. Use `PUBLIC_URL` environment variable instead.
    */
   shopDomainUpdate?: Maybe<ShopDomainUpdate>;
   /**
@@ -12283,8 +12701,24 @@ export type Mutation = {
    * Note: this API is currently in Feature Preview and can be subject to changes at later point.
    *
    * Requires one of the following permissions: MANAGE_PRODUCTS.
+   *
+   * Triggers the following webhook events:
+   * - PRODUCT_VARIANT_STOCK_UPDATED (async): A product variant stock details were updated.
    */
   stockBulkUpdate?: Maybe<StockBulkUpdate>;
+  /**
+   * Request to delete a stored payment method on payment provider side.
+   *
+   * Added in Saleor 3.16.
+   *
+   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+   *
+   * Requires one of the following permissions: AUTHENTICATED_USER.
+   *
+   * Triggers the following webhook events:
+   * - STORED_PAYMENT_METHOD_DELETE_REQUESTED (sync): The customer requested to delete a payment method.
+   */
+  storedPaymentMethodRequestDelete?: Maybe<StoredPaymentMethodRequestDelete>;
   /**
    * Create a tax class.
    *
@@ -12501,6 +12935,17 @@ export type Mutation = {
    * - VOUCHER_UPDATED (async): A voucher was updated.
    */
   voucherChannelListingUpdate?: Maybe<VoucherChannelListingUpdate>;
+  /**
+   * Deletes voucher codes.
+   *
+   * Added in Saleor 3.18.
+   *
+   * Requires one of the following permissions: MANAGE_DISCOUNTS.
+   *
+   * Triggers the following webhook events:
+   * - VOUCHER_UPDATED (async): A voucher was updated.
+   */
+  voucherCodeBulkDelete?: Maybe<VoucherCodeBulkDelete>;
   /**
    * Creates a new voucher.
    *
@@ -13092,6 +13537,10 @@ export type MutationExportProductsArgs = {
   input: ExportProductsInput;
 };
 
+export type MutationExportVoucherCodesArgs = {
+  input: ExportVoucherCodesInput;
+};
+
 export type MutationExternalAuthenticationUrlArgs = {
   input: Scalars['JSONString']['input'];
   pluginId: Scalars['String']['input'];
@@ -13487,10 +13936,29 @@ export type MutationPaymentGatewayInitializeArgs = {
   paymentGateways?: InputMaybe<Array<PaymentGatewayToInitialize>>;
 };
 
+export type MutationPaymentGatewayInitializeTokenizationArgs = {
+  channel: Scalars['String']['input'];
+  data?: InputMaybe<Scalars['JSON']['input']>;
+  id: Scalars['String']['input'];
+};
+
 export type MutationPaymentInitializeArgs = {
   channel?: InputMaybe<Scalars['String']['input']>;
   gateway: Scalars['String']['input'];
   paymentData?: InputMaybe<Scalars['JSONString']['input']>;
+};
+
+export type MutationPaymentMethodInitializeTokenizationArgs = {
+  channel: Scalars['String']['input'];
+  data?: InputMaybe<Scalars['JSON']['input']>;
+  id: Scalars['String']['input'];
+  paymentFlowToSupport: TokenizedPaymentFlowEnum;
+};
+
+export type MutationPaymentMethodProcessTokenizationArgs = {
+  channel: Scalars['String']['input'];
+  data?: InputMaybe<Scalars['JSON']['input']>;
+  id: Scalars['String']['input'];
 };
 
 export type MutationPaymentRefundArgs = {
@@ -13715,6 +14183,48 @@ export type MutationProductVariantUpdateArgs = {
   sku?: InputMaybe<Scalars['String']['input']>;
 };
 
+export type MutationPromotionBulkDeleteArgs = {
+  ids: Array<Scalars['ID']['input']>;
+};
+
+export type MutationPromotionCreateArgs = {
+  input: PromotionCreateInput;
+};
+
+export type MutationPromotionDeleteArgs = {
+  id: Scalars['ID']['input'];
+};
+
+export type MutationPromotionRuleCreateArgs = {
+  input: PromotionRuleCreateInput;
+};
+
+export type MutationPromotionRuleDeleteArgs = {
+  id: Scalars['ID']['input'];
+};
+
+export type MutationPromotionRuleTranslateArgs = {
+  id: Scalars['ID']['input'];
+  input: PromotionRuleTranslationInput;
+  languageCode: LanguageCodeEnum;
+};
+
+export type MutationPromotionRuleUpdateArgs = {
+  id: Scalars['ID']['input'];
+  input: PromotionRuleUpdateInput;
+};
+
+export type MutationPromotionTranslateArgs = {
+  id: Scalars['ID']['input'];
+  input: PromotionTranslationInput;
+  languageCode: LanguageCodeEnum;
+};
+
+export type MutationPromotionUpdateArgs = {
+  id: Scalars['ID']['input'];
+  input: PromotionUpdateInput;
+};
+
 export type MutationRequestEmailChangeArgs = {
   channel?: InputMaybe<Scalars['String']['input']>;
   newEmail: Scalars['String']['input'];
@@ -13884,6 +14394,11 @@ export type MutationStockBulkUpdateArgs = {
   stocks: Array<StockBulkUpdateInput>;
 };
 
+export type MutationStoredPaymentMethodRequestDeleteArgs = {
+  channel: Scalars['String']['input'];
+  id: Scalars['ID']['input'];
+};
+
 export type MutationTaxClassCreateArgs = {
   input: TaxClassCreateInput;
 };
@@ -13951,11 +14466,14 @@ export type MutationTransactionEventReportArgs = {
 export type MutationTransactionInitializeArgs = {
   action?: InputMaybe<TransactionFlowStrategyEnum>;
   amount?: InputMaybe<Scalars['PositiveDecimal']['input']>;
+  customerIpAddress?: InputMaybe<Scalars['String']['input']>;
   id: Scalars['ID']['input'];
+  idempotencyKey?: InputMaybe<Scalars['String']['input']>;
   paymentGateway: PaymentGatewayToInitialize;
 };
 
 export type MutationTransactionProcessArgs = {
+  customerIpAddress?: InputMaybe<Scalars['String']['input']>;
   data?: InputMaybe<Scalars['JSON']['input']>;
   id: Scalars['ID']['input'];
 };
@@ -13993,7 +14511,8 @@ export type MutationUpdatePrivateMetadataArgs = {
 };
 
 export type MutationUpdateWarehouseArgs = {
-  id: Scalars['ID']['input'];
+  externalReference?: InputMaybe<Scalars['String']['input']>;
+  id?: InputMaybe<Scalars['ID']['input']>;
   input: WarehouseUpdateInput;
 };
 
@@ -14033,6 +14552,10 @@ export type MutationVoucherCataloguesRemoveArgs = {
 export type MutationVoucherChannelListingUpdateArgs = {
   id: Scalars['ID']['input'];
   input: VoucherChannelListingInput;
+};
+
+export type MutationVoucherCodeBulkDeleteArgs = {
+  ids: Array<Scalars['ID']['input']>;
 };
 
 export type MutationVoucherCreateArgs = {
@@ -14194,7 +14717,7 @@ export type Order = Node &
     /** List of all discounts assigned to the order. */
     discounts: Array<OrderDiscount>;
     /**
-     * Determines whether checkout prices should include taxes when displayed in a storefront.
+     * Determines whether displayed prices should include taxes.
      *
      * Added in Saleor 3.9.
      */
@@ -14445,11 +14968,17 @@ export type Order = Node &
     /** Undiscounted total amount of the order. */
     undiscountedTotal: TaxedMoney;
     updatedAt: Scalars['DateTime']['output'];
-    /** User who placed the order. This field is set only for orders placed by authenticated users. Can be fetched for orders created in Saleor 3.2 and later, for other orders requires one of the following permissions: MANAGE_USERS, MANAGE_ORDERS, OWNER. */
+    /** User who placed the order. This field is set only for orders placed by authenticated users. Can be fetched for orders created in Saleor 3.2 and later, for other orders requires one of the following permissions: MANAGE_USERS, MANAGE_ORDERS, HANDLE_PAYMENTS, OWNER. */
     user?: Maybe<User>;
     /** Email address of the customer. The full data can be access for orders created in Saleor 3.2 and later, for other orders requires one of the following permissions: MANAGE_ORDERS, OWNER. */
     userEmail?: Maybe<Scalars['String']['output']>;
     voucher?: Maybe<Voucher>;
+    /**
+     * Voucher code that was used for Order.
+     *
+     * Added in Saleor 3.18.
+     */
+    voucherCode?: Maybe<Scalars['String']['output']>;
     weight: Weight;
   };
 
@@ -14654,7 +15183,7 @@ export type OrderBulkCreateInput = {
   deliveryMethod?: InputMaybe<OrderBulkCreateDeliveryMethodInput>;
   /** List of discounts. */
   discounts?: InputMaybe<Array<OrderDiscountCommonInput>>;
-  /** Determines whether checkout prices should include taxes, when displayed in a storefront. */
+  /** Determines whether displayed prices should include taxes. */
   displayGrossPrices?: InputMaybe<Scalars['Boolean']['input']>;
   /** External ID of the order. */
   externalReference?: InputMaybe<Scalars['String']['input']>;
@@ -14684,8 +15213,18 @@ export type OrderBulkCreateInput = {
   transactions?: InputMaybe<Array<TransactionCreateInput>>;
   /** Customer associated with the order. */
   user: OrderBulkCreateUserInput;
-  /** Code of a voucher associated with the order. */
+  /**
+   * Code of a voucher associated with the order.
+   *
+   * DEPRECATED: this field will be removed in Saleor 3.19. Use `voucherCode` instead.
+   */
   voucher?: InputMaybe<Scalars['String']['input']>;
+  /**
+   * Code of a voucher associated with the order.
+   *
+   * Added in Saleor 3.18.
+   */
+  voucherCode?: InputMaybe<Scalars['String']['input']>;
   /** Weight of the order in kg. */
   weight?: InputMaybe<Scalars['WeightScalar']['input']>;
 };
@@ -15057,6 +15596,7 @@ export type OrderDiscountDelete = {
 /** An enumeration. */
 export enum OrderDiscountType {
   Manual = 'MANUAL',
+  Promotion = 'PROMOTION',
   Sale = 'SALE',
   Voucher = 'VOUCHER',
 }
@@ -15117,6 +15657,8 @@ export enum OrderErrorCode {
   InsufficientStock = 'INSUFFICIENT_STOCK',
   Invalid = 'INVALID',
   InvalidQuantity = 'INVALID_QUANTITY',
+  InvalidVoucher = 'INVALID_VOUCHER',
+  InvalidVoucherCode = 'INVALID_VOUCHER_CODE',
   NotAvailableInChannel = 'NOT_AVAILABLE_IN_CHANNEL',
   NotEditable = 'NOT_EDITABLE',
   NotFound = 'NOT_FOUND',
@@ -15371,6 +15913,12 @@ export type OrderFilterShippingMethods = Event & {
  * Creates new fulfillments for an order.
  *
  * Requires one of the following permissions: MANAGE_ORDERS.
+ *
+ * Triggers the following webhook events:
+ * - FULFILLMENT_CREATED (async): A new fulfillment is created.
+ * - ORDER_FULFILLED (async): Order is fulfilled.
+ * - FULFILLMENT_TRACKING_NUMBER_UPDATED (async): Sent when fulfillment tracking number is updated.
+ * - FULFILLMENT_APPROVED (async): A fulfillment is approved.
  */
 export type OrderFulfill = {
   errors: Array<OrderError>;
@@ -15789,6 +16337,12 @@ export type OrderLine = Node &
      */
     quantityToFulfill: Scalars['Int']['output'];
     /**
+     * Denormalized sale ID, set when order line is created for a product variant that is on sale.
+     *
+     * Added in Saleor 3.14.
+     */
+    saleId?: Maybe<Scalars['ID']['output']>;
+    /**
      * Denormalized tax class of the product in this order line.
      *
      * Added in Saleor 3.9.
@@ -15822,6 +16376,8 @@ export type OrderLine = Node &
     translatedProductName: Scalars['String']['output'];
     /** Variant name in the customer's language */
     translatedVariantName: Scalars['String']['output'];
+    /** Price of the order line without discounts. */
+    undiscountedTotalPrice: TaxedMoney;
     /** Price of the single item in the order line without applied an order line discount. */
     undiscountedUnitPrice: TaxedMoney;
     /** The discount applied to the single order line. */
@@ -15836,6 +16392,12 @@ export type OrderLine = Node &
     /** A purchased product variant. Note: this field may be null if the variant has been removed from stock at all. Requires one of the following permissions to include the unpublished items: MANAGE_ORDERS, MANAGE_DISCOUNTS, MANAGE_PRODUCTS. */
     variant?: Maybe<ProductVariant>;
     variantName: Scalars['String']['output'];
+    /**
+     * Voucher code that was used for this order line.
+     *
+     * Added in Saleor 3.14.
+     */
+    voucherCode?: Maybe<Scalars['String']['output']>;
   };
 
 /** Represents order line of particular order. */
@@ -16199,14 +16761,6 @@ export type OrderSettings = {
   /** When enabled, all non-shippable gift card orders will be fulfilled automatically. */
   automaticallyFulfillNonShippableGiftCard: Scalars['Boolean']['output'];
   /**
-   * Determine the transaction flow strategy to be used. Include the selected option in the payload sent to the payment app, as a requested action for the transaction.
-   *
-   * Added in Saleor 3.13.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
-   */
-  defaultTransactionFlowStrategy: TransactionFlowStrategyEnum;
-  /**
    * The time in days after expired orders will be deleted.
    *
    * Added in Saleor 3.14.
@@ -16222,6 +16776,14 @@ export type OrderSettings = {
    * Note: this API is currently in Feature Preview and can be subject to changes at later point.
    */
   expireOrdersAfter?: Maybe<Scalars['Minute']['output']>;
+  /**
+   * Determine if voucher applied on draft order should be count toward voucher usage.
+   *
+   * Added in Saleor 3.18.
+   *
+   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+   */
+  includeDraftOrderInVoucherUsage: Scalars['Boolean']['output'];
   /**
    * Determine what strategy will be used to mark the order as paid. Based on the chosen option, the proper object will be created and attached to the order when it's manually marked as paid.
    * `PAYMENT_FLOW` - [default option] creates the `Payment` object.
@@ -16250,7 +16812,7 @@ export enum OrderSettingsErrorCode {
 
 export type OrderSettingsInput = {
   /**
-   * Determine if it is possible to place unpdaid order by calling `checkoutComplete` mutation.
+   * Determine if it is possible to place unpaid order by calling `checkoutComplete` mutation.
    *
    * Added in Saleor 3.15.
    *
@@ -16263,14 +16825,6 @@ export type OrderSettingsInput = {
   automaticallyFulfillNonShippableGiftCard?: InputMaybe<
     Scalars['Boolean']['input']
   >;
-  /**
-   * Determine the transaction flow strategy to be used. Include the selected option in the payload sent to the payment app, as a requested action for the transaction.
-   *
-   * Added in Saleor 3.13.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
-   */
-  defaultTransactionFlowStrategy?: InputMaybe<TransactionFlowStrategyEnum>;
   /**
    * The time in days after expired orders will be deleted.Allowed range is from 1 to 120.
    *
@@ -16287,6 +16841,16 @@ export type OrderSettingsInput = {
    * Note: this API is currently in Feature Preview and can be subject to changes at later point.
    */
   expireOrdersAfter?: InputMaybe<Scalars['Minute']['input']>;
+  /**
+   * Specify whether a coupon applied to draft orders will count toward voucher usage.
+   *
+   * Warning:  when switching this setting from `false` to `true`, the vouchers will be disconnected from all draft orders.
+   *
+   * Added in Saleor 3.18.
+   *
+   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+   */
+  includeDraftOrderInVoucherUsage?: InputMaybe<Scalars['Boolean']['input']>;
   /**
    * Determine what strategy will be used to mark the order as paid. Based on the chosen option, the proper object will be created and attached to the order when it's manually marked as paid.
    * `PAYMENT_FLOW` - [default option] creates the `Payment` object.
@@ -16315,7 +16879,7 @@ export type OrderSettingsUpdate = {
 export type OrderSettingsUpdateInput = {
   /** When disabled, all new orders from checkout will be marked as unconfirmed. When enabled orders from checkout will become unfulfilled immediately. By default set to True */
   automaticallyConfirmAllNewOrders?: InputMaybe<Scalars['Boolean']['input']>;
-  /** When enabled, all non-shippable gift card orders will be fulfilled automatically. By defualt set to True. */
+  /** When enabled, all non-shippable gift card orders will be fulfilled automatically. By default set to True. */
   automaticallyFulfillNonShippableGiftCard?: InputMaybe<
     Scalars['Boolean']['input']
   >;
@@ -16845,6 +17409,7 @@ export type PageSortingInput = {
   field: PageSortField;
 };
 
+/** Represents page's original translatable fields and related translations. */
 export type PageTranslatableContent = Node & {
   /** List of page content attribute values that can be translated. */
   attributeValues: Array<AttributeValueTranslatableContent>;
@@ -16878,6 +17443,7 @@ export type PageTranslatableContent = Node & {
   translation?: Maybe<PageTranslation>;
 };
 
+/** Represents page's original translatable fields and related translations. */
 export type PageTranslatableContentTranslationArgs = {
   languageCode: LanguageCodeEnum;
 };
@@ -16894,6 +17460,7 @@ export type PageTranslate = {
   translationErrors: Array<TranslationError>;
 };
 
+/** Represents page translations. */
 export type PageTranslation = Node & {
   /**
    * Translated content of the page.
@@ -17295,6 +17862,12 @@ export type Payment = Node &
     modified: Scalars['DateTime']['output'];
     /** Order associated with a payment. */
     order?: Maybe<Order>;
+    /**
+     * Informs whether this is a partial payment.
+     *
+     * Added in Saleor 3.14.
+     */
+    partial: Scalars['Boolean']['output'];
     /** Type of method used for payment. */
     paymentMethodType: Scalars['String']['output'];
     /** List of private metadata items. Requires staff permissions to access. */
@@ -17313,6 +17886,12 @@ export type Payment = Node &
      * Added in Saleor 3.3.
      */
     privateMetafields?: Maybe<Scalars['Metadata']['output']>;
+    /**
+     * PSP reference of the payment.
+     *
+     * Added in Saleor 3.14.
+     */
+    pspReference?: Maybe<Scalars['String']['output']>;
     /** Unique token associated with a payment. */
     token: Scalars['String']['output'];
     /** Total amount of the payment. */
@@ -17576,7 +18155,7 @@ export enum PaymentGatewayInitializeErrorCode {
 export type PaymentGatewayInitializeSession = Event & {
   /** Amount requested for initializing the payment gateway. */
   amount?: Maybe<Scalars['PositiveDecimal']['output']>;
-  /** Payment gateway data in JSON format, recieved from storefront. */
+  /** Payment gateway data in JSON format, received from storefront. */
   data?: Maybe<Scalars['JSON']['output']>;
   /** Time of the event. */
   issuedAt?: Maybe<Scalars['DateTime']['output']>;
@@ -17586,6 +18165,83 @@ export type PaymentGatewayInitializeSession = Event & {
   recipient?: Maybe<App>;
   /** Checkout or order */
   sourceObject: OrderOrCheckout;
+  /** Saleor version that triggered the event. */
+  version?: Maybe<Scalars['String']['output']>;
+};
+
+/**
+ * Initializes payment gateway for tokenizing payment method session.
+ *
+ * Added in Saleor 3.16.
+ *
+ * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+ *
+ * Requires one of the following permissions: AUTHENTICATED_USER.
+ *
+ * Triggers the following webhook events:
+ * - PAYMENT_GATEWAY_INITIALIZE_TOKENIZATION_SESSION (sync): The customer requested to initialize payment gateway for tokenization.
+ */
+export type PaymentGatewayInitializeTokenization = {
+  /** A data returned by payment app. */
+  data?: Maybe<Scalars['JSON']['output']>;
+  errors: Array<PaymentGatewayInitializeTokenizationError>;
+  /** A status of the payment gateway initialization. */
+  result: PaymentGatewayInitializeTokenizationResult;
+};
+
+export type PaymentGatewayInitializeTokenizationError = {
+  /** The error code. */
+  code: PaymentGatewayInitializeTokenizationErrorCode;
+  /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
+  field?: Maybe<Scalars['String']['output']>;
+  /** The error message. */
+  message?: Maybe<Scalars['String']['output']>;
+};
+
+/** An enumeration. */
+export enum PaymentGatewayInitializeTokenizationErrorCode {
+  ChannelInactive = 'CHANNEL_INACTIVE',
+  GatewayError = 'GATEWAY_ERROR',
+  GraphqlError = 'GRAPHQL_ERROR',
+  Invalid = 'INVALID',
+  NotFound = 'NOT_FOUND',
+}
+
+/**
+ * Result of initialize payment gateway for tokenization of payment method.
+ *
+ *     The result of initialize payment gateway for tokenization of payment method.
+ *     SUCCESSFULLY_INITIALIZED - The payment gateway was successfully initialized.
+ *     FAILED_TO_INITIALIZE - The payment gateway was not initialized.
+ *     FAILED_TO_DELIVER - The request to initialize payment gateway was not delivered.
+ *
+ */
+export enum PaymentGatewayInitializeTokenizationResult {
+  FailedToDeliver = 'FAILED_TO_DELIVER',
+  FailedToInitialize = 'FAILED_TO_INITIALIZE',
+  SuccessfullyInitialized = 'SUCCESSFULLY_INITIALIZED',
+}
+
+/**
+ * Event sent to initialize a new session in payment gateway to store the payment method.
+ *
+ * Added in Saleor 3.16.
+ *
+ * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+ */
+export type PaymentGatewayInitializeTokenizationSession = Event & {
+  /** Channel related to the requested action. */
+  channel: Channel;
+  /** Payment gateway data in JSON format, received from storefront. */
+  data?: Maybe<Scalars['JSON']['output']>;
+  /** Time of the event. */
+  issuedAt?: Maybe<Scalars['DateTime']['output']>;
+  /** The user or application that triggered the event. */
+  issuingPrincipal?: Maybe<IssuingPrincipal>;
+  /** The application receiving the webhook. */
+  recipient?: Maybe<App>;
+  /** The user related to the requested action. */
+  user: User;
   /** Saleor version that triggered the event. */
   version?: Maybe<Scalars['String']['output']>;
 };
@@ -17658,6 +18314,166 @@ export type PaymentListGateways = Event & {
 };
 
 /**
+ * Tokenize payment method.
+ *
+ * Added in Saleor 3.16.
+ *
+ * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+ *
+ * Requires one of the following permissions: AUTHENTICATED_USER.
+ *
+ * Triggers the following webhook events:
+ * - PAYMENT_METHOD_INITIALIZE_TOKENIZATION_SESSION (sync): The customer requested to tokenize payment method.
+ */
+export type PaymentMethodInitializeTokenization = {
+  /** A data returned by the payment app. */
+  data?: Maybe<Scalars['JSON']['output']>;
+  errors: Array<PaymentMethodInitializeTokenizationError>;
+  /** The identifier of the payment method. */
+  id?: Maybe<Scalars['String']['output']>;
+  /** A status of the payment method tokenization. */
+  result: PaymentMethodTokenizationResult;
+};
+
+export type PaymentMethodInitializeTokenizationError = {
+  /** The error code. */
+  code: PaymentMethodInitializeTokenizationErrorCode;
+  /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
+  field?: Maybe<Scalars['String']['output']>;
+  /** The error message. */
+  message?: Maybe<Scalars['String']['output']>;
+};
+
+/** An enumeration. */
+export enum PaymentMethodInitializeTokenizationErrorCode {
+  ChannelInactive = 'CHANNEL_INACTIVE',
+  GatewayError = 'GATEWAY_ERROR',
+  GraphqlError = 'GRAPHQL_ERROR',
+  Invalid = 'INVALID',
+  NotFound = 'NOT_FOUND',
+}
+
+/**
+ * Event sent when user requests a tokenization of payment method.
+ *
+ * Added in Saleor 3.16.
+ *
+ * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+ */
+export type PaymentMethodInitializeTokenizationSession = Event & {
+  /** Channel related to the requested action. */
+  channel: Channel;
+  /** Payment gateway data in JSON format, received from storefront. */
+  data?: Maybe<Scalars['JSON']['output']>;
+  /** Time of the event. */
+  issuedAt?: Maybe<Scalars['DateTime']['output']>;
+  /** The user or application that triggered the event. */
+  issuingPrincipal?: Maybe<IssuingPrincipal>;
+  /** The payment flow that the tokenized payment method should support. */
+  paymentFlowToSupport: TokenizedPaymentFlowEnum;
+  /** The application receiving the webhook. */
+  recipient?: Maybe<App>;
+  /** The user related to the requested action. */
+  user: User;
+  /** Saleor version that triggered the event. */
+  version?: Maybe<Scalars['String']['output']>;
+};
+
+/**
+ * Tokenize payment method.
+ *
+ * Added in Saleor 3.16.
+ *
+ * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+ *
+ * Requires one of the following permissions: AUTHENTICATED_USER.
+ *
+ * Triggers the following webhook events:
+ * - PAYMENT_METHOD_PROCESS_TOKENIZATION_SESSION (sync): The customer continues payment method tokenization.
+ */
+export type PaymentMethodProcessTokenization = {
+  /** A data returned by the payment app. */
+  data?: Maybe<Scalars['JSON']['output']>;
+  errors: Array<PaymentMethodProcessTokenizationError>;
+  /** The identifier of the payment method. */
+  id?: Maybe<Scalars['String']['output']>;
+  /** A status of the payment method tokenization. */
+  result: PaymentMethodTokenizationResult;
+};
+
+export type PaymentMethodProcessTokenizationError = {
+  /** The error code. */
+  code: PaymentMethodProcessTokenizationErrorCode;
+  /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
+  field?: Maybe<Scalars['String']['output']>;
+  /** The error message. */
+  message?: Maybe<Scalars['String']['output']>;
+};
+
+/** An enumeration. */
+export enum PaymentMethodProcessTokenizationErrorCode {
+  ChannelInactive = 'CHANNEL_INACTIVE',
+  GatewayError = 'GATEWAY_ERROR',
+  GraphqlError = 'GRAPHQL_ERROR',
+  Invalid = 'INVALID',
+  NotFound = 'NOT_FOUND',
+}
+
+/**
+ * Event sent when user continues a tokenization of payment method.
+ *
+ * Added in Saleor 3.16.
+ *
+ * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+ */
+export type PaymentMethodProcessTokenizationSession = Event & {
+  /** Channel related to the requested action. */
+  channel: Channel;
+  /** Payment gateway data in JSON format, received from storefront. */
+  data?: Maybe<Scalars['JSON']['output']>;
+  /** The ID returned by app from `PAYMENT_METHOD_INITIALIZE_TOKENIZATION_SESSION` webhook. */
+  id: Scalars['String']['output'];
+  /** Time of the event. */
+  issuedAt?: Maybe<Scalars['DateTime']['output']>;
+  /** The user or application that triggered the event. */
+  issuingPrincipal?: Maybe<IssuingPrincipal>;
+  /** The application receiving the webhook. */
+  recipient?: Maybe<App>;
+  /** The user related to the requested action. */
+  user: User;
+  /** Saleor version that triggered the event. */
+  version?: Maybe<Scalars['String']['output']>;
+};
+
+export type PaymentMethodRequestDeleteError = {
+  /** The error code. */
+  code: StoredPaymentMethodRequestDeleteErrorCode;
+  /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
+  field?: Maybe<Scalars['String']['output']>;
+  /** The error message. */
+  message?: Maybe<Scalars['String']['output']>;
+};
+
+/**
+ * Result of tokenization of payment method.
+ *
+ *     SUCCESSFULLY_TOKENIZED - The payment method was successfully tokenized.
+ *     ADDITIONAL_ACTION_REQUIRED - The additional action is required to tokenize payment
+ *     method.
+ *     PENDING - The payment method is pending tokenization.
+ *     FAILED_TO_TOKENIZE - The payment method was not tokenized.
+ *     FAILED_TO_DELIVER - The request to tokenize payment method was not delivered.
+ *
+ */
+export enum PaymentMethodTokenizationResult {
+  AdditionalActionRequired = 'ADDITIONAL_ACTION_REQUIRED',
+  FailedToDeliver = 'FAILED_TO_DELIVER',
+  FailedToTokenize = 'FAILED_TO_TOKENIZE',
+  Pending = 'PENDING',
+  SuccessfullyTokenized = 'SUCCESSFULLY_TOKENIZED',
+}
+
+/**
  * Process payment.
  *
  * Added in Saleor 3.6.
@@ -17704,6 +18520,29 @@ export type PaymentRefundEvent = Event & {
   recipient?: Maybe<App>;
   /** Saleor version that triggered the event. */
   version?: Maybe<Scalars['String']['output']>;
+};
+
+/** Represents the channel-specific payment settings. */
+export type PaymentSettings = {
+  /**
+   * Determine the transaction flow strategy to be used. Include the selected option in the payload sent to the payment app, as a requested action for the transaction.
+   *
+   * Added in Saleor 3.16.
+   *
+   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+   */
+  defaultTransactionFlowStrategy: TransactionFlowStrategyEnum;
+};
+
+export type PaymentSettingsInput = {
+  /**
+   * Determine the transaction flow strategy to be used. Include the selected option in the payload sent to the payment app, as a requested action for the transaction.
+   *
+   * Added in Saleor 3.16.
+   *
+   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+   */
+  defaultTransactionFlowStrategy?: InputMaybe<TransactionFlowStrategyEnum>;
 };
 
 /** Represents a payment source stored for user in payment gateway, such as credit card. */
@@ -18952,6 +19791,24 @@ export enum ProductErrorCode {
   VariantNoDigitalContent = 'VARIANT_NO_DIGITAL_CONTENT',
 }
 
+/**
+ * Event sent when product export is completed.
+ *
+ * Added in Saleor 3.16.
+ */
+export type ProductExportCompleted = Event & {
+  /** The export file for products. */
+  export?: Maybe<ExportFile>;
+  /** Time of the event. */
+  issuedAt?: Maybe<Scalars['DateTime']['output']>;
+  /** The user or application that triggered the event. */
+  issuingPrincipal?: Maybe<IssuingPrincipal>;
+  /** The application receiving the webhook. */
+  recipient?: Maybe<App>;
+  /** Saleor version that triggered the event. */
+  version?: Maybe<Scalars['String']['output']>;
+};
+
 export enum ProductFieldEnum {
   Category = 'CATEGORY',
   ChargeTaxes = 'CHARGE_TAXES',
@@ -19442,7 +20299,7 @@ export type ProductPricingInfo = {
    */
   discountLocalCurrency?: Maybe<TaxedMoney>;
   /**
-   * Determines whether this product's price displayed in a storefront should include taxes.
+   * Determines whether displayed prices should include taxes.
    *
    * Added in Saleor 3.9.
    */
@@ -19478,6 +20335,7 @@ export type ProductStockFilterInput = {
   warehouseIds?: InputMaybe<Array<Scalars['ID']['input']>>;
 };
 
+/** Represents product's original translatable fields and related translations. */
 export type ProductTranslatableContent = Node & {
   /** List of product attribute values that can be translated. */
   attributeValues: Array<AttributeValueTranslatableContent>;
@@ -19511,6 +20369,7 @@ export type ProductTranslatableContent = Node & {
   translation?: Maybe<ProductTranslation>;
 };
 
+/** Represents product's original translatable fields and related translations. */
 export type ProductTranslatableContentTranslationArgs = {
   languageCode: LanguageCodeEnum;
 };
@@ -19535,6 +20394,7 @@ export enum ProductTranslateErrorCode {
   Required = 'REQUIRED',
 }
 
+/** Represents product translations. */
 export type ProductTranslation = Node & {
   /**
    * Translated description of the product.
@@ -20213,6 +21073,7 @@ export enum ProductVariantBulkErrorCode {
   NotProductsVariant = 'NOT_PRODUCTS_VARIANT',
   ProductNotAssignedToChannel = 'PRODUCT_NOT_ASSIGNED_TO_CHANNEL',
   Required = 'REQUIRED',
+  StockAlreadyExists = 'STOCK_ALREADY_EXISTS',
   Unique = 'UNIQUE',
 }
 
@@ -20805,6 +21666,7 @@ export type ProductVariantStocksUpdateInput = {
   update?: InputMaybe<Array<StockUpdateInput>>;
 };
 
+/** Represents product variant's original translatable fields and related translations. */
 export type ProductVariantTranslatableContent = Node & {
   /** List of product variant attribute values that can be translated. */
   attributeValues: Array<AttributeValueTranslatableContent>;
@@ -20821,6 +21683,7 @@ export type ProductVariantTranslatableContent = Node & {
   translation?: Maybe<ProductVariantTranslation>;
 };
 
+/** Represents product variant's original translatable fields and related translations. */
 export type ProductVariantTranslatableContentTranslationArgs = {
   languageCode: LanguageCodeEnum;
 };
@@ -20845,6 +21708,7 @@ export enum ProductVariantTranslateErrorCode {
   Required = 'REQUIRED',
 }
 
+/** Represents product variant translations. */
 export type ProductVariantTranslation = Node & {
   /** The ID of the product variant translation. */
   id: Scalars['ID']['output'];
@@ -20946,7 +21810,1031 @@ export type ProductWhereInput = {
   /** Filter by stock of the product variant. */
   stocks?: InputMaybe<ProductStockFilterInput>;
   /** Filter by when was the most recent update. */
-  updatedAt?: InputMaybe<DateTimeRangeInput>;
+  updatedAt?: InputMaybe<DateTimeFilterInput>;
+};
+
+/**
+ * Represents the promotion that allow creating discounts based on given conditions, and is visible to all the customers.
+ *
+ * Added in Saleor 3.17.
+ *
+ * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+ */
+export type Promotion = Node &
+  ObjectWithMetadata & {
+    /** Date time of promotion creation. */
+    createdAt: Scalars['DateTime']['output'];
+    /** Description of the promotion. */
+    description?: Maybe<Scalars['JSON']['output']>;
+    /** End date of the promotion. */
+    endDate?: Maybe<Scalars['DateTime']['output']>;
+    /** The list of events associated with the promotion. */
+    events?: Maybe<Array<PromotionEvent>>;
+    id: Scalars['ID']['output'];
+    /** List of public metadata items. Can be accessed without permissions. */
+    metadata: Array<MetadataItem>;
+    /**
+     * A single key from public metadata.
+     *
+     * Tip: Use GraphQL aliases to fetch multiple keys.
+     *
+     * Added in Saleor 3.3.
+     */
+    metafield?: Maybe<Scalars['String']['output']>;
+    /**
+     * Public metadata. Use `keys` to control which fields you want to include. The default is to include everything.
+     *
+     * Added in Saleor 3.3.
+     */
+    metafields?: Maybe<Scalars['Metadata']['output']>;
+    /** Name of the promotion. */
+    name: Scalars['String']['output'];
+    /** List of private metadata items. Requires staff permissions to access. */
+    privateMetadata: Array<MetadataItem>;
+    /**
+     * A single key from private metadata. Requires staff permissions to access.
+     *
+     * Tip: Use GraphQL aliases to fetch multiple keys.
+     *
+     * Added in Saleor 3.3.
+     */
+    privateMetafield?: Maybe<Scalars['String']['output']>;
+    /**
+     * Private metadata. Requires staff permissions to access. Use `keys` to control which fields you want to include. The default is to include everything.
+     *
+     * Added in Saleor 3.3.
+     */
+    privateMetafields?: Maybe<Scalars['Metadata']['output']>;
+    /** The list of promotion rules. */
+    rules?: Maybe<Array<PromotionRule>>;
+    /** Start date of the promotion. */
+    startDate: Scalars['DateTime']['output'];
+    /** Returns translated promotion fields for the given language code. */
+    translation?: Maybe<PromotionTranslation>;
+    /** Date time of last update of promotion. */
+    updatedAt: Scalars['DateTime']['output'];
+  };
+
+/**
+ * Represents the promotion that allow creating discounts based on given conditions, and is visible to all the customers.
+ *
+ * Added in Saleor 3.17.
+ *
+ * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+ */
+export type PromotionMetafieldArgs = {
+  key: Scalars['String']['input'];
+};
+
+/**
+ * Represents the promotion that allow creating discounts based on given conditions, and is visible to all the customers.
+ *
+ * Added in Saleor 3.17.
+ *
+ * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+ */
+export type PromotionMetafieldsArgs = {
+  keys?: InputMaybe<Array<Scalars['String']['input']>>;
+};
+
+/**
+ * Represents the promotion that allow creating discounts based on given conditions, and is visible to all the customers.
+ *
+ * Added in Saleor 3.17.
+ *
+ * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+ */
+export type PromotionPrivateMetafieldArgs = {
+  key: Scalars['String']['input'];
+};
+
+/**
+ * Represents the promotion that allow creating discounts based on given conditions, and is visible to all the customers.
+ *
+ * Added in Saleor 3.17.
+ *
+ * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+ */
+export type PromotionPrivateMetafieldsArgs = {
+  keys?: InputMaybe<Array<Scalars['String']['input']>>;
+};
+
+/**
+ * Represents the promotion that allow creating discounts based on given conditions, and is visible to all the customers.
+ *
+ * Added in Saleor 3.17.
+ *
+ * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+ */
+export type PromotionTranslationArgs = {
+  languageCode: LanguageCodeEnum;
+};
+
+/**
+ * Deletes promotions.
+ *
+ * Added in Saleor 3.17.
+ *
+ * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+ *
+ * Requires one of the following permissions: MANAGE_DISCOUNTS.
+ *
+ * Triggers the following webhook events:
+ * - PROMOTION_DELETED (async): A promotion was deleted.
+ */
+export type PromotionBulkDelete = {
+  /** Returns how many objects were affected. */
+  count: Scalars['Int']['output'];
+  errors: Array<DiscountError>;
+};
+
+export type PromotionCountableConnection = {
+  edges: Array<PromotionCountableEdge>;
+  /** Pagination data for this connection. */
+  pageInfo: PageInfo;
+  /** A total count of items in the collection. */
+  totalCount?: Maybe<Scalars['Int']['output']>;
+};
+
+export type PromotionCountableEdge = {
+  /** A cursor for use in pagination. */
+  cursor: Scalars['String']['output'];
+  /** The item at the end of the edge. */
+  node: Promotion;
+};
+
+/**
+ * Creates a new promotion.
+ *
+ * Added in Saleor 3.17.
+ *
+ * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+ *
+ * Requires one of the following permissions: MANAGE_DISCOUNTS.
+ *
+ * Triggers the following webhook events:
+ * - PROMOTION_CREATED (async): A promotion was created.
+ * - PROMOTION_STARTED (async): Optionally called if promotion was started.
+ */
+export type PromotionCreate = {
+  errors: Array<PromotionCreateError>;
+  promotion?: Maybe<Promotion>;
+};
+
+export type PromotionCreateError = {
+  /** The error code. */
+  code: PromotionCreateErrorCode;
+  /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
+  field?: Maybe<Scalars['String']['output']>;
+  /** Index of an input list item that caused the error. */
+  index?: Maybe<Scalars['Int']['output']>;
+  /** The error message. */
+  message?: Maybe<Scalars['String']['output']>;
+};
+
+/** An enumeration. */
+export enum PromotionCreateErrorCode {
+  GraphqlError = 'GRAPHQL_ERROR',
+  Invalid = 'INVALID',
+  InvalidPrecision = 'INVALID_PRECISION',
+  MultipleCurrenciesNotAllowed = 'MULTIPLE_CURRENCIES_NOT_ALLOWED',
+  NotFound = 'NOT_FOUND',
+  Required = 'REQUIRED',
+}
+
+export type PromotionCreateInput = {
+  /** Promotion description. */
+  description?: InputMaybe<Scalars['JSON']['input']>;
+  /** The end date of the promotion in ISO 8601 format. */
+  endDate?: InputMaybe<Scalars['DateTime']['input']>;
+  /** Promotion name. */
+  name: Scalars['String']['input'];
+  /** List of promotion rules. */
+  rules?: InputMaybe<Array<PromotionRuleInput>>;
+  /** The start date of the promotion in ISO 8601 format. */
+  startDate?: InputMaybe<Scalars['DateTime']['input']>;
+};
+
+/**
+ * Event sent when new promotion is created.
+ *
+ * Added in Saleor 3.17.
+ *
+ * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+ */
+export type PromotionCreated = Event & {
+  /** Time of the event. */
+  issuedAt?: Maybe<Scalars['DateTime']['output']>;
+  /** The user or application that triggered the event. */
+  issuingPrincipal?: Maybe<IssuingPrincipal>;
+  /** The promotion the event relates to. */
+  promotion?: Maybe<Promotion>;
+  /** The application receiving the webhook. */
+  recipient?: Maybe<App>;
+  /** Saleor version that triggered the event. */
+  version?: Maybe<Scalars['String']['output']>;
+};
+
+/**
+ * History log of the promotion created event.
+ *
+ * Added in Saleor 3.17.
+ *
+ * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+ */
+export type PromotionCreatedEvent = Node &
+  PromotionEventInterface & {
+    /**
+     * User or App that created the promotion event.
+     *
+     * Requires one of the following permissions: MANAGE_STAFF, MANAGE_APPS, OWNER.
+     */
+    createdBy?: Maybe<UserOrApp>;
+    /** Date when event happened. */
+    date: Scalars['DateTime']['output'];
+    id: Scalars['ID']['output'];
+    /** Promotion event type. */
+    type: PromotionEventsEnum;
+  };
+
+/**
+ * Deletes a promotion.
+ *
+ * Added in Saleor 3.17.
+ *
+ * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+ *
+ * Requires one of the following permissions: MANAGE_DISCOUNTS.
+ *
+ * Triggers the following webhook events:
+ * - PROMOTION_DELETED (async): A promotion was deleted.
+ */
+export type PromotionDelete = {
+  errors: Array<PromotionDeleteError>;
+  promotion?: Maybe<Promotion>;
+};
+
+export type PromotionDeleteError = {
+  /** The error code. */
+  code: PromotionDeleteErrorCode;
+  /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
+  field?: Maybe<Scalars['String']['output']>;
+  /** The error message. */
+  message?: Maybe<Scalars['String']['output']>;
+};
+
+/** An enumeration. */
+export enum PromotionDeleteErrorCode {
+  GraphqlError = 'GRAPHQL_ERROR',
+  NotFound = 'NOT_FOUND',
+}
+
+/**
+ * Event sent when promotion is deleted.
+ *
+ * Added in Saleor 3.17.
+ *
+ * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+ */
+export type PromotionDeleted = Event & {
+  /** Time of the event. */
+  issuedAt?: Maybe<Scalars['DateTime']['output']>;
+  /** The user or application that triggered the event. */
+  issuingPrincipal?: Maybe<IssuingPrincipal>;
+  /** The promotion the event relates to. */
+  promotion?: Maybe<Promotion>;
+  /** The application receiving the webhook. */
+  recipient?: Maybe<App>;
+  /** Saleor version that triggered the event. */
+  version?: Maybe<Scalars['String']['output']>;
+};
+
+/**
+ * The event informs about the end of the promotion.
+ *
+ * Added in Saleor 3.17.
+ *
+ * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+ */
+export type PromotionEnded = Event & {
+  /** Time of the event. */
+  issuedAt?: Maybe<Scalars['DateTime']['output']>;
+  /** The user or application that triggered the event. */
+  issuingPrincipal?: Maybe<IssuingPrincipal>;
+  /** The promotion the event relates to. */
+  promotion?: Maybe<Promotion>;
+  /** The application receiving the webhook. */
+  recipient?: Maybe<App>;
+  /** Saleor version that triggered the event. */
+  version?: Maybe<Scalars['String']['output']>;
+};
+
+/**
+ * History log of the promotion ended event.
+ *
+ * Added in Saleor 3.17.
+ *
+ * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+ */
+export type PromotionEndedEvent = Node &
+  PromotionEventInterface & {
+    /**
+     * User or App that created the promotion event.
+     *
+     * Requires one of the following permissions: MANAGE_STAFF, MANAGE_APPS, OWNER.
+     */
+    createdBy?: Maybe<UserOrApp>;
+    /** Date when event happened. */
+    date: Scalars['DateTime']['output'];
+    id: Scalars['ID']['output'];
+    /** Promotion event type. */
+    type: PromotionEventsEnum;
+  };
+
+export type PromotionEvent =
+  | PromotionCreatedEvent
+  | PromotionEndedEvent
+  | PromotionRuleCreatedEvent
+  | PromotionRuleDeletedEvent
+  | PromotionRuleUpdatedEvent
+  | PromotionStartedEvent
+  | PromotionUpdatedEvent;
+
+export type PromotionEventInterface = {
+  /**
+   * User or App that created the promotion event.
+   *
+   * Requires one of the following permissions: MANAGE_STAFF, MANAGE_APPS, OWNER.
+   */
+  createdBy?: Maybe<UserOrApp>;
+  /** Date when event happened. */
+  date: Scalars['DateTime']['output'];
+  id: Scalars['ID']['output'];
+  /** Promotion event type. */
+  type: PromotionEventsEnum;
+};
+
+/** An enumeration. */
+export enum PromotionEventsEnum {
+  PromotionCreated = 'PROMOTION_CREATED',
+  PromotionEnded = 'PROMOTION_ENDED',
+  PromotionStarted = 'PROMOTION_STARTED',
+  PromotionUpdated = 'PROMOTION_UPDATED',
+  RuleCreated = 'RULE_CREATED',
+  RuleDeleted = 'RULE_DELETED',
+  RuleUpdated = 'RULE_UPDATED',
+}
+
+/**
+ * Represents the promotion rule that specifies the conditions that must be met to apply the promotion discount.
+ *
+ * Added in Saleor 3.17.
+ *
+ * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+ */
+export type PromotionRule = Node & {
+  /** The catalogue predicate that must be met to apply the rule reward. */
+  cataloguePredicate?: Maybe<Scalars['JSON']['output']>;
+  /**
+   * List of channels where the rule applies.
+   *
+   * Requires one of the following permissions: AUTHENTICATED_APP, AUTHENTICATED_STAFF_USER.
+   */
+  channels?: Maybe<Array<Channel>>;
+  /** Description of the promotion rule. */
+  description?: Maybe<Scalars['JSON']['output']>;
+  id: Scalars['ID']['output'];
+  /** Name of the promotion rule. */
+  name?: Maybe<Scalars['String']['output']>;
+  /** Promotion to which the rule belongs. */
+  promotion?: Maybe<Promotion>;
+  /** The reward value of the promotion rule. Defines the discount value applied when the rule conditions are met. */
+  rewardValue?: Maybe<Scalars['PositiveDecimal']['output']>;
+  /** The type of reward value of the promotion rule. */
+  rewardValueType?: Maybe<RewardValueTypeEnum>;
+  /** Returns translated promotion rule fields for the given language code. */
+  translation?: Maybe<PromotionRuleTranslation>;
+};
+
+/**
+ * Represents the promotion rule that specifies the conditions that must be met to apply the promotion discount.
+ *
+ * Added in Saleor 3.17.
+ *
+ * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+ */
+export type PromotionRuleTranslationArgs = {
+  languageCode: LanguageCodeEnum;
+};
+
+/**
+ * Creates a new promotion rule.
+ *
+ * Added in Saleor 3.17.
+ *
+ * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+ *
+ * Requires one of the following permissions: MANAGE_DISCOUNTS.
+ *
+ * Triggers the following webhook events:
+ * - PROMOTION_RULE_CREATED (async): A promotion rule was created.
+ */
+export type PromotionRuleCreate = {
+  errors: Array<PromotionRuleCreateError>;
+  promotionRule?: Maybe<PromotionRule>;
+};
+
+export type PromotionRuleCreateError = {
+  /** The error code. */
+  code: PromotionRuleCreateErrorCode;
+  /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
+  field?: Maybe<Scalars['String']['output']>;
+  /** The error message. */
+  message?: Maybe<Scalars['String']['output']>;
+};
+
+/** An enumeration. */
+export enum PromotionRuleCreateErrorCode {
+  GraphqlError = 'GRAPHQL_ERROR',
+  Invalid = 'INVALID',
+  InvalidPrecision = 'INVALID_PRECISION',
+  MultipleCurrenciesNotAllowed = 'MULTIPLE_CURRENCIES_NOT_ALLOWED',
+  NotFound = 'NOT_FOUND',
+  Required = 'REQUIRED',
+}
+
+export type PromotionRuleCreateInput = {
+  /** Defines the conditions on the catalogue level that must be met for the reward to be applied. */
+  cataloguePredicate?: InputMaybe<CataloguePredicateInput>;
+  /** List of channel ids to which the rule should apply to. */
+  channels?: InputMaybe<Array<Scalars['ID']['input']>>;
+  /** Promotion rule description. */
+  description?: InputMaybe<Scalars['JSON']['input']>;
+  /** Promotion rule name. */
+  name?: InputMaybe<Scalars['String']['input']>;
+  /** The ID of the promotion that rule belongs to. */
+  promotion: Scalars['ID']['input'];
+  /** Defines the discount value. Required when catalogue predicate is provided. */
+  rewardValue?: InputMaybe<Scalars['PositiveDecimal']['input']>;
+  /** Defines the promotion rule reward value type. Must be provided together with reward value. */
+  rewardValueType?: InputMaybe<RewardValueTypeEnum>;
+};
+
+/**
+ * Event sent when new promotion rule is created.
+ *
+ * Added in Saleor 3.17.
+ *
+ * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+ */
+export type PromotionRuleCreated = Event & {
+  /** Time of the event. */
+  issuedAt?: Maybe<Scalars['DateTime']['output']>;
+  /** The user or application that triggered the event. */
+  issuingPrincipal?: Maybe<IssuingPrincipal>;
+  /** The promotion rule the event relates to. */
+  promotionRule?: Maybe<PromotionRule>;
+  /** The application receiving the webhook. */
+  recipient?: Maybe<App>;
+  /** Saleor version that triggered the event. */
+  version?: Maybe<Scalars['String']['output']>;
+};
+
+/**
+ * History log of the promotion rule created event.
+ *
+ * Added in Saleor 3.17.
+ *
+ * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+ */
+export type PromotionRuleCreatedEvent = Node &
+  PromotionEventInterface &
+  PromotionRuleEventInterface & {
+    /**
+     * User or App that created the promotion event.
+     *
+     * Requires one of the following permissions: MANAGE_STAFF, MANAGE_APPS, OWNER.
+     */
+    createdBy?: Maybe<UserOrApp>;
+    /** Date when event happened. */
+    date: Scalars['DateTime']['output'];
+    id: Scalars['ID']['output'];
+    /** The rule ID associated with the promotion event. */
+    ruleId?: Maybe<Scalars['String']['output']>;
+    /** Promotion event type. */
+    type: PromotionEventsEnum;
+  };
+
+/**
+ * Deletes a promotion rule.
+ *
+ * Added in Saleor 3.17.
+ *
+ * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+ *
+ * Requires one of the following permissions: MANAGE_DISCOUNTS.
+ *
+ * Triggers the following webhook events:
+ * - PROMOTION_RULE_DELETED (async): A promotion rule was deleted.
+ */
+export type PromotionRuleDelete = {
+  errors: Array<PromotionRuleDeleteError>;
+  promotionRule?: Maybe<PromotionRule>;
+};
+
+export type PromotionRuleDeleteError = {
+  /** The error code. */
+  code: PromotionRuleDeleteErrorCode;
+  /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
+  field?: Maybe<Scalars['String']['output']>;
+  /** The error message. */
+  message?: Maybe<Scalars['String']['output']>;
+};
+
+/** An enumeration. */
+export enum PromotionRuleDeleteErrorCode {
+  GraphqlError = 'GRAPHQL_ERROR',
+  NotFound = 'NOT_FOUND',
+}
+
+/**
+ * Event sent when new promotion rule is deleted.
+ *
+ * Added in Saleor 3.17.
+ *
+ * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+ */
+export type PromotionRuleDeleted = Event & {
+  /** Time of the event. */
+  issuedAt?: Maybe<Scalars['DateTime']['output']>;
+  /** The user or application that triggered the event. */
+  issuingPrincipal?: Maybe<IssuingPrincipal>;
+  /** The promotion rule the event relates to. */
+  promotionRule?: Maybe<PromotionRule>;
+  /** The application receiving the webhook. */
+  recipient?: Maybe<App>;
+  /** Saleor version that triggered the event. */
+  version?: Maybe<Scalars['String']['output']>;
+};
+
+/**
+ * History log of the promotion rule created event.
+ *
+ * Added in Saleor 3.17.
+ *
+ * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+ */
+export type PromotionRuleDeletedEvent = Node &
+  PromotionEventInterface &
+  PromotionRuleEventInterface & {
+    /**
+     * User or App that created the promotion event.
+     *
+     * Requires one of the following permissions: MANAGE_STAFF, MANAGE_APPS, OWNER.
+     */
+    createdBy?: Maybe<UserOrApp>;
+    /** Date when event happened. */
+    date: Scalars['DateTime']['output'];
+    id: Scalars['ID']['output'];
+    /** The rule ID associated with the promotion event. */
+    ruleId?: Maybe<Scalars['String']['output']>;
+    /** Promotion event type. */
+    type: PromotionEventsEnum;
+  };
+
+/**
+ * History log of the promotion event related to rule.
+ *
+ * Added in Saleor 3.17.
+ *
+ * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+ */
+export type PromotionRuleEventInterface = {
+  /** The rule ID associated with the promotion event. */
+  ruleId?: Maybe<Scalars['String']['output']>;
+};
+
+export type PromotionRuleInput = {
+  /** Defines the conditions on the catalogue level that must be met for the reward to be applied. */
+  cataloguePredicate?: InputMaybe<CataloguePredicateInput>;
+  /** List of channel ids to which the rule should apply to. */
+  channels?: InputMaybe<Array<Scalars['ID']['input']>>;
+  /** Promotion rule description. */
+  description?: InputMaybe<Scalars['JSON']['input']>;
+  /** Promotion rule name. */
+  name?: InputMaybe<Scalars['String']['input']>;
+  /** Defines the discount value. Required when catalogue predicate is provided. */
+  rewardValue?: InputMaybe<Scalars['PositiveDecimal']['input']>;
+  /** Defines the promotion rule reward value type. Must be provided together with reward value. */
+  rewardValueType?: InputMaybe<RewardValueTypeEnum>;
+};
+
+/**
+ * Represents promotion rule's original translatable fields and related translations.
+ *
+ * Added in Saleor 3.17.
+ */
+export type PromotionRuleTranslatableContent = Node & {
+  /**
+   * Description of the promotion rule.
+   *
+   * Rich text format. For reference see https://editorjs.io/
+   */
+  description?: Maybe<Scalars['JSONString']['output']>;
+  /** ID of the promotion rule translatable content. */
+  id: Scalars['ID']['output'];
+  /** Name of the promotion rule. */
+  name?: Maybe<Scalars['String']['output']>;
+  /** Returns translated promotion rule fields for the given language code. */
+  translation?: Maybe<PromotionRuleTranslation>;
+};
+
+/**
+ * Represents promotion rule's original translatable fields and related translations.
+ *
+ * Added in Saleor 3.17.
+ */
+export type PromotionRuleTranslatableContentTranslationArgs = {
+  languageCode: LanguageCodeEnum;
+};
+
+/**
+ * Creates/updates translations for a promotion rule.
+ *
+ * Added in Saleor 3.17.
+ *
+ * Requires one of the following permissions: MANAGE_TRANSLATIONS.
+ */
+export type PromotionRuleTranslate = {
+  errors: Array<TranslationError>;
+  promotionRule?: Maybe<PromotionRule>;
+};
+
+/**
+ * Represents promotion rule translations.
+ *
+ * Added in Saleor 3.17.
+ */
+export type PromotionRuleTranslation = Node & {
+  /**
+   * Translated description of the promotion rule.
+   *
+   * Rich text format. For reference see https://editorjs.io/
+   */
+  description?: Maybe<Scalars['JSONString']['output']>;
+  /** ID of the promotion rule translation. */
+  id: Scalars['ID']['output'];
+  /** Translation language. */
+  language: LanguageDisplay;
+  /** Translated name of the promotion rule. */
+  name?: Maybe<Scalars['String']['output']>;
+};
+
+export type PromotionRuleTranslationInput = {
+  /**
+   * Translated promotion description.
+   *
+   * Rich text format. For reference see https://editorjs.io/
+   */
+  description?: InputMaybe<Scalars['JSON']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+};
+
+/**
+ * Updates an existing promotion rule.
+ *
+ * Added in Saleor 3.17.
+ *
+ * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+ *
+ * Requires one of the following permissions: MANAGE_DISCOUNTS.
+ *
+ * Triggers the following webhook events:
+ * - PROMOTION_RULE_UPDATED (async): A promotion rule was updated.
+ */
+export type PromotionRuleUpdate = {
+  errors: Array<PromotionRuleUpdateError>;
+  promotionRule?: Maybe<PromotionRule>;
+};
+
+export type PromotionRuleUpdateError = {
+  /** List of channel IDs which causes the error. */
+  channels?: Maybe<Array<Scalars['ID']['output']>>;
+  /** The error code. */
+  code: PromotionRuleUpdateErrorCode;
+  /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
+  field?: Maybe<Scalars['String']['output']>;
+  /** The error message. */
+  message?: Maybe<Scalars['String']['output']>;
+};
+
+/** An enumeration. */
+export enum PromotionRuleUpdateErrorCode {
+  DuplicatedInputItem = 'DUPLICATED_INPUT_ITEM',
+  GraphqlError = 'GRAPHQL_ERROR',
+  Invalid = 'INVALID',
+  InvalidPrecision = 'INVALID_PRECISION',
+  MissingChannels = 'MISSING_CHANNELS',
+  MultipleCurrenciesNotAllowed = 'MULTIPLE_CURRENCIES_NOT_ALLOWED',
+  NotFound = 'NOT_FOUND',
+}
+
+export type PromotionRuleUpdateInput = {
+  /** List of channel ids to remove. */
+  addChannels?: InputMaybe<Array<Scalars['ID']['input']>>;
+  /** Defines the conditions on the catalogue level that must be met for the reward to be applied. */
+  cataloguePredicate?: InputMaybe<CataloguePredicateInput>;
+  /** Promotion rule description. */
+  description?: InputMaybe<Scalars['JSON']['input']>;
+  /** Promotion rule name. */
+  name?: InputMaybe<Scalars['String']['input']>;
+  /** List of channel ids to remove. */
+  removeChannels?: InputMaybe<Array<Scalars['ID']['input']>>;
+  /** Defines the discount value. Required when catalogue predicate is provided. */
+  rewardValue?: InputMaybe<Scalars['PositiveDecimal']['input']>;
+  /** Defines the promotion rule reward value type. Must be provided together with reward value. */
+  rewardValueType?: InputMaybe<RewardValueTypeEnum>;
+};
+
+/**
+ * Event sent when new promotion rule is updated.
+ *
+ * Added in Saleor 3.17.
+ *
+ * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+ */
+export type PromotionRuleUpdated = Event & {
+  /** Time of the event. */
+  issuedAt?: Maybe<Scalars['DateTime']['output']>;
+  /** The user or application that triggered the event. */
+  issuingPrincipal?: Maybe<IssuingPrincipal>;
+  /** The promotion rule the event relates to. */
+  promotionRule?: Maybe<PromotionRule>;
+  /** The application receiving the webhook. */
+  recipient?: Maybe<App>;
+  /** Saleor version that triggered the event. */
+  version?: Maybe<Scalars['String']['output']>;
+};
+
+/**
+ * History log of the promotion rule created event.
+ *
+ * Added in Saleor 3.17.
+ *
+ * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+ */
+export type PromotionRuleUpdatedEvent = Node &
+  PromotionEventInterface &
+  PromotionRuleEventInterface & {
+    /**
+     * User or App that created the promotion event.
+     *
+     * Requires one of the following permissions: MANAGE_STAFF, MANAGE_APPS, OWNER.
+     */
+    createdBy?: Maybe<UserOrApp>;
+    /** Date when event happened. */
+    date: Scalars['DateTime']['output'];
+    id: Scalars['ID']['output'];
+    /** The rule ID associated with the promotion event. */
+    ruleId?: Maybe<Scalars['String']['output']>;
+    /** Promotion event type. */
+    type: PromotionEventsEnum;
+  };
+
+export enum PromotionSortField {
+  /** Sort promotions by created at. */
+  CreatedAt = 'CREATED_AT',
+  /** Sort promotions by end date. */
+  EndDate = 'END_DATE',
+  /** Sort promotions by name. */
+  Name = 'NAME',
+  /** Sort promotions by start date. */
+  StartDate = 'START_DATE',
+}
+
+export type PromotionSortingInput = {
+  /** Specifies the direction in which to sort promotions. */
+  direction: OrderDirection;
+  /** Sort promotions by the selected field. */
+  field: PromotionSortField;
+};
+
+/**
+ * The event informs about the start of the promotion.
+ *
+ * Added in Saleor 3.17.
+ *
+ * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+ */
+export type PromotionStarted = Event & {
+  /** Time of the event. */
+  issuedAt?: Maybe<Scalars['DateTime']['output']>;
+  /** The user or application that triggered the event. */
+  issuingPrincipal?: Maybe<IssuingPrincipal>;
+  /** The promotion the event relates to. */
+  promotion?: Maybe<Promotion>;
+  /** The application receiving the webhook. */
+  recipient?: Maybe<App>;
+  /** Saleor version that triggered the event. */
+  version?: Maybe<Scalars['String']['output']>;
+};
+
+/**
+ * History log of the promotion started event.
+ *
+ * Added in Saleor 3.17.
+ *
+ * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+ */
+export type PromotionStartedEvent = Node &
+  PromotionEventInterface & {
+    /**
+     * User or App that created the promotion event.
+     *
+     * Requires one of the following permissions: MANAGE_STAFF, MANAGE_APPS, OWNER.
+     */
+    createdBy?: Maybe<UserOrApp>;
+    /** Date when event happened. */
+    date: Scalars['DateTime']['output'];
+    id: Scalars['ID']['output'];
+    /** Promotion event type. */
+    type: PromotionEventsEnum;
+  };
+
+/**
+ * Represents promotion's original translatable fields and related translations.
+ *
+ * Added in Saleor 3.17.
+ */
+export type PromotionTranslatableContent = Node & {
+  /**
+   * Description of the promotion.
+   *
+   * Rich text format. For reference see https://editorjs.io/
+   */
+  description?: Maybe<Scalars['JSONString']['output']>;
+  /** ID of the promotion translatable content. */
+  id: Scalars['ID']['output'];
+  /** Name of the promotion. */
+  name: Scalars['String']['output'];
+  /** Returns translated promotion fields for the given language code. */
+  translation?: Maybe<PromotionTranslation>;
+};
+
+/**
+ * Represents promotion's original translatable fields and related translations.
+ *
+ * Added in Saleor 3.17.
+ */
+export type PromotionTranslatableContentTranslationArgs = {
+  languageCode: LanguageCodeEnum;
+};
+
+/**
+ * Creates/updates translations for a promotion.
+ *
+ * Added in Saleor 3.17.
+ *
+ * Requires one of the following permissions: MANAGE_TRANSLATIONS.
+ */
+export type PromotionTranslate = {
+  errors: Array<TranslationError>;
+  promotion?: Maybe<Promotion>;
+};
+
+/**
+ * Represents promotion translations.
+ *
+ * Added in Saleor 3.17.
+ */
+export type PromotionTranslation = Node & {
+  /**
+   * Translated description of the promotion.
+   *
+   * Rich text format. For reference see https://editorjs.io/
+   */
+  description?: Maybe<Scalars['JSONString']['output']>;
+  /** ID of the promotion translation. */
+  id: Scalars['ID']['output'];
+  /** Translation language. */
+  language: LanguageDisplay;
+  /** Translated name of the promotion. */
+  name?: Maybe<Scalars['String']['output']>;
+};
+
+export type PromotionTranslationInput = {
+  /**
+   * Translated promotion description.
+   *
+   * Rich text format. For reference see https://editorjs.io/
+   */
+  description?: InputMaybe<Scalars['JSON']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+};
+
+/**
+ * Updates an existing promotion.
+ *
+ * Added in Saleor 3.17.
+ *
+ * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+ *
+ * Requires one of the following permissions: MANAGE_DISCOUNTS.
+ *
+ * Triggers the following webhook events:
+ * - PROMOTION_UPDATED (async): A promotion was updated.
+ * - PROMOTION_STARTED (async): Optionally called if promotion was started.
+ * - PROMOTION_ENDED (async): Optionally called if promotion was ended.
+ */
+export type PromotionUpdate = {
+  errors: Array<PromotionUpdateError>;
+  promotion?: Maybe<Promotion>;
+};
+
+export type PromotionUpdateError = {
+  /** The error code. */
+  code: PromotionUpdateErrorCode;
+  /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
+  field?: Maybe<Scalars['String']['output']>;
+  /** The error message. */
+  message?: Maybe<Scalars['String']['output']>;
+};
+
+/** An enumeration. */
+export enum PromotionUpdateErrorCode {
+  GraphqlError = 'GRAPHQL_ERROR',
+  Invalid = 'INVALID',
+  NotFound = 'NOT_FOUND',
+  Required = 'REQUIRED',
+}
+
+export type PromotionUpdateInput = {
+  /** Promotion description. */
+  description?: InputMaybe<Scalars['JSON']['input']>;
+  /** The end date of the promotion in ISO 8601 format. */
+  endDate?: InputMaybe<Scalars['DateTime']['input']>;
+  /** Promotion name. */
+  name?: InputMaybe<Scalars['String']['input']>;
+  /** The start date of the promotion in ISO 8601 format. */
+  startDate?: InputMaybe<Scalars['DateTime']['input']>;
+};
+
+/**
+ * Event sent when promotion is updated.
+ *
+ * Added in Saleor 3.17.
+ *
+ * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+ */
+export type PromotionUpdated = Event & {
+  /** Time of the event. */
+  issuedAt?: Maybe<Scalars['DateTime']['output']>;
+  /** The user or application that triggered the event. */
+  issuingPrincipal?: Maybe<IssuingPrincipal>;
+  /** The promotion the event relates to. */
+  promotion?: Maybe<Promotion>;
+  /** The application receiving the webhook. */
+  recipient?: Maybe<App>;
+  /** Saleor version that triggered the event. */
+  version?: Maybe<Scalars['String']['output']>;
+};
+
+/**
+ * History log of the promotion updated event.
+ *
+ * Added in Saleor 3.17.
+ *
+ * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+ */
+export type PromotionUpdatedEvent = Node &
+  PromotionEventInterface & {
+    /**
+     * User or App that created the promotion event.
+     *
+     * Requires one of the following permissions: MANAGE_STAFF, MANAGE_APPS, OWNER.
+     */
+    createdBy?: Maybe<UserOrApp>;
+    /** Date when event happened. */
+    date: Scalars['DateTime']['output'];
+    id: Scalars['ID']['output'];
+    /** Promotion event type. */
+    type: PromotionEventsEnum;
+  };
+
+export type PromotionWhereInput = {
+  /** List of conditions that must be met. */
+  AND?: InputMaybe<Array<PromotionWhereInput>>;
+  /** A list of conditions of which at least one must be met. */
+  OR?: InputMaybe<Array<PromotionWhereInput>>;
+  /** Filter promotions by end date. */
+  endDate?: InputMaybe<DateTimeFilterInput>;
+  ids?: InputMaybe<Array<Scalars['ID']['input']>>;
+  isOldSale?: InputMaybe<Scalars['Boolean']['input']>;
+  metadata?: InputMaybe<Array<MetadataFilter>>;
+  /** Filter by promotion name. */
+  name?: InputMaybe<StringFilterInput>;
+  /** Filter promotions by start date. */
+  startDate?: InputMaybe<DateTimeFilterInput>;
 };
 
 export type PublishableChannelListingInput = {
@@ -21220,6 +23108,26 @@ export type Query = {
   /** List of the shop's products. Requires one of the following permissions to include the unpublished items: MANAGE_ORDERS, MANAGE_DISCOUNTS, MANAGE_PRODUCTS. */
   products?: Maybe<ProductCountableConnection>;
   /**
+   * Look up a promotion by ID.
+   *
+   * Added in Saleor 3.17.
+   *
+   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+   *
+   * Requires one of the following permissions: MANAGE_DISCOUNTS.
+   */
+  promotion?: Maybe<Promotion>;
+  /**
+   * List of the promotions.
+   *
+   * Added in Saleor 3.17.
+   *
+   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+   *
+   * Requires one of the following permissions: MANAGE_DISCOUNTS.
+   */
+  promotions?: Maybe<PromotionCountableConnection>;
+  /**
    * List of top selling products.
    *
    * Requires one of the following permissions: MANAGE_PRODUCTS.
@@ -21229,12 +23137,14 @@ export type Query = {
    * Look up a sale by ID.
    *
    * Requires one of the following permissions: MANAGE_DISCOUNTS.
+   * @deprecated This field will be removed in Saleor 4.0. Use the `promotion` query instead.
    */
   sale?: Maybe<Sale>;
   /**
    * List of the shop's sales.
    *
    * Requires one of the following permissions: MANAGE_DISCOUNTS.
+   * @deprecated This field will be removed in Saleor 4.0. Use the `promotions` query instead.
    */
   sales?: Maybe<SaleCountableConnection>;
   /**
@@ -21741,6 +23651,19 @@ export type QueryProductsArgs = {
   where?: InputMaybe<ProductWhereInput>;
 };
 
+export type QueryPromotionArgs = {
+  id: Scalars['ID']['input'];
+};
+
+export type QueryPromotionsArgs = {
+  after?: InputMaybe<Scalars['String']['input']>;
+  before?: InputMaybe<Scalars['String']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  sortBy?: InputMaybe<PromotionSortingInput>;
+  where?: InputMaybe<PromotionWhereInput>;
+};
+
 export type QueryReportProductSalesArgs = {
   after?: InputMaybe<Scalars['String']['input']>;
   before?: InputMaybe<Scalars['String']['input']>;
@@ -21953,7 +23876,17 @@ export type RequestPasswordReset = {
   errors: Array<AccountError>;
 };
 
-/** Sales allow creating discounts for categories, collections or products and are visible to all the customers. */
+/** An enumeration. */
+export enum RewardValueTypeEnum {
+  Fixed = 'FIXED',
+  Percentage = 'PERCENTAGE',
+}
+
+/**
+ * Sales allow creating discounts for categories, collections or products and are visible to all the customers.
+ *
+ * DEPRECATED: this type will be removed in Saleor 4.0. Use `Promotion` type instead.
+ */
 export type Sale = Node &
   ObjectWithMetadata & {
     /** List of categories this sale applies to. */
@@ -22038,7 +23971,11 @@ export type Sale = Node &
     variants?: Maybe<ProductVariantCountableConnection>;
   };
 
-/** Sales allow creating discounts for categories, collections or products and are visible to all the customers. */
+/**
+ * Sales allow creating discounts for categories, collections or products and are visible to all the customers.
+ *
+ * DEPRECATED: this type will be removed in Saleor 4.0. Use `Promotion` type instead.
+ */
 export type SaleCategoriesArgs = {
   after?: InputMaybe<Scalars['String']['input']>;
   before?: InputMaybe<Scalars['String']['input']>;
@@ -22046,7 +23983,11 @@ export type SaleCategoriesArgs = {
   last?: InputMaybe<Scalars['Int']['input']>;
 };
 
-/** Sales allow creating discounts for categories, collections or products and are visible to all the customers. */
+/**
+ * Sales allow creating discounts for categories, collections or products and are visible to all the customers.
+ *
+ * DEPRECATED: this type will be removed in Saleor 4.0. Use `Promotion` type instead.
+ */
 export type SaleCollectionsArgs = {
   after?: InputMaybe<Scalars['String']['input']>;
   before?: InputMaybe<Scalars['String']['input']>;
@@ -22054,27 +23995,47 @@ export type SaleCollectionsArgs = {
   last?: InputMaybe<Scalars['Int']['input']>;
 };
 
-/** Sales allow creating discounts for categories, collections or products and are visible to all the customers. */
+/**
+ * Sales allow creating discounts for categories, collections or products and are visible to all the customers.
+ *
+ * DEPRECATED: this type will be removed in Saleor 4.0. Use `Promotion` type instead.
+ */
 export type SaleMetafieldArgs = {
   key: Scalars['String']['input'];
 };
 
-/** Sales allow creating discounts for categories, collections or products and are visible to all the customers. */
+/**
+ * Sales allow creating discounts for categories, collections or products and are visible to all the customers.
+ *
+ * DEPRECATED: this type will be removed in Saleor 4.0. Use `Promotion` type instead.
+ */
 export type SaleMetafieldsArgs = {
   keys?: InputMaybe<Array<Scalars['String']['input']>>;
 };
 
-/** Sales allow creating discounts for categories, collections or products and are visible to all the customers. */
+/**
+ * Sales allow creating discounts for categories, collections or products and are visible to all the customers.
+ *
+ * DEPRECATED: this type will be removed in Saleor 4.0. Use `Promotion` type instead.
+ */
 export type SalePrivateMetafieldArgs = {
   key: Scalars['String']['input'];
 };
 
-/** Sales allow creating discounts for categories, collections or products and are visible to all the customers. */
+/**
+ * Sales allow creating discounts for categories, collections or products and are visible to all the customers.
+ *
+ * DEPRECATED: this type will be removed in Saleor 4.0. Use `Promotion` type instead.
+ */
 export type SalePrivateMetafieldsArgs = {
   keys?: InputMaybe<Array<Scalars['String']['input']>>;
 };
 
-/** Sales allow creating discounts for categories, collections or products and are visible to all the customers. */
+/**
+ * Sales allow creating discounts for categories, collections or products and are visible to all the customers.
+ *
+ * DEPRECATED: this type will be removed in Saleor 4.0. Use `Promotion` type instead.
+ */
 export type SaleProductsArgs = {
   after?: InputMaybe<Scalars['String']['input']>;
   before?: InputMaybe<Scalars['String']['input']>;
@@ -22082,12 +24043,20 @@ export type SaleProductsArgs = {
   last?: InputMaybe<Scalars['Int']['input']>;
 };
 
-/** Sales allow creating discounts for categories, collections or products and are visible to all the customers. */
+/**
+ * Sales allow creating discounts for categories, collections or products and are visible to all the customers.
+ *
+ * DEPRECATED: this type will be removed in Saleor 4.0. Use `Promotion` type instead.
+ */
 export type SaleTranslationArgs = {
   languageCode: LanguageCodeEnum;
 };
 
-/** Sales allow creating discounts for categories, collections or products and are visible to all the customers. */
+/**
+ * Sales allow creating discounts for categories, collections or products and are visible to all the customers.
+ *
+ * DEPRECATED: this type will be removed in Saleor 4.0. Use `Promotion` type instead.
+ */
 export type SaleVariantsArgs = {
   after?: InputMaybe<Scalars['String']['input']>;
   before?: InputMaybe<Scalars['String']['input']>;
@@ -22096,7 +24065,9 @@ export type SaleVariantsArgs = {
 };
 
 /**
- * Adds products, categories, collections to a voucher.
+ * Adds products, categories, collections to a sale.
+ *
+ * DEPRECATED: this mutation will be removed in Saleor 4.0. Use `promotionRuleCreate` mutation instead.
  *
  * Requires one of the following permissions: MANAGE_DISCOUNTS.
  *
@@ -22127,7 +24098,11 @@ export type SaleBulkDelete = {
   errors: Array<DiscountError>;
 };
 
-/** Represents sale channel listing. */
+/**
+ * Represents sale channel listing.
+ *
+ * DEPRECATED: this type will be removed in Saleor 4.0. Use `PromotionRule` type instead.
+ */
 export type SaleChannelListing = Node & {
   /** The channel in which the sale is available. */
   channel: Channel;
@@ -22155,6 +24130,8 @@ export type SaleChannelListingInput = {
 
 /**
  * Manage sale's availability in channels.
+ *
+ * DEPRECATED: this mutation will be removed in Saleor 4.0. Use `promotionRuleCreate` or `promotionRuleUpdate` mutations instead.
  *
  * Requires one of the following permissions: MANAGE_DISCOUNTS.
  */
@@ -22184,6 +24161,8 @@ export type SaleCountableEdge = {
 /**
  * Creates a new sale.
  *
+ * DEPRECATED: this mutation will be removed in Saleor 4.0. Use `promotionCreate` mutation instead.
+ *
  * Requires one of the following permissions: MANAGE_DISCOUNTS.
  *
  * Triggers the following webhook events:
@@ -22200,6 +24179,8 @@ export type SaleCreate = {
  * Event sent when new sale is created.
  *
  * Added in Saleor 3.2.
+ *
+ * DEPRECATED: this event will be removed in Saleor 4.0. Use `PromotionCreated` event instead.
  */
 export type SaleCreated = Event & {
   /** Time of the event. */
@@ -22218,6 +24199,8 @@ export type SaleCreated = Event & {
  * Event sent when new sale is created.
  *
  * Added in Saleor 3.2.
+ *
+ * DEPRECATED: this event will be removed in Saleor 4.0. Use `PromotionCreated` event instead.
  */
 export type SaleCreatedSaleArgs = {
   channel?: InputMaybe<Scalars['String']['input']>;
@@ -22225,6 +24208,8 @@ export type SaleCreatedSaleArgs = {
 
 /**
  * Deletes a sale.
+ *
+ * DEPRECATED: this mutation will be removed in Saleor 4.0. Use `promotionDelete` mutation instead.
  *
  * Requires one of the following permissions: MANAGE_DISCOUNTS.
  *
@@ -22242,6 +24227,8 @@ export type SaleDelete = {
  * Event sent when sale is deleted.
  *
  * Added in Saleor 3.2.
+ *
+ * DEPRECATED: this event will be removed in Saleor 4.0. Use `PromotionDeleted` event instead.
  */
 export type SaleDeleted = Event & {
   /** Time of the event. */
@@ -22260,6 +24247,8 @@ export type SaleDeleted = Event & {
  * Event sent when sale is deleted.
  *
  * Added in Saleor 3.2.
+ *
+ * DEPRECATED: this event will be removed in Saleor 4.0. Use `PromotionDeleted` event instead.
  */
 export type SaleDeletedSaleArgs = {
   channel?: InputMaybe<Scalars['String']['input']>;
@@ -22296,6 +24285,8 @@ export type SaleInput = {
 
 /**
  * Removes products, categories, collections from a sale.
+ *
+ * DEPRECATED: this mutation will be removed in Saleor 4.0. Use `promotionRuleUpdate` or `promotionRuleDelete` mutations instead.
  *
  * Requires one of the following permissions: MANAGE_DISCOUNTS.
  *
@@ -22348,6 +24339,8 @@ export type SaleSortingInput = {
  * The event informs about the start or end of the sale.
  *
  * Added in Saleor 3.5.
+ *
+ * DEPRECATED: this event will be removed in Saleor 4.0. Use `PromotionStarted` and `PromotionEnded` events instead.
  */
 export type SaleToggle = Event & {
   /** Time of the event. */
@@ -22370,11 +24363,18 @@ export type SaleToggle = Event & {
  * The event informs about the start or end of the sale.
  *
  * Added in Saleor 3.5.
+ *
+ * DEPRECATED: this event will be removed in Saleor 4.0. Use `PromotionStarted` and `PromotionEnded` events instead.
  */
 export type SaleToggleSaleArgs = {
   channel?: InputMaybe<Scalars['String']['input']>;
 };
 
+/**
+ * Represents sale's original translatable fields and related translations.
+ *
+ * DEPRECATED: this type will be removed in Saleor 4.0. Use `PromotionTranslatableContent` instead.
+ */
 export type SaleTranslatableContent = Node & {
   /** The ID of the sale translatable content. */
   id: Scalars['ID']['output'];
@@ -22391,12 +24391,19 @@ export type SaleTranslatableContent = Node & {
   translation?: Maybe<SaleTranslation>;
 };
 
+/**
+ * Represents sale's original translatable fields and related translations.
+ *
+ * DEPRECATED: this type will be removed in Saleor 4.0. Use `PromotionTranslatableContent` instead.
+ */
 export type SaleTranslatableContentTranslationArgs = {
   languageCode: LanguageCodeEnum;
 };
 
 /**
  * Creates/updates translations for a sale.
+ *
+ * DEPRECATED: this mutation will be removed in Saleor 4.0. Use `PromotionTranslate` mutation instead.
  *
  * Requires one of the following permissions: MANAGE_TRANSLATIONS.
  */
@@ -22407,6 +24414,11 @@ export type SaleTranslate = {
   translationErrors: Array<TranslationError>;
 };
 
+/**
+ * Represents sale translations.
+ *
+ * DEPRECATED: this type will be removed in Saleor 4.0. Use `PromotionTranslation` instead.
+ */
 export type SaleTranslation = Node & {
   /** The ID of the sale translation. */
   id: Scalars['ID']['output'];
@@ -22423,6 +24435,8 @@ export enum SaleType {
 
 /**
  * Updates a sale.
+ *
+ * DEPRECATED: this mutation will be removed in Saleor 4.0. Use `promotionUpdate` mutation instead.
  *
  * Requires one of the following permissions: MANAGE_DISCOUNTS.
  *
@@ -22441,6 +24455,8 @@ export type SaleUpdate = {
  * Event sent when sale is updated.
  *
  * Added in Saleor 3.2.
+ *
+ * DEPRECATED: this event will be removed in Saleor 4.0. Use `PromotionUpdated` event instead.
  */
 export type SaleUpdated = Event & {
   /** Time of the event. */
@@ -22459,6 +24475,8 @@ export type SaleUpdated = Event & {
  * Event sent when sale is updated.
  *
  * Added in Saleor 3.2.
+ *
+ * DEPRECATED: this event will be removed in Saleor 4.0. Use `PromotionUpdated` event instead.
  */
 export type SaleUpdatedSaleArgs = {
   channel?: InputMaybe<Scalars['String']['input']>;
@@ -22725,6 +24743,7 @@ export type ShippingMethodPostalCodeRule = Node & {
   start?: Maybe<Scalars['String']['output']>;
 };
 
+/** Represents shipping method's original translatable fields and related translations. */
 export type ShippingMethodTranslatableContent = Node & {
   /**
    * Shipping method description to translate.
@@ -22747,10 +24766,12 @@ export type ShippingMethodTranslatableContent = Node & {
   translation?: Maybe<ShippingMethodTranslation>;
 };
 
+/** Represents shipping method's original translatable fields and related translations. */
 export type ShippingMethodTranslatableContentTranslationArgs = {
   languageCode: LanguageCodeEnum;
 };
 
+/** Represents shipping method translations. */
 export type ShippingMethodTranslation = Node & {
   /**
    * Translated description of the shipping method.
@@ -23693,6 +25714,8 @@ export type ShopAddressUpdate = {
 /**
  * Updates site domain of the shop.
  *
+ * DEPRECATED: this mutation will be removed in Saleor 4.0. Use `PUBLIC_URL` environment variable instead.
+ *
  * Requires one of the following permissions: MANAGE_SETTINGS.
  */
 export type ShopDomainUpdate = {
@@ -23883,6 +25906,7 @@ export type ShopSettingsUpdate = {
   shopErrors: Array<ShopError>;
 };
 
+/** Represents shop translations. */
 export type ShopTranslation = Node & {
   /** Translated description of sale. */
   description: Scalars['String']['output'];
@@ -24240,6 +26264,9 @@ export type StockBulkResult = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  *
  * Requires one of the following permissions: MANAGE_PRODUCTS.
+ *
+ * Triggers the following webhook events:
+ * - PRODUCT_VARIANT_STOCK_UPDATED (async): A product variant stock details were updated.
  */
 export type StockBulkUpdate = {
   /** Returns how many objects were updated. */
@@ -24395,6 +26422,73 @@ export type StoredPaymentMethod = {
   /** Type of the payment method. Example: credit card, wallet, etc. */
   type: Scalars['String']['output'];
 };
+
+/**
+ * Event sent when user requests to delete a payment method.
+ *
+ * Added in Saleor 3.16.
+ *
+ * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+ */
+export type StoredPaymentMethodDeleteRequested = Event & {
+  /** Channel related to the requested delete action. */
+  channel: Channel;
+  /** Time of the event. */
+  issuedAt?: Maybe<Scalars['DateTime']['output']>;
+  /** The user or application that triggered the event. */
+  issuingPrincipal?: Maybe<IssuingPrincipal>;
+  /** The ID of the payment method that should be deleted by the payment gateway. */
+  paymentMethodId: Scalars['String']['output'];
+  /** The application receiving the webhook. */
+  recipient?: Maybe<App>;
+  /** The user for which the app should proceed with payment method delete request. */
+  user: User;
+  /** Saleor version that triggered the event. */
+  version?: Maybe<Scalars['String']['output']>;
+};
+
+/**
+ * Request to delete a stored payment method on payment provider side.
+ *
+ * Added in Saleor 3.16.
+ *
+ * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+ *
+ * Requires one of the following permissions: AUTHENTICATED_USER.
+ *
+ * Triggers the following webhook events:
+ * - STORED_PAYMENT_METHOD_DELETE_REQUESTED (sync): The customer requested to delete a payment method.
+ */
+export type StoredPaymentMethodRequestDelete = {
+  errors: Array<PaymentMethodRequestDeleteError>;
+  /** The result of deleting a stored payment method. */
+  result: StoredPaymentMethodRequestDeleteResult;
+};
+
+/** An enumeration. */
+export enum StoredPaymentMethodRequestDeleteErrorCode {
+  ChannelInactive = 'CHANNEL_INACTIVE',
+  GatewayError = 'GATEWAY_ERROR',
+  GraphqlError = 'GRAPHQL_ERROR',
+  Invalid = 'INVALID',
+  NotFound = 'NOT_FOUND',
+}
+
+/**
+ * Result of deleting a stored payment method.
+ *
+ *     This enum is used to determine the result of deleting a stored payment method.
+ *     SUCCESSFULLY_DELETED - The stored payment method was successfully deleted.
+ *     FAILED_TO_DELETE - The stored payment method was not deleted.
+ *     FAILED_TO_DELIVER - The request to delete the stored payment method was not
+ *     delivered.
+ *
+ */
+export enum StoredPaymentMethodRequestDeleteResult {
+  FailedToDelete = 'FAILED_TO_DELETE',
+  FailedToDeliver = 'FAILED_TO_DELIVER',
+  SuccessfullyDeleted = 'SUCCESSFULLY_DELETED',
+}
 
 /**
  * Define the filtering options for string fields.
@@ -24679,7 +26773,7 @@ export type TaxConfiguration = Node &
     chargeTaxes: Scalars['Boolean']['output'];
     /** List of country-specific exceptions in tax configuration. */
     countries: Array<TaxConfigurationPerCountry>;
-    /** Determines whether prices displayed in a storefront should include taxes. */
+    /** Determines whether displayed prices should include taxes. */
     displayGrossPrices: Scalars['Boolean']['output'];
     /** The ID of the object. */
     id: Scalars['ID']['output'];
@@ -24787,7 +26881,7 @@ export type TaxConfigurationPerCountry = {
   chargeTaxes: Scalars['Boolean']['output'];
   /** Country in which this configuration applies. */
   country: CountryDisplay;
-  /** Determines whether prices displayed in a storefront should include taxes for this country. */
+  /** Determines whether displayed prices should include taxes for this country. */
   displayGrossPrices: Scalars['Boolean']['output'];
   /** A country-specific strategy to use for tax calculation. Taxes can be calculated either using user-defined flat rates or with a tax app. If not provided, use the value from the channel's tax configuration. */
   taxCalculationStrategy?: Maybe<TaxCalculationStrategy>;
@@ -24798,7 +26892,7 @@ export type TaxConfigurationPerCountryInput = {
   chargeTaxes: Scalars['Boolean']['input'];
   /** Country in which this configuration applies. */
   countryCode: CountryCode;
-  /** Determines whether prices displayed in a storefront should include taxes for this country. */
+  /** Determines whether displayed prices should include taxes for this country. */
   displayGrossPrices: Scalars['Boolean']['input'];
   /** A country-specific strategy to use for tax calculation. Taxes can be calculated either using user-defined flat rates or with a tax app. If not provided, use the value from the channel's tax configuration. */
   taxCalculationStrategy?: InputMaybe<TaxCalculationStrategy>;
@@ -24838,7 +26932,7 @@ export enum TaxConfigurationUpdateErrorCode {
 export type TaxConfigurationUpdateInput = {
   /** Determines whether taxes are charged in the given channel. */
   chargeTaxes?: InputMaybe<Scalars['Boolean']['input']>;
-  /** Determines whether prices displayed in a storefront should include taxes. */
+  /** Determines whether displayed prices should include taxes. */
   displayGrossPrices?: InputMaybe<Scalars['Boolean']['input']>;
   /** Determines whether prices are entered with the tax included. */
   pricesEnteredWithTax?: InputMaybe<Scalars['Boolean']['input']>;
@@ -25125,7 +27219,7 @@ export enum TokenizedPaymentFlowEnum {
 export type Transaction = Node & {
   /** Total amount of the transaction. */
   amount?: Maybe<Money>;
-  /** Date and time which transaction was created. */
+  /** Date and time at which transaction was created. */
   created: Scalars['DateTime']['output'];
   /** Error associated with transaction, if any. */
   error?: Maybe<Scalars['String']['output']>;
@@ -25148,6 +27242,12 @@ export type TransactionAction = {
   actionType: TransactionActionEnum;
   /** Transaction request amount. Null when action type is VOID. */
   amount?: Maybe<Scalars['PositiveDecimal']['output']>;
+  /**
+   * Currency code.
+   *
+   * Added in Saleor 3.16.
+   */
+  currency: Scalars['String']['output'];
 };
 
 /**
@@ -25312,6 +27412,12 @@ export type TransactionEvent = Node & {
   /** The ID of the object. */
   id: Scalars['ID']['output'];
   /**
+   * Idempotency key assigned to the event.
+   *
+   * Added in Saleor 3.14.
+   */
+  idempotencyKey?: Maybe<Scalars['String']['output']>;
+  /**
    * Message related to the transaction's event.
    *
    * Added in Saleor 3.13.
@@ -25475,6 +27581,7 @@ export enum TransactionInitializeErrorCode {
   GraphqlError = 'GRAPHQL_ERROR',
   Invalid = 'INVALID',
   NotFound = 'NOT_FOUND',
+  Unique = 'UNIQUE',
 }
 
 /**
@@ -25487,8 +27594,20 @@ export enum TransactionInitializeErrorCode {
 export type TransactionInitializeSession = Event & {
   /** Action to proceed for the transaction */
   action: TransactionProcessAction;
-  /** Payment gateway data in JSON format, recieved from storefront. */
+  /**
+   * The customer's IP address. If not provided as a parameter in the mutation, Saleor will try to determine the customer's IP address on its own.
+   *
+   * Added in Saleor 3.16.
+   */
+  customerIpAddress?: Maybe<Scalars['String']['output']>;
+  /** Payment gateway data in JSON format, received from storefront. */
   data?: Maybe<Scalars['JSON']['output']>;
+  /**
+   * Idempotency key assigned to the transaction initialize.
+   *
+   * Added in Saleor 3.14.
+   */
+  idempotencyKey: Scalars['String']['output'];
   /** Time of the event. */
   issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -25544,6 +27663,12 @@ export type TransactionItem = Node &
     chargePendingAmount: Money;
     /** Total amount charged for this payment. */
     chargedAmount: Money;
+    /**
+     * The related checkout.
+     *
+     * Added in Saleor 3.14.
+     */
+    checkout?: Maybe<Checkout>;
     /** Date and time at which payment transaction was created. */
     createdAt: Scalars['DateTime']['output'];
     /**
@@ -25760,7 +27885,13 @@ export enum TransactionProcessErrorCode {
 export type TransactionProcessSession = Event & {
   /** Action to proceed for the transaction */
   action: TransactionProcessAction;
-  /** Payment gateway data in JSON format, recieved from storefront. */
+  /**
+   * The customer's IP address. If not provided as a parameter in the mutation, Saleor will try to determine the customer's IP address on its own.
+   *
+   * Added in Saleor 3.16.
+   */
+  customerIpAddress?: Maybe<Scalars['String']['output']>;
+  /** Payment gateway data in JSON format, received from storefront. */
   data?: Maybe<Scalars['JSON']['output']>;
   /** Time of the event. */
   issuedAt?: Maybe<Scalars['DateTime']['output']>;
@@ -25957,6 +28088,8 @@ export type TranslatableItem =
   | PageTranslatableContent
   | ProductTranslatableContent
   | ProductVariantTranslatableContent
+  | PromotionRuleTranslatableContent
+  | PromotionTranslatableContent
   | SaleTranslatableContent
   | ShippingMethodTranslatableContent
   | VoucherTranslatableContent;
@@ -25984,6 +28117,8 @@ export enum TranslatableKinds {
   MenuItem = 'MENU_ITEM',
   Page = 'PAGE',
   Product = 'PRODUCT',
+  Promotion = 'PROMOTION',
+  PromotionRule = 'PROMOTION_RULE',
   Sale = 'SALE',
   ShippingMethod = 'SHIPPING_METHOD',
   Variant = 'VARIANT',
@@ -26046,6 +28181,8 @@ export type TranslationTypes =
   | PageTranslation
   | ProductTranslation
   | ProductVariantTranslation
+  | PromotionRuleTranslation
+  | PromotionTranslation
   | SaleTranslation
   | ShippingMethodTranslation
   | VoucherTranslation;
@@ -26580,8 +28717,14 @@ export type Voucher = Node &
      * Requires one of the following permissions: MANAGE_DISCOUNTS.
      */
     channelListings?: Maybe<Array<VoucherChannelListing>>;
-    /** The code of the voucher. */
-    code: Scalars['String']['output'];
+    /** The code of the voucher.This field will be removed in Saleor 4.0. */
+    code?: Maybe<Scalars['String']['output']>;
+    /**
+     * List of codes available for this voucher.
+     *
+     * Added in Saleor 3.18.
+     */
+    codes?: Maybe<VoucherCodeCountableConnection>;
     /**
      * List of collections this voucher applies to.
      *
@@ -26646,6 +28789,14 @@ export type Voucher = Node &
      * Requires one of the following permissions: MANAGE_DISCOUNTS.
      */
     products?: Maybe<ProductCountableConnection>;
+    /**
+     * Determine if the voucher codes can be used once or multiple times.
+     *
+     * Added in Saleor 3.18.
+     *
+     * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+     */
+    singleUse: Scalars['Boolean']['output'];
     /** The start date and time of voucher. */
     startDate: Scalars['DateTime']['output'];
     /** Returns translated voucher fields for the given language code. */
@@ -26668,6 +28819,14 @@ export type Voucher = Node &
 
 /** Vouchers allow giving discounts to particular customers on categories, collections or specific products. They can be used during checkout by providing valid voucher codes. */
 export type VoucherCategoriesArgs = {
+  after?: InputMaybe<Scalars['String']['input']>;
+  before?: InputMaybe<Scalars['String']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+};
+
+/** Vouchers allow giving discounts to particular customers on categories, collections or specific products. They can be used during checkout by providing valid voucher codes. */
+export type VoucherCodesArgs = {
   after?: InputMaybe<Scalars['String']['input']>;
   before?: InputMaybe<Scalars['String']['input']>;
   first?: InputMaybe<Scalars['Int']['input']>;
@@ -26801,6 +28960,93 @@ export type VoucherChannelListingUpdate = {
   voucher?: Maybe<Voucher>;
 };
 
+/**
+ * Represents voucher code.
+ *
+ * Added in Saleor 3.18.
+ *
+ * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+ */
+export type VoucherCode = {
+  /** Code to use the voucher. */
+  code?: Maybe<Scalars['String']['output']>;
+  /** Date time of code creation. */
+  createdAt: Scalars['DateTime']['output'];
+  /** The ID of the voucher code. */
+  id: Scalars['ID']['output'];
+  /** Whether a code is active or not. */
+  isActive?: Maybe<Scalars['Boolean']['output']>;
+  /** Number of times a code has been used. */
+  used?: Maybe<Scalars['Int']['output']>;
+};
+
+/**
+ * Deletes voucher codes.
+ *
+ * Added in Saleor 3.18.
+ *
+ * Requires one of the following permissions: MANAGE_DISCOUNTS.
+ *
+ * Triggers the following webhook events:
+ * - VOUCHER_UPDATED (async): A voucher was updated.
+ */
+export type VoucherCodeBulkDelete = {
+  /** Returns how many codes were deleted. */
+  count: Scalars['Int']['output'];
+  errors: Array<VoucherCodeBulkDeleteError>;
+};
+
+export type VoucherCodeBulkDeleteError = {
+  /** The error code. */
+  code: VoucherCodeBulkDeleteErrorCode;
+  /** The error message. */
+  message?: Maybe<Scalars['String']['output']>;
+  /** Path to field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
+  path?: Maybe<Scalars['String']['output']>;
+  /** List of voucher codes which causes the error. */
+  voucherCodes?: Maybe<Array<Scalars['ID']['output']>>;
+};
+
+/** An enumeration. */
+export enum VoucherCodeBulkDeleteErrorCode {
+  GraphqlError = 'GRAPHQL_ERROR',
+  Invalid = 'INVALID',
+  NotFound = 'NOT_FOUND',
+}
+
+export type VoucherCodeCountableConnection = {
+  edges: Array<VoucherCodeCountableEdge>;
+  /** Pagination data for this connection. */
+  pageInfo: PageInfo;
+  /** A total count of items in the collection. */
+  totalCount?: Maybe<Scalars['Int']['output']>;
+};
+
+export type VoucherCodeCountableEdge = {
+  /** A cursor for use in pagination. */
+  cursor: Scalars['String']['output'];
+  /** The item at the end of the edge. */
+  node: VoucherCode;
+};
+
+/**
+ * Event sent when voucher code export is completed.
+ *
+ * Added in Saleor 3.18.
+ */
+export type VoucherCodeExportCompleted = Event & {
+  /** The export file for voucher codes. */
+  export?: Maybe<ExportFile>;
+  /** Time of the event. */
+  issuedAt?: Maybe<Scalars['DateTime']['output']>;
+  /** The user or application that triggered the event. */
+  issuingPrincipal?: Maybe<IssuingPrincipal>;
+  /** The application receiving the webhook. */
+  recipient?: Maybe<App>;
+  /** Saleor version that triggered the event. */
+  version?: Maybe<Scalars['String']['output']>;
+};
+
 export type VoucherCountableConnection = {
   edges: Array<VoucherCountableEdge>;
   /** Pagination data for this connection. */
@@ -26917,13 +29163,21 @@ export type VoucherFilterInput = {
 };
 
 export type VoucherInput = {
+  /**
+   * List of codes to add.
+   *
+   * Added in Saleor 3.18.
+   *
+   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+   */
+  addCodes?: InputMaybe<Array<Scalars['String']['input']>>;
   /** Voucher should be applied once per customer. */
   applyOncePerCustomer?: InputMaybe<Scalars['Boolean']['input']>;
   /** Voucher should be applied to the cheapest item or entire order. */
   applyOncePerOrder?: InputMaybe<Scalars['Boolean']['input']>;
   /** Categories discounted by the voucher. */
   categories?: InputMaybe<Array<Scalars['ID']['input']>>;
-  /** Code to use the voucher. */
+  /** Code to use the voucher. This field will be removed in Saleor 4.0. Use `addCodes` instead. */
   code?: InputMaybe<Scalars['String']['input']>;
   /** Collections discounted by the voucher. */
   collections?: InputMaybe<Array<Scalars['ID']['input']>>;
@@ -26941,6 +29195,16 @@ export type VoucherInput = {
   onlyForStaff?: InputMaybe<Scalars['Boolean']['input']>;
   /** Products discounted by the voucher. */
   products?: InputMaybe<Array<Scalars['ID']['input']>>;
+  /**
+   * When set to 'True', each voucher code can be used only once; otherwise, codes can be used multiple times depending on `usageLimit`.
+   *
+   * The option can only be changed if none of the voucher codes have been used.
+   *
+   * Added in Saleor 3.18.
+   *
+   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+   */
+  singleUse?: InputMaybe<Scalars['Boolean']['input']>;
   /** Start date of the voucher in ISO 8601 format. */
   startDate?: InputMaybe<Scalars['DateTime']['input']>;
   /** Voucher type: PRODUCT, CATEGORY SHIPPING or ENTIRE_ORDER. */
@@ -26999,7 +29263,11 @@ export type VoucherRemoveCatalogues = {
 };
 
 export enum VoucherSortField {
-  /** Sort vouchers by code. */
+  /**
+   * Sort vouchers by code.
+   *
+   * DEPRECATED: this field will be removed in Saleor 4.0.
+   */
   Code = 'CODE',
   /** Sort vouchers by end date. */
   EndDate = 'END_DATE',
@@ -27009,6 +29277,12 @@ export enum VoucherSortField {
    * This option requires a channel filter to work as the values can vary between channels.
    */
   MinimumSpentAmount = 'MINIMUM_SPENT_AMOUNT',
+  /**
+   * Sort vouchers by name.
+   *
+   * Added in Saleor 3.18.
+   */
+  Name = 'NAME',
   /** Sort vouchers by start date. */
   StartDate = 'START_DATE',
   /** Sort vouchers by type. */
@@ -27036,6 +29310,7 @@ export type VoucherSortingInput = {
   field: VoucherSortField;
 };
 
+/** Represents voucher's original translatable fields and related translations. */
 export type VoucherTranslatableContent = Node & {
   /** The ID of the voucher translatable content. */
   id: Scalars['ID']['output'];
@@ -27052,6 +29327,7 @@ export type VoucherTranslatableContent = Node & {
   voucher?: Maybe<Voucher>;
 };
 
+/** Represents voucher's original translatable fields and related translations. */
 export type VoucherTranslatableContentTranslationArgs = {
   languageCode: LanguageCodeEnum;
 };
@@ -27068,6 +29344,7 @@ export type VoucherTranslate = {
   voucher?: Maybe<Voucher>;
 };
 
+/** Represents voucher translations. */
 export type VoucherTranslation = Node & {
   /** The ID of the voucher translation. */
   id: Scalars['ID']['output'];
@@ -27352,6 +29629,7 @@ export type WarehouseFilterInput = {
   clickAndCollectOption?: InputMaybe<WarehouseClickAndCollectOptionEnum>;
   ids?: InputMaybe<Array<Scalars['ID']['input']>>;
   isPrivate?: InputMaybe<Scalars['Boolean']['input']>;
+  metadata?: InputMaybe<Array<MetadataFilter>>;
   search?: InputMaybe<Scalars['String']['input']>;
   slugs?: InputMaybe<Array<Scalars['String']['input']>>;
 };
@@ -27787,10 +30065,17 @@ export enum WebhookEventTypeAsyncEnum {
    * Added in Saleor 3.8.
    */
   FulfillmentMetadataUpdated = 'FULFILLMENT_METADATA_UPDATED',
+  FulfillmentTrackingNumberUpdated = 'FULFILLMENT_TRACKING_NUMBER_UPDATED',
   /** A new gift card created. */
   GiftCardCreated = 'GIFT_CARD_CREATED',
   /** A gift card is deleted. */
   GiftCardDeleted = 'GIFT_CARD_DELETED',
+  /**
+   * A gift card export is completed.
+   *
+   * Added in Saleor 3.16.
+   */
+  GiftCardExportCompleted = 'GIFT_CARD_EXPORT_COMPLETED',
   /**
    * A gift card metadata is updated.
    *
@@ -27827,7 +30112,11 @@ export enum WebhookEventTypeAsyncEnum {
   MenuItemUpdated = 'MENU_ITEM_UPDATED',
   /** A menu is updated. */
   MenuUpdated = 'MENU_UPDATED',
-  /** User notification triggered. */
+  /**
+   * User notification triggered.
+   *
+   * DEPRECATED: this value will be removed in Saleor 4.0. See the docs for more details about migrating from NOTIFY_USER to other events: https://docs.saleor.io/docs/next/upgrade-guides/notify-user-deprecation
+   */
   NotifyUser = 'NOTIFY_USER',
   /** An observability event is created. */
   Observability = 'OBSERVABILITY',
@@ -27906,6 +30195,12 @@ export enum WebhookEventTypeAsyncEnum {
   /** A product is deleted. */
   ProductDeleted = 'PRODUCT_DELETED',
   /**
+   * A product export is completed.
+   *
+   * Added in Saleor 3.16.
+   */
+  ProductExportCompleted = 'PRODUCT_EXPORT_COMPLETED',
+  /**
    * A new product media is created.
    *
    * Added in Saleor 3.12.
@@ -27935,7 +30230,7 @@ export enum WebhookEventTypeAsyncEnum {
   ProductVariantBackInStock = 'PRODUCT_VARIANT_BACK_IN_STOCK',
   /** A new product variant is created. */
   ProductVariantCreated = 'PRODUCT_VARIANT_CREATED',
-  /** A product variant is deleted. */
+  /** A product variant is deleted. Warning: this event will not be executed when parent product has been deleted. Check PRODUCT_DELETED. */
   ProductVariantDeleted = 'PRODUCT_VARIANT_DELETED',
   /**
    * A product variant metadata is updated.
@@ -27949,6 +30244,22 @@ export enum WebhookEventTypeAsyncEnum {
   ProductVariantStockUpdated = 'PRODUCT_VARIANT_STOCK_UPDATED',
   /** A product variant is updated. */
   ProductVariantUpdated = 'PRODUCT_VARIANT_UPDATED',
+  /** A promotion is created. */
+  PromotionCreated = 'PROMOTION_CREATED',
+  /** A promotion is deleted. */
+  PromotionDeleted = 'PROMOTION_DELETED',
+  /** A promotion is deactivated. */
+  PromotionEnded = 'PROMOTION_ENDED',
+  /** A promotion rule is created. */
+  PromotionRuleCreated = 'PROMOTION_RULE_CREATED',
+  /** A promotion rule is deleted. */
+  PromotionRuleDeleted = 'PROMOTION_RULE_DELETED',
+  /** A promotion rule is updated. */
+  PromotionRuleUpdated = 'PROMOTION_RULE_UPDATED',
+  /** A promotion is activated. */
+  PromotionStarted = 'PROMOTION_STARTED',
+  /** A promotion is updated. */
+  PromotionUpdated = 'PROMOTION_UPDATED',
   /** A sale is created. */
   SaleCreated = 'SALE_CREATED',
   /** A sale is deleted. */
@@ -28005,6 +30316,12 @@ export enum WebhookEventTypeAsyncEnum {
   TranslationCreated = 'TRANSLATION_CREATED',
   /** A translation is updated. */
   TranslationUpdated = 'TRANSLATION_UPDATED',
+  /**
+   * A voucher code export is completed.
+   *
+   * Added in Saleor 3.18.
+   */
+  VoucherCodeExportCompleted = 'VOUCHER_CODE_EXPORT_COMPLETED',
   /** A new voucher created. */
   VoucherCreated = 'VOUCHER_CREATED',
   /** A voucher is deleted. */
@@ -28156,10 +30473,17 @@ export enum WebhookEventTypeEnum {
    * Added in Saleor 3.8.
    */
   FulfillmentMetadataUpdated = 'FULFILLMENT_METADATA_UPDATED',
+  FulfillmentTrackingNumberUpdated = 'FULFILLMENT_TRACKING_NUMBER_UPDATED',
   /** A new gift card created. */
   GiftCardCreated = 'GIFT_CARD_CREATED',
   /** A gift card is deleted. */
   GiftCardDeleted = 'GIFT_CARD_DELETED',
+  /**
+   * A gift card export is completed.
+   *
+   * Added in Saleor 3.16.
+   */
+  GiftCardExportCompleted = 'GIFT_CARD_EXPORT_COMPLETED',
   /**
    * A gift card metadata is updated.
    *
@@ -28197,7 +30521,11 @@ export enum WebhookEventTypeEnum {
   MenuItemUpdated = 'MENU_ITEM_UPDATED',
   /** A menu is updated. */
   MenuUpdated = 'MENU_UPDATED',
-  /** User notification triggered. */
+  /**
+   * User notification triggered.
+   *
+   * DEPRECATED: this value will be removed in Saleor 4.0. See the docs for more details about migrating from NOTIFY_USER to other events: https://docs.saleor.io/docs/next/upgrade-guides/notify-user-deprecation
+   */
   NotifyUser = 'NOTIFY_USER',
   /** An observability event is created. */
   Observability = 'OBSERVABILITY',
@@ -28280,8 +30608,11 @@ export enum WebhookEventTypeEnum {
   /** Confirm payment. */
   PaymentConfirm = 'PAYMENT_CONFIRM',
   PaymentGatewayInitializeSession = 'PAYMENT_GATEWAY_INITIALIZE_SESSION',
+  PaymentGatewayInitializeTokenizationSession = 'PAYMENT_GATEWAY_INITIALIZE_TOKENIZATION_SESSION',
   /** Listing available payment gateways. */
   PaymentListGateways = 'PAYMENT_LIST_GATEWAYS',
+  PaymentMethodInitializeTokenizationSession = 'PAYMENT_METHOD_INITIALIZE_TOKENIZATION_SESSION',
+  PaymentMethodProcessTokenizationSession = 'PAYMENT_METHOD_PROCESS_TOKENIZATION_SESSION',
   /** Process payment. */
   PaymentProcess = 'PAYMENT_PROCESS',
   /** Refund payment. */
@@ -28298,6 +30629,12 @@ export enum WebhookEventTypeEnum {
   ProductCreated = 'PRODUCT_CREATED',
   /** A product is deleted. */
   ProductDeleted = 'PRODUCT_DELETED',
+  /**
+   * A product export is completed.
+   *
+   * Added in Saleor 3.16.
+   */
+  ProductExportCompleted = 'PRODUCT_EXPORT_COMPLETED',
   /**
    * A new product media is created.
    *
@@ -28328,7 +30665,7 @@ export enum WebhookEventTypeEnum {
   ProductVariantBackInStock = 'PRODUCT_VARIANT_BACK_IN_STOCK',
   /** A new product variant is created. */
   ProductVariantCreated = 'PRODUCT_VARIANT_CREATED',
-  /** A product variant is deleted. */
+  /** A product variant is deleted. Warning: this event will not be executed when parent product has been deleted. Check PRODUCT_DELETED. */
   ProductVariantDeleted = 'PRODUCT_VARIANT_DELETED',
   /**
    * A product variant metadata is updated.
@@ -28342,6 +30679,22 @@ export enum WebhookEventTypeEnum {
   ProductVariantStockUpdated = 'PRODUCT_VARIANT_STOCK_UPDATED',
   /** A product variant is updated. */
   ProductVariantUpdated = 'PRODUCT_VARIANT_UPDATED',
+  /** A promotion is created. */
+  PromotionCreated = 'PROMOTION_CREATED',
+  /** A promotion is deleted. */
+  PromotionDeleted = 'PROMOTION_DELETED',
+  /** A promotion is deactivated. */
+  PromotionEnded = 'PROMOTION_ENDED',
+  /** A promotion rule is created. */
+  PromotionRuleCreated = 'PROMOTION_RULE_CREATED',
+  /** A promotion rule is deleted. */
+  PromotionRuleDeleted = 'PROMOTION_RULE_DELETED',
+  /** A promotion rule is updated. */
+  PromotionRuleUpdated = 'PROMOTION_RULE_UPDATED',
+  /** A promotion is activated. */
+  PromotionStarted = 'PROMOTION_STARTED',
+  /** A promotion is updated. */
+  PromotionUpdated = 'PROMOTION_UPDATED',
   /** A sale is created. */
   SaleCreated = 'SALE_CREATED',
   /** A sale is deleted. */
@@ -28384,6 +30737,7 @@ export enum WebhookEventTypeEnum {
   StaffSetPasswordRequested = 'STAFF_SET_PASSWORD_REQUESTED',
   /** A staff user is updated. */
   StaffUpdated = 'STAFF_UPDATED',
+  StoredPaymentMethodDeleteRequested = 'STORED_PAYMENT_METHOD_DELETE_REQUESTED',
   /**
    * A thumbnail is created.
    *
@@ -28426,6 +30780,12 @@ export enum WebhookEventTypeEnum {
   TranslationCreated = 'TRANSLATION_CREATED',
   /** A translation is updated. */
   TranslationUpdated = 'TRANSLATION_UPDATED',
+  /**
+   * A voucher code export is completed.
+   *
+   * Added in Saleor 3.18.
+   */
+  VoucherCodeExportCompleted = 'VOUCHER_CODE_EXPORT_COMPLETED',
   /** A new voucher created. */
   VoucherCreated = 'VOUCHER_CREATED',
   /** A voucher is deleted. */
@@ -28478,8 +30838,11 @@ export enum WebhookEventTypeSyncEnum {
   /** Confirm payment. */
   PaymentConfirm = 'PAYMENT_CONFIRM',
   PaymentGatewayInitializeSession = 'PAYMENT_GATEWAY_INITIALIZE_SESSION',
+  PaymentGatewayInitializeTokenizationSession = 'PAYMENT_GATEWAY_INITIALIZE_TOKENIZATION_SESSION',
   /** Listing available payment gateways. */
   PaymentListGateways = 'PAYMENT_LIST_GATEWAYS',
+  PaymentMethodInitializeTokenizationSession = 'PAYMENT_METHOD_INITIALIZE_TOKENIZATION_SESSION',
+  PaymentMethodProcessTokenizationSession = 'PAYMENT_METHOD_PROCESS_TOKENIZATION_SESSION',
   /** Process payment. */
   PaymentProcess = 'PAYMENT_PROCESS',
   /** Refund payment. */
@@ -28488,6 +30851,7 @@ export enum WebhookEventTypeSyncEnum {
   PaymentVoid = 'PAYMENT_VOID',
   /** Fetch external shipping methods for checkout. */
   ShippingListMethodsForCheckout = 'SHIPPING_LIST_METHODS_FOR_CHECKOUT',
+  StoredPaymentMethodDeleteRequested = 'STORED_PAYMENT_METHOD_DELETE_REQUESTED',
   /**
    * Event called when cancel has been requested for transaction.
    *
@@ -28565,8 +30929,10 @@ export enum WebhookSampleEventTypeEnum {
   FulfillmentCanceled = 'FULFILLMENT_CANCELED',
   FulfillmentCreated = 'FULFILLMENT_CREATED',
   FulfillmentMetadataUpdated = 'FULFILLMENT_METADATA_UPDATED',
+  FulfillmentTrackingNumberUpdated = 'FULFILLMENT_TRACKING_NUMBER_UPDATED',
   GiftCardCreated = 'GIFT_CARD_CREATED',
   GiftCardDeleted = 'GIFT_CARD_DELETED',
+  GiftCardExportCompleted = 'GIFT_CARD_EXPORT_COMPLETED',
   GiftCardMetadataUpdated = 'GIFT_CARD_METADATA_UPDATED',
   GiftCardSent = 'GIFT_CARD_SENT',
   GiftCardStatusChanged = 'GIFT_CARD_STATUS_CHANGED',
@@ -28605,6 +30971,7 @@ export enum WebhookSampleEventTypeEnum {
   PermissionGroupUpdated = 'PERMISSION_GROUP_UPDATED',
   ProductCreated = 'PRODUCT_CREATED',
   ProductDeleted = 'PRODUCT_DELETED',
+  ProductExportCompleted = 'PRODUCT_EXPORT_COMPLETED',
   ProductMediaCreated = 'PRODUCT_MEDIA_CREATED',
   ProductMediaDeleted = 'PRODUCT_MEDIA_DELETED',
   ProductMediaUpdated = 'PRODUCT_MEDIA_UPDATED',
@@ -28617,6 +30984,14 @@ export enum WebhookSampleEventTypeEnum {
   ProductVariantOutOfStock = 'PRODUCT_VARIANT_OUT_OF_STOCK',
   ProductVariantStockUpdated = 'PRODUCT_VARIANT_STOCK_UPDATED',
   ProductVariantUpdated = 'PRODUCT_VARIANT_UPDATED',
+  PromotionCreated = 'PROMOTION_CREATED',
+  PromotionDeleted = 'PROMOTION_DELETED',
+  PromotionEnded = 'PROMOTION_ENDED',
+  PromotionRuleCreated = 'PROMOTION_RULE_CREATED',
+  PromotionRuleDeleted = 'PROMOTION_RULE_DELETED',
+  PromotionRuleUpdated = 'PROMOTION_RULE_UPDATED',
+  PromotionStarted = 'PROMOTION_STARTED',
+  PromotionUpdated = 'PROMOTION_UPDATED',
   SaleCreated = 'SALE_CREATED',
   SaleDeleted = 'SALE_DELETED',
   SaleToggle = 'SALE_TOGGLE',
@@ -28637,6 +31012,7 @@ export enum WebhookSampleEventTypeEnum {
   TransactionItemMetadataUpdated = 'TRANSACTION_ITEM_METADATA_UPDATED',
   TranslationCreated = 'TRANSLATION_CREATED',
   TranslationUpdated = 'TRANSLATION_UPDATED',
+  VoucherCodeExportCompleted = 'VOUCHER_CODE_EXPORT_COMPLETED',
   VoucherCreated = 'VOUCHER_CREATED',
   VoucherDeleted = 'VOUCHER_DELETED',
   VoucherMetadataUpdated = 'VOUCHER_METADATA_UPDATED',
@@ -28877,90 +31253,119 @@ export type RequestEmailChangeMutationMutation = {
   } | null;
 };
 
-export type HeaderMenu_MenuQueryQueryVariables = Exact<{
+export type ProductCategoryName_CategoryFragmentFragment = {
+  __typename: 'Category';
+  id: string;
+  name: string;
+  translation?: {
+    __typename: 'CategoryTranslation';
+    id: string;
+    name?: string | null;
+  } | null;
+} & {' $fragmentName'?: 'ProductCategoryName_CategoryFragmentFragment'};
+
+export type ProductPriceRange_PricingInfoFragmentFragment = {
+  priceRange?: {
+    start?: {gross: {currency: string; amount: number}} | null;
+    stop?: {gross: {currency: string; amount: number}} | null;
+  } | null;
+} & {' $fragmentName'?: 'ProductPriceRange_PricingInfoFragmentFragment'};
+
+export type ProductThumbnail_ImageFragmentFragment = {
+  __typename: 'Image';
+  url: string;
+  alt?: string | null;
+} & {' $fragmentName'?: 'ProductThumbnail_ImageFragmentFragment'};
+
+export type NavbarItem_MenuItemFragmentFragment = ({
+  children?: Array<{__typename: 'MenuItem'}> | null;
+} & {
+  ' $fragmentRefs'?: {
+    NavbarLink_MenuItemFragmentFragment: NavbarLink_MenuItemFragmentFragment;
+    NavbarDropdown_MenuItemFragmentFragment: NavbarDropdown_MenuItemFragmentFragment;
+  };
+}) & {' $fragmentName'?: 'NavbarItem_MenuItemFragmentFragment'};
+
+export type NavbarLink_MenuItemFragmentFragment = {
+  name: string;
+  translation?: {name: string} | null;
+  page?: {slug: string} | null;
+} & {' $fragmentName'?: 'NavbarLink_MenuItemFragmentFragment'};
+
+export type NavbarMenu_MenuQueryQueryVariables = Exact<{
   channel?: InputMaybe<Scalars['String']['input']>;
   languageCode: LanguageCodeEnum;
 }>;
 
-export type HeaderMenu_MenuQueryQuery = {
+export type NavbarMenu_MenuQueryQuery = {
   menu?: {
     items?: Array<
       {id: string} & {
         ' $fragmentRefs'?: {
-          HeaderMenuItem_MenuItemFragmentFragment: HeaderMenuItem_MenuItemFragmentFragment;
+          NavbarItem_MenuItemFragmentFragment: NavbarItem_MenuItemFragmentFragment;
         };
       }
     > | null;
   } | null;
 };
 
-export type HeaderMenuItem_MenuItemFragmentFragment = ({
-  page?: {id: string} | null;
-} & {
+export type NavbarDropdown_MenuItemFragmentFragment = {
   ' $fragmentRefs'?: {
-    HeaderMenuLink_MenuItemFragmentFragment: HeaderMenuLink_MenuItemFragmentFragment;
-    CategoryDropdown_MenuItemFragmentFragment: CategoryDropdown_MenuItemFragmentFragment;
+    NavbarDropdownTrigger_MenuItemFragmentFragment: NavbarDropdownTrigger_MenuItemFragmentFragment;
+    NavbarDropdownContent_MenuItemFragmentFragment: NavbarDropdownContent_MenuItemFragmentFragment;
   };
-}) & {' $fragmentName'?: 'HeaderMenuItem_MenuItemFragmentFragment'};
+} & {' $fragmentName'?: 'NavbarDropdown_MenuItemFragmentFragment'};
 
-export type HeaderMenuLink_MenuItemFragmentFragment = {
-  name: string;
+export type NavbarDropdownContent_MenuItemFragmentFragment = {
   page?: {slug: string} | null;
-  translation?: {name: string} | null;
-} & {' $fragmentName'?: 'HeaderMenuLink_MenuItemFragmentFragment'};
-
-export type CategoryDropdown_MenuItemFragmentFragment = {
-  name: string;
-  translation?: {name: string} | null;
   children?: Array<
     {id: string} & {
       ' $fragmentRefs'?: {
-        CategoryDropdownItem_MenuItemFragmentFragment: CategoryDropdownItem_MenuItemFragmentFragment;
+        NavbarDropdownItem_MenuItemFragmentFragment: NavbarDropdownItem_MenuItemFragmentFragment;
       };
     }
   > | null;
-} & {' $fragmentName'?: 'CategoryDropdown_MenuItemFragmentFragment'};
+} & {' $fragmentName'?: 'NavbarDropdownContent_MenuItemFragmentFragment'};
 
-export type CategoryDropdownItem_MenuItemFragmentFragment = ({
-  children?: Array<
-    {
-      id: string;
-      children?: Array<
-        {id: string} & {
-          ' $fragmentRefs'?: {
-            DropdownItem_MenuItemFragmentFragment: DropdownItem_MenuItemFragmentFragment;
-            DropdownItemWithChildren_MenuItemFragmentFragment: DropdownItemWithChildren_MenuItemFragmentFragment;
-          };
-        }
-      > | null;
-    } & {
-      ' $fragmentRefs'?: {
-        DropdownItem_MenuItemFragmentFragment: DropdownItem_MenuItemFragmentFragment;
-        DropdownItemWithChildren_MenuItemFragmentFragment: DropdownItemWithChildren_MenuItemFragmentFragment;
-      };
-    }
-  > | null;
-} & {
-  ' $fragmentRefs'?: {
-    DropdownItem_MenuItemFragmentFragment: DropdownItem_MenuItemFragmentFragment;
-    DropdownItemWithChildren_MenuItemFragmentFragment: DropdownItemWithChildren_MenuItemFragmentFragment;
-  };
-}) & {' $fragmentName'?: 'CategoryDropdownItem_MenuItemFragmentFragment'};
-
-export type DropdownItem_MenuItemFragmentFragment = {
+export type NavbarDropdownItem_MenuItemFragmentFragment = {
   name: string;
+  translation?: {name: string} | null;
   category?: {slug: string} | null;
-  translation?: {name: string} | null;
-} & {' $fragmentName'?: 'DropdownItem_MenuItemFragmentFragment'};
+  collection?: {slug: string} | null;
+} & {' $fragmentName'?: 'NavbarDropdownItem_MenuItemFragmentFragment'};
 
-export type DropdownItemWithChildren_MenuItemFragmentFragment = ({
+export type NavbarDropdownTrigger_MenuItemFragmentFragment = {
   name: string;
   translation?: {name: string} | null;
-} & {
-  ' $fragmentRefs'?: {
-    DropdownItem_MenuItemFragmentFragment: DropdownItem_MenuItemFragmentFragment;
-  };
-}) & {' $fragmentName'?: 'DropdownItemWithChildren_MenuItemFragmentFragment'};
+} & {' $fragmentName'?: 'NavbarDropdownTrigger_MenuItemFragmentFragment'};
+
+export type ProductItem_ProductFragmentFragment = {
+  __typename: 'Product';
+  id: string;
+  name: string;
+  slug: string;
+  translation?: {
+    __typename: 'ProductTranslation';
+    id: string;
+    name?: string | null;
+  } | null;
+  thumbnail?: {
+    ' $fragmentRefs'?: {
+      ProductThumbnail_ImageFragmentFragment: ProductThumbnail_ImageFragmentFragment;
+    };
+  } | null;
+  pricing?: {
+    ' $fragmentRefs'?: {
+      ProductPriceRange_PricingInfoFragmentFragment: ProductPriceRange_PricingInfoFragmentFragment;
+    };
+  } | null;
+  category?: {
+    ' $fragmentRefs'?: {
+      ProductCategoryName_CategoryFragmentFragment: ProductCategoryName_CategoryFragmentFragment;
+    };
+  } | null;
+  variants?: Array<{__typename: 'ProductVariant'; id: string}> | null;
+} & {' $fragmentName'?: 'ProductItem_ProductFragmentFragment'};
 
 export type ShoppingCartButton_CheckoutFragmentFragment = {quantity: number} & {
   ' $fragmentName'?: 'ShoppingCartButton_CheckoutFragmentFragment';
@@ -29071,192 +31476,233 @@ export type CartTotal_CheckoutFragmentFragment = {
   };
 } & {' $fragmentName'?: 'CartTotal_CheckoutFragmentFragment'};
 
-export type GetNavCategoriesQueryQueryVariables = Exact<{
-  languageCode: LanguageCodeEnum;
-}>;
-
-export type GetNavCategoriesQueryQuery = {
-  categories?: {
-    edges: Array<{
-      node: {
-        id: string;
-        name: string;
-        slug: string;
-        level: number;
-        translation?: {name?: string | null} | null;
-        children?: {
-          edges: Array<{
-            node: {
-              id: string;
-              name: string;
-              slug: string;
-              level: number;
-              translation?: {name?: string | null} | null;
-              children?: {
-                edges: Array<{
-                  node: {
-                    id: string;
-                    name: string;
-                    slug: string;
-                    level: number;
-                    translation?: {name?: string | null} | null;
-                  };
-                }>;
-              } | null;
-            };
-          }>;
-        } | null;
-      };
-    }>;
-  } | null;
-};
-
-export type GetNavCollectionsQueryQueryVariables = Exact<{
+export type CategoryPage_CategoryQueryQueryVariables = Exact<{
+  slug?: InputMaybe<Scalars['String']['input']>;
   channel?: InputMaybe<Scalars['String']['input']>;
   languageCode: LanguageCodeEnum;
 }>;
 
-export type GetNavCollectionsQueryQuery = {
-  collections?: {
-    edges: Array<{
-      node: {
-        id: string;
-        name: string;
-        slug: string;
-        translation?: {name?: string | null} | null;
-      };
-    }>;
-  } | null;
-};
-
-export type Pagination_ProductsQueryQueryVariables = Exact<{
-  first?: InputMaybe<Scalars['Int']['input']>;
-  after?: InputMaybe<Scalars['String']['input']>;
-  search?: InputMaybe<Scalars['String']['input']>;
-  filter?: InputMaybe<ProductFilterInput>;
-  address?: InputMaybe<AddressInput>;
-  channel?: InputMaybe<Scalars['String']['input']>;
-  languageCode: LanguageCodeEnum;
-}>;
-
-export type Pagination_ProductsQueryQuery = {
-  products?:
-    | ({
-        pageInfo: {
+export type CategoryPage_CategoryQueryQuery = {
+  category?: {
+    __typename: 'Category';
+    id: string;
+    products?: {
+      edges: Array<{
+        node: {__typename: 'Product'; id: string} & {
           ' $fragmentRefs'?: {
-            PaginationLinks_PageInfoFragmentFragment: PaginationLinks_PageInfoFragmentFragment;
+            ProductItem_ProductFragmentFragment: ProductItem_ProductFragmentFragment;
           };
         };
-      } & {
+      }>;
+    } | null;
+  } | null;
+};
+
+export type CollectionPage_CollectionQueryQueryVariables = Exact<{
+  slug?: InputMaybe<Scalars['String']['input']>;
+  channel?: InputMaybe<Scalars['String']['input']>;
+  languageCode: LanguageCodeEnum;
+}>;
+
+export type CollectionPage_CollectionQueryQuery = {
+  collection?: {
+    __typename: 'Collection';
+    id: string;
+    products?: {
+      edges: Array<{
+        node: {__typename: 'Product'; id: string} & {
+          ' $fragmentRefs'?: {
+            ProductItem_ProductFragmentFragment: ProductItem_ProductFragmentFragment;
+          };
+        };
+      }>;
+    } | null;
+  } | null;
+};
+
+export type Product_ProductFragmentFragment = ({
+  __typename: 'Product';
+  id: string;
+  name: string;
+  description?: string | null;
+  isAvailable?: boolean | null;
+  translation?: {
+    __typename: 'ProductTranslation';
+    id: string;
+    name?: string | null;
+    description?: string | null;
+  } | null;
+  thumbnail?: {
+    ' $fragmentRefs'?: {
+      ProductThumbnail_ImageFragmentFragment: ProductThumbnail_ImageFragmentFragment;
+    };
+  } | null;
+  pricing?: {
+    ' $fragmentRefs'?: {
+      ProductPriceRange_PricingInfoFragmentFragment: ProductPriceRange_PricingInfoFragmentFragment;
+    };
+  } | null;
+  variants?: Array<{__typename: 'ProductVariant'; id: string}> | null;
+} & {
+  ' $fragmentRefs'?: {
+    VariantLinks_ProductFragmentFragment: VariantLinks_ProductFragmentFragment;
+  };
+}) & {' $fragmentName'?: 'Product_ProductFragmentFragment'};
+
+export type VariantLink_ProductVariantFragmentFragment = {
+  __typename: 'ProductVariant';
+  id: string;
+  name: string;
+  translation?: {
+    __typename: 'ProductVariantTranslation';
+    id: string;
+    name: string;
+  } | null;
+  product: {__typename: 'Product'; id: string; slug: string};
+} & {' $fragmentName'?: 'VariantLink_ProductVariantFragmentFragment'};
+
+export type VariantLinks_ProductFragmentFragment = {
+  variants?: Array<
+    {__typename: 'ProductVariant'; id: string} & {
+      ' $fragmentRefs'?: {
+        VariantLink_ProductVariantFragmentFragment: VariantLink_ProductVariantFragmentFragment;
+      };
+    }
+  > | null;
+} & {' $fragmentName'?: 'VariantLinks_ProductFragmentFragment'};
+
+export type ProductPage_ProductQueryQueryVariables = Exact<{
+  slug: Scalars['String']['input'];
+  channel?: InputMaybe<Scalars['String']['input']>;
+  languageCode: LanguageCodeEnum;
+}>;
+
+export type ProductPage_ProductQueryQuery = {
+  product?:
+    | ({__typename: 'Product'; id: string} & {
         ' $fragmentRefs'?: {
-          ProductList_ProductCountableConnectionFragmentFragment: ProductList_ProductCountableConnectionFragmentFragment;
+          Product_ProductFragmentFragment: Product_ProductFragmentFragment;
         };
       })
     | null;
 };
 
-export type PaginationLinks_PageInfoFragmentFragment = {
-  hasNextPage: boolean;
-  endCursor?: string | null;
-} & {' $fragmentName'?: 'PaginationLinks_PageInfoFragmentFragment'};
-
-export type PriceBadge_VariantPricingInfoFragmentFragment = {
-  onSale?: boolean | null;
-  price?: {gross: {currency: string; amount: number}} | null;
-  priceUndiscounted?: {gross: {currency: string; amount: number}} | null;
-} & {' $fragmentName'?: 'PriceBadge_VariantPricingInfoFragmentFragment'};
-
-export type ProductCard_ProductFragmentFragment = {
+export type CategoryDropdownItem_CategoryFragmentFragment = {
+  __typename: 'Category';
+  id: string;
   name: string;
-  isAvailable?: boolean | null;
+  slug: string;
   translation?: {name?: string | null} | null;
-  defaultVariant?: {
-    pricing?: {
-      ' $fragmentRefs'?: {
-        PriceBadge_VariantPricingInfoFragmentFragment: PriceBadge_VariantPricingInfoFragmentFragment;
-      };
-    } | null;
-  } | null;
-  thumbnail?: {url: string; alt?: string | null} | null;
-} & {' $fragmentName'?: 'ProductCard_ProductFragmentFragment'};
+} & {' $fragmentName'?: 'CategoryDropdownItem_CategoryFragmentFragment'};
 
-export type ProductList_ProductCountableConnectionFragmentFragment = {
-  edges: Array<{
-    node: {id: string; slug: string} & {
-      ' $fragmentRefs'?: {
-        ProductCard_ProductFragmentFragment: ProductCard_ProductFragmentFragment;
-      };
-    };
-  }>;
-} & {
-  ' $fragmentName'?: 'ProductList_ProductCountableConnectionFragmentFragment';
-};
-
-export type GetCategoryIdsQueryQueryVariables = Exact<{
+export type CategoryDropdownItems_CategoriesQueryQueryVariables = Exact<{
   first?: InputMaybe<Scalars['Int']['input']>;
   after?: InputMaybe<Scalars['String']['input']>;
-  filter?: InputMaybe<CategoryFilterInput>;
+  languageCode: LanguageCodeEnum;
 }>;
 
-export type GetCategoryIdsQueryQuery = {
+export type CategoryDropdownItems_CategoriesQueryQuery = {
   categories?: {
-    edges: Array<{node: {id: string}}>;
-    pageInfo: {hasNextPage: boolean; endCursor?: string | null};
+    edges: Array<{
+      node: {__typename: 'Category'; id: string} & {
+        ' $fragmentRefs'?: {
+          CategoryDropdownItem_CategoryFragmentFragment: CategoryDropdownItem_CategoryFragmentFragment;
+        };
+      };
+    }>;
+    pageInfo: {
+      hasNextPage: boolean;
+      endCursor?: string | null;
+      hasPreviousPage: boolean;
+      startCursor?: string | null;
+    };
   } | null;
 };
 
-export type GetCollectionIdsQueryVariables = Exact<{
+export type CollectionDropdownItem_CategoryFragmentFragment = {
+  __typename: 'Collection';
+  id: string;
+  name: string;
+  slug: string;
+  translation?: {name?: string | null} | null;
+} & {' $fragmentName'?: 'CollectionDropdownItem_CategoryFragmentFragment'};
+
+export type CollectionDropdownItems_CategoriesQueryQueryVariables = Exact<{
   first?: InputMaybe<Scalars['Int']['input']>;
   after?: InputMaybe<Scalars['String']['input']>;
-  filter?: InputMaybe<CollectionFilterInput>;
-  channel?: InputMaybe<Scalars['String']['input']>;
-}>;
-
-export type GetCollectionIdsQuery = {
-  collections?: {
-    edges: Array<{node: {id: string}}>;
-    pageInfo: {hasNextPage: boolean; endCursor?: string | null};
-  } | null;
-};
-
-export type ProductAttributes_AttributesQueryQueryVariables = Exact<{
-  where?: InputMaybe<AttributeWhereInput>;
   channel?: InputMaybe<Scalars['String']['input']>;
   languageCode: LanguageCodeEnum;
 }>;
 
-export type ProductAttributes_AttributesQueryQuery = {
-  attributes?: {
+export type CollectionDropdownItems_CategoriesQueryQuery = {
+  collections?: {
     edges: Array<{
-      node: {id: string} & {
+      node: {__typename: 'Collection'; id: string} & {
         ' $fragmentRefs'?: {
-          ProductAttributesDropdown_AttributeFragmentFragment: ProductAttributesDropdown_AttributeFragmentFragment;
+          CollectionDropdownItem_CategoryFragmentFragment: CollectionDropdownItem_CategoryFragmentFragment;
         };
       };
     }>;
+    pageInfo: {
+      hasNextPage: boolean;
+      endCursor?: string | null;
+      hasPreviousPage: boolean;
+      startCursor?: string | null;
+    };
   } | null;
 };
 
-export type AttributeCheckbox_AttributeFragmentFragment = {
-  name?: string | null;
-  slug?: string | null;
-  translation?: {name: string} | null;
-} & {' $fragmentName'?: 'AttributeCheckbox_AttributeFragmentFragment'};
+export type ProductItems_ProductsQueryQueryVariables = Exact<{
+  first?: InputMaybe<Scalars['Int']['input']>;
+  after?: InputMaybe<Scalars['String']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  before?: InputMaybe<Scalars['String']['input']>;
+  channel?: InputMaybe<Scalars['String']['input']>;
+  categoryIds?: InputMaybe<
+    Array<Scalars['ID']['input']> | Scalars['ID']['input']
+  >;
+  collectionIds?: InputMaybe<
+    Array<Scalars['ID']['input']> | Scalars['ID']['input']
+  >;
+  languageCode: LanguageCodeEnum;
+}>;
 
-export type ProductAttributesDropdown_AttributeFragmentFragment = {
-  name?: string | null;
-  slug?: string | null;
-  translation?: {name: string} | null;
-  choices?: {
+export type ProductItems_ProductsQueryQuery = {
+  products?: {
     edges: Array<{
       node: {id: string} & {
         ' $fragmentRefs'?: {
-          AttributeCheckbox_AttributeFragmentFragment: AttributeCheckbox_AttributeFragmentFragment;
+          ProductItem_ProductFragmentFragment: ProductItem_ProductFragmentFragment;
         };
       };
     }>;
+    pageInfo: {
+      hasNextPage: boolean;
+      endCursor?: string | null;
+      hasPreviousPage: boolean;
+      startCursor?: string | null;
+    };
   } | null;
-} & {' $fragmentName'?: 'ProductAttributesDropdown_AttributeFragmentFragment'};
+};
+
+export type GetCategoryIdsQueryVariables = Exact<{
+  first: Scalars['Int']['input'];
+  slugs: Array<Scalars['String']['input']> | Scalars['String']['input'];
+}>;
+
+export type GetCategoryIdsQuery = {
+  categories?: {edges: Array<{node: {id: string}}>} | null;
+};
+
+export type GetCollectionIdsQueryVariables = Exact<{
+  first: Scalars['Int']['input'];
+  slugs: Array<Scalars['String']['input']> | Scalars['String']['input'];
+  channel?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+export type GetCollectionIdsQuery = {
+  collections?: {edges: Array<{node: {id: string}}>} | null;
+};
 
 export type AddressFields_ChannelFragmentFragment = {
   ' $fragmentRefs'?: {
@@ -29669,6 +32115,20 @@ export type ShippingPage_CheckoutQueryQuery = {
     | null;
 };
 
+export type DeactivateAllTokensMutationMutationVariables = Exact<{
+  [key: string]: never;
+}>;
+
+export type DeactivateAllTokensMutationMutation = {
+  tokensDeactivateAll?: {
+    errors: Array<{
+      field?: string | null;
+      message?: string | null;
+      code: AccountErrorCode;
+    }>;
+  } | null;
+};
+
 export type RefreshAccessTokenMutationMutationVariables = Exact<{
   refreshToken: Scalars['String']['input'];
 }>;
@@ -29709,12 +32169,12 @@ export type CreateCheckoutMutationMutation = {
   } | null;
 };
 
-export const HeaderMenuLink_MenuItemFragmentFragmentDoc = {
+export const NavbarLink_MenuItemFragmentFragmentDoc = {
   kind: 'Document',
   definitions: [
     {
       kind: 'FragmentDefinition',
-      name: {kind: 'Name', value: 'HeaderMenuLink_MenuItemFragment'},
+      name: {kind: 'Name', value: 'NavbarLink_MenuItemFragment'},
       typeCondition: {
         kind: 'NamedType',
         name: {kind: 'Name', value: 'MenuItem'},
@@ -29723,6 +32183,26 @@ export const HeaderMenuLink_MenuItemFragmentFragmentDoc = {
         kind: 'SelectionSet',
         selections: [
           {kind: 'Field', name: {kind: 'Name', value: 'name'}},
+          {
+            kind: 'Field',
+            name: {kind: 'Name', value: 'translation'},
+            arguments: [
+              {
+                kind: 'Argument',
+                name: {kind: 'Name', value: 'languageCode'},
+                value: {
+                  kind: 'Variable',
+                  name: {kind: 'Name', value: 'languageCode'},
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {kind: 'Field', name: {kind: 'Name', value: 'name'}},
+              ],
+            },
+          },
           {
             kind: 'Field',
             name: {kind: 'Name', value: 'page'},
@@ -29733,37 +32213,17 @@ export const HeaderMenuLink_MenuItemFragmentFragmentDoc = {
               ],
             },
           },
-          {
-            kind: 'Field',
-            name: {kind: 'Name', value: 'translation'},
-            arguments: [
-              {
-                kind: 'Argument',
-                name: {kind: 'Name', value: 'languageCode'},
-                value: {
-                  kind: 'Variable',
-                  name: {kind: 'Name', value: 'languageCode'},
-                },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {kind: 'Field', name: {kind: 'Name', value: 'name'}},
-              ],
-            },
-          },
         ],
       },
     },
   ],
-} as unknown as DocumentNode<HeaderMenuLink_MenuItemFragmentFragment, unknown>;
-export const DropdownItem_MenuItemFragmentFragmentDoc = {
+} as unknown as DocumentNode<NavbarLink_MenuItemFragmentFragment, unknown>;
+export const NavbarDropdownTrigger_MenuItemFragmentFragmentDoc = {
   kind: 'Document',
   definitions: [
     {
       kind: 'FragmentDefinition',
-      name: {kind: 'Name', value: 'DropdownItem_MenuItemFragment'},
+      name: {kind: 'Name', value: 'NavbarDropdownTrigger_MenuItemFragment'},
       typeCondition: {
         kind: 'NamedType',
         name: {kind: 'Name', value: 'MenuItem'},
@@ -29772,103 +32232,6 @@ export const DropdownItem_MenuItemFragmentFragmentDoc = {
         kind: 'SelectionSet',
         selections: [
           {kind: 'Field', name: {kind: 'Name', value: 'name'}},
-          {
-            kind: 'Field',
-            name: {kind: 'Name', value: 'category'},
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {kind: 'Field', name: {kind: 'Name', value: 'slug'}},
-              ],
-            },
-          },
-          {
-            kind: 'Field',
-            name: {kind: 'Name', value: 'translation'},
-            arguments: [
-              {
-                kind: 'Argument',
-                name: {kind: 'Name', value: 'languageCode'},
-                value: {
-                  kind: 'Variable',
-                  name: {kind: 'Name', value: 'languageCode'},
-                },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {kind: 'Field', name: {kind: 'Name', value: 'name'}},
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<DropdownItem_MenuItemFragmentFragment, unknown>;
-export const DropdownItemWithChildren_MenuItemFragmentFragmentDoc = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'FragmentDefinition',
-      name: {kind: 'Name', value: 'DropdownItemWithChildren_MenuItemFragment'},
-      typeCondition: {
-        kind: 'NamedType',
-        name: {kind: 'Name', value: 'MenuItem'},
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {kind: 'Field', name: {kind: 'Name', value: 'name'}},
-          {
-            kind: 'Field',
-            name: {kind: 'Name', value: 'translation'},
-            arguments: [
-              {
-                kind: 'Argument',
-                name: {kind: 'Name', value: 'languageCode'},
-                value: {
-                  kind: 'Variable',
-                  name: {kind: 'Name', value: 'languageCode'},
-                },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {kind: 'Field', name: {kind: 'Name', value: 'name'}},
-              ],
-            },
-          },
-          {
-            kind: 'FragmentSpread',
-            name: {kind: 'Name', value: 'DropdownItem_MenuItemFragment'},
-          },
-        ],
-      },
-    },
-    {
-      kind: 'FragmentDefinition',
-      name: {kind: 'Name', value: 'DropdownItem_MenuItemFragment'},
-      typeCondition: {
-        kind: 'NamedType',
-        name: {kind: 'Name', value: 'MenuItem'},
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {kind: 'Field', name: {kind: 'Name', value: 'name'}},
-          {
-            kind: 'Field',
-            name: {kind: 'Name', value: 'category'},
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {kind: 'Field', name: {kind: 'Name', value: 'slug'}},
-              ],
-            },
-          },
           {
             kind: 'Field',
             name: {kind: 'Name', value: 'translation'},
@@ -29894,84 +32257,15 @@ export const DropdownItemWithChildren_MenuItemFragmentFragmentDoc = {
     },
   ],
 } as unknown as DocumentNode<
-  DropdownItemWithChildren_MenuItemFragmentFragment,
+  NavbarDropdownTrigger_MenuItemFragmentFragment,
   unknown
 >;
-export const CategoryDropdownItem_MenuItemFragmentFragmentDoc = {
+export const NavbarDropdownItem_MenuItemFragmentFragmentDoc = {
   kind: 'Document',
   definitions: [
     {
       kind: 'FragmentDefinition',
-      name: {kind: 'Name', value: 'CategoryDropdownItem_MenuItemFragment'},
-      typeCondition: {
-        kind: 'NamedType',
-        name: {kind: 'Name', value: 'MenuItem'},
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'FragmentSpread',
-            name: {kind: 'Name', value: 'DropdownItem_MenuItemFragment'},
-          },
-          {
-            kind: 'FragmentSpread',
-            name: {
-              kind: 'Name',
-              value: 'DropdownItemWithChildren_MenuItemFragment',
-            },
-          },
-          {
-            kind: 'Field',
-            name: {kind: 'Name', value: 'children'},
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {kind: 'Field', name: {kind: 'Name', value: 'id'}},
-                {
-                  kind: 'FragmentSpread',
-                  name: {kind: 'Name', value: 'DropdownItem_MenuItemFragment'},
-                },
-                {
-                  kind: 'FragmentSpread',
-                  name: {
-                    kind: 'Name',
-                    value: 'DropdownItemWithChildren_MenuItemFragment',
-                  },
-                },
-                {
-                  kind: 'Field',
-                  name: {kind: 'Name', value: 'children'},
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      {kind: 'Field', name: {kind: 'Name', value: 'id'}},
-                      {
-                        kind: 'FragmentSpread',
-                        name: {
-                          kind: 'Name',
-                          value: 'DropdownItem_MenuItemFragment',
-                        },
-                      },
-                      {
-                        kind: 'FragmentSpread',
-                        name: {
-                          kind: 'Name',
-                          value: 'DropdownItemWithChildren_MenuItemFragment',
-                        },
-                      },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-    {
-      kind: 'FragmentDefinition',
-      name: {kind: 'Name', value: 'DropdownItem_MenuItemFragment'},
+      name: {kind: 'Name', value: 'NavbarDropdownItem_MenuItemFragment'},
       typeCondition: {
         kind: 'NamedType',
         name: {kind: 'Name', value: 'MenuItem'},
@@ -29980,6 +32274,26 @@ export const CategoryDropdownItem_MenuItemFragmentFragmentDoc = {
         kind: 'SelectionSet',
         selections: [
           {kind: 'Field', name: {kind: 'Name', value: 'name'}},
+          {
+            kind: 'Field',
+            name: {kind: 'Name', value: 'translation'},
+            arguments: [
+              {
+                kind: 'Argument',
+                name: {kind: 'Name', value: 'languageCode'},
+                value: {
+                  kind: 'Variable',
+                  name: {kind: 'Name', value: 'languageCode'},
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {kind: 'Field', name: {kind: 'Name', value: 'name'}},
+              ],
+            },
+          },
           {
             kind: 'Field',
             name: {kind: 'Name', value: 'category'},
@@ -29992,138 +32306,7 @@ export const CategoryDropdownItem_MenuItemFragmentFragmentDoc = {
           },
           {
             kind: 'Field',
-            name: {kind: 'Name', value: 'translation'},
-            arguments: [
-              {
-                kind: 'Argument',
-                name: {kind: 'Name', value: 'languageCode'},
-                value: {
-                  kind: 'Variable',
-                  name: {kind: 'Name', value: 'languageCode'},
-                },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {kind: 'Field', name: {kind: 'Name', value: 'name'}},
-              ],
-            },
-          },
-        ],
-      },
-    },
-    {
-      kind: 'FragmentDefinition',
-      name: {kind: 'Name', value: 'DropdownItemWithChildren_MenuItemFragment'},
-      typeCondition: {
-        kind: 'NamedType',
-        name: {kind: 'Name', value: 'MenuItem'},
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {kind: 'Field', name: {kind: 'Name', value: 'name'}},
-          {
-            kind: 'Field',
-            name: {kind: 'Name', value: 'translation'},
-            arguments: [
-              {
-                kind: 'Argument',
-                name: {kind: 'Name', value: 'languageCode'},
-                value: {
-                  kind: 'Variable',
-                  name: {kind: 'Name', value: 'languageCode'},
-                },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {kind: 'Field', name: {kind: 'Name', value: 'name'}},
-              ],
-            },
-          },
-          {
-            kind: 'FragmentSpread',
-            name: {kind: 'Name', value: 'DropdownItem_MenuItemFragment'},
-          },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<
-  CategoryDropdownItem_MenuItemFragmentFragment,
-  unknown
->;
-export const CategoryDropdown_MenuItemFragmentFragmentDoc = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'FragmentDefinition',
-      name: {kind: 'Name', value: 'CategoryDropdown_MenuItemFragment'},
-      typeCondition: {
-        kind: 'NamedType',
-        name: {kind: 'Name', value: 'MenuItem'},
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {kind: 'Field', name: {kind: 'Name', value: 'name'}},
-          {
-            kind: 'Field',
-            name: {kind: 'Name', value: 'translation'},
-            arguments: [
-              {
-                kind: 'Argument',
-                name: {kind: 'Name', value: 'languageCode'},
-                value: {
-                  kind: 'Variable',
-                  name: {kind: 'Name', value: 'languageCode'},
-                },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {kind: 'Field', name: {kind: 'Name', value: 'name'}},
-              ],
-            },
-          },
-          {
-            kind: 'Field',
-            name: {kind: 'Name', value: 'children'},
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {kind: 'Field', name: {kind: 'Name', value: 'id'}},
-                {
-                  kind: 'FragmentSpread',
-                  name: {
-                    kind: 'Name',
-                    value: 'CategoryDropdownItem_MenuItemFragment',
-                  },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-    {
-      kind: 'FragmentDefinition',
-      name: {kind: 'Name', value: 'DropdownItem_MenuItemFragment'},
-      typeCondition: {
-        kind: 'NamedType',
-        name: {kind: 'Name', value: 'MenuItem'},
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {kind: 'Field', name: {kind: 'Name', value: 'name'}},
-          {
-            kind: 'Field',
-            name: {kind: 'Name', value: 'category'},
+            name: {kind: 'Name', value: 'collection'},
             selectionSet: {
               kind: 'SelectionSet',
               selections: [
@@ -30131,147 +32314,20 @@ export const CategoryDropdown_MenuItemFragmentFragmentDoc = {
               ],
             },
           },
-          {
-            kind: 'Field',
-            name: {kind: 'Name', value: 'translation'},
-            arguments: [
-              {
-                kind: 'Argument',
-                name: {kind: 'Name', value: 'languageCode'},
-                value: {
-                  kind: 'Variable',
-                  name: {kind: 'Name', value: 'languageCode'},
-                },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {kind: 'Field', name: {kind: 'Name', value: 'name'}},
-              ],
-            },
-          },
-        ],
-      },
-    },
-    {
-      kind: 'FragmentDefinition',
-      name: {kind: 'Name', value: 'DropdownItemWithChildren_MenuItemFragment'},
-      typeCondition: {
-        kind: 'NamedType',
-        name: {kind: 'Name', value: 'MenuItem'},
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {kind: 'Field', name: {kind: 'Name', value: 'name'}},
-          {
-            kind: 'Field',
-            name: {kind: 'Name', value: 'translation'},
-            arguments: [
-              {
-                kind: 'Argument',
-                name: {kind: 'Name', value: 'languageCode'},
-                value: {
-                  kind: 'Variable',
-                  name: {kind: 'Name', value: 'languageCode'},
-                },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {kind: 'Field', name: {kind: 'Name', value: 'name'}},
-              ],
-            },
-          },
-          {
-            kind: 'FragmentSpread',
-            name: {kind: 'Name', value: 'DropdownItem_MenuItemFragment'},
-          },
-        ],
-      },
-    },
-    {
-      kind: 'FragmentDefinition',
-      name: {kind: 'Name', value: 'CategoryDropdownItem_MenuItemFragment'},
-      typeCondition: {
-        kind: 'NamedType',
-        name: {kind: 'Name', value: 'MenuItem'},
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'FragmentSpread',
-            name: {kind: 'Name', value: 'DropdownItem_MenuItemFragment'},
-          },
-          {
-            kind: 'FragmentSpread',
-            name: {
-              kind: 'Name',
-              value: 'DropdownItemWithChildren_MenuItemFragment',
-            },
-          },
-          {
-            kind: 'Field',
-            name: {kind: 'Name', value: 'children'},
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {kind: 'Field', name: {kind: 'Name', value: 'id'}},
-                {
-                  kind: 'FragmentSpread',
-                  name: {kind: 'Name', value: 'DropdownItem_MenuItemFragment'},
-                },
-                {
-                  kind: 'FragmentSpread',
-                  name: {
-                    kind: 'Name',
-                    value: 'DropdownItemWithChildren_MenuItemFragment',
-                  },
-                },
-                {
-                  kind: 'Field',
-                  name: {kind: 'Name', value: 'children'},
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      {kind: 'Field', name: {kind: 'Name', value: 'id'}},
-                      {
-                        kind: 'FragmentSpread',
-                        name: {
-                          kind: 'Name',
-                          value: 'DropdownItem_MenuItemFragment',
-                        },
-                      },
-                      {
-                        kind: 'FragmentSpread',
-                        name: {
-                          kind: 'Name',
-                          value: 'DropdownItemWithChildren_MenuItemFragment',
-                        },
-                      },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
         ],
       },
     },
   ],
 } as unknown as DocumentNode<
-  CategoryDropdown_MenuItemFragmentFragment,
+  NavbarDropdownItem_MenuItemFragmentFragment,
   unknown
 >;
-export const HeaderMenuItem_MenuItemFragmentFragmentDoc = {
+export const NavbarDropdownContent_MenuItemFragmentFragmentDoc = {
   kind: 'Document',
   definitions: [
     {
       kind: 'FragmentDefinition',
-      name: {kind: 'Name', value: 'HeaderMenuItem_MenuItemFragment'},
+      name: {kind: 'Name', value: 'NavbarDropdownContent_MenuItemFragment'},
       typeCondition: {
         kind: 'NamedType',
         name: {kind: 'Name', value: 'MenuItem'},
@@ -30284,23 +32340,34 @@ export const HeaderMenuItem_MenuItemFragmentFragmentDoc = {
             name: {kind: 'Name', value: 'page'},
             selectionSet: {
               kind: 'SelectionSet',
-              selections: [{kind: 'Field', name: {kind: 'Name', value: 'id'}}],
+              selections: [
+                {kind: 'Field', name: {kind: 'Name', value: 'slug'}},
+              ],
             },
           },
           {
-            kind: 'FragmentSpread',
-            name: {kind: 'Name', value: 'HeaderMenuLink_MenuItemFragment'},
-          },
-          {
-            kind: 'FragmentSpread',
-            name: {kind: 'Name', value: 'CategoryDropdown_MenuItemFragment'},
+            kind: 'Field',
+            name: {kind: 'Name', value: 'children'},
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {kind: 'Field', name: {kind: 'Name', value: 'id'}},
+                {
+                  kind: 'FragmentSpread',
+                  name: {
+                    kind: 'Name',
+                    value: 'NavbarDropdownItem_MenuItemFragment',
+                  },
+                },
+              ],
+            },
           },
         ],
       },
     },
     {
       kind: 'FragmentDefinition',
-      name: {kind: 'Name', value: 'DropdownItem_MenuItemFragment'},
+      name: {kind: 'Name', value: 'NavbarDropdownItem_MenuItemFragment'},
       typeCondition: {
         kind: 'NamedType',
         name: {kind: 'Name', value: 'MenuItem'},
@@ -30309,6 +32376,26 @@ export const HeaderMenuItem_MenuItemFragmentFragmentDoc = {
         kind: 'SelectionSet',
         selections: [
           {kind: 'Field', name: {kind: 'Name', value: 'name'}},
+          {
+            kind: 'Field',
+            name: {kind: 'Name', value: 'translation'},
+            arguments: [
+              {
+                kind: 'Argument',
+                name: {kind: 'Name', value: 'languageCode'},
+                value: {
+                  kind: 'Variable',
+                  name: {kind: 'Name', value: 'languageCode'},
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {kind: 'Field', name: {kind: 'Name', value: 'name'}},
+              ],
+            },
+          },
           {
             kind: 'Field',
             name: {kind: 'Name', value: 'category'},
@@ -30321,22 +32408,47 @@ export const HeaderMenuItem_MenuItemFragmentFragmentDoc = {
           },
           {
             kind: 'Field',
-            name: {kind: 'Name', value: 'translation'},
-            arguments: [
-              {
-                kind: 'Argument',
-                name: {kind: 'Name', value: 'languageCode'},
-                value: {
-                  kind: 'Variable',
-                  name: {kind: 'Name', value: 'languageCode'},
-                },
-              },
-            ],
+            name: {kind: 'Name', value: 'collection'},
             selectionSet: {
               kind: 'SelectionSet',
               selections: [
-                {kind: 'Field', name: {kind: 'Name', value: 'name'}},
+                {kind: 'Field', name: {kind: 'Name', value: 'slug'}},
               ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  NavbarDropdownContent_MenuItemFragmentFragment,
+  unknown
+>;
+export const NavbarDropdown_MenuItemFragmentFragmentDoc = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'FragmentDefinition',
+      name: {kind: 'Name', value: 'NavbarDropdown_MenuItemFragment'},
+      typeCondition: {
+        kind: 'NamedType',
+        name: {kind: 'Name', value: 'MenuItem'},
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'FragmentSpread',
+            name: {
+              kind: 'Name',
+              value: 'NavbarDropdownTrigger_MenuItemFragment',
+            },
+          },
+          {
+            kind: 'FragmentSpread',
+            name: {
+              kind: 'Name',
+              value: 'NavbarDropdownContent_MenuItemFragment',
             },
           },
         ],
@@ -30344,7 +32456,7 @@ export const HeaderMenuItem_MenuItemFragmentFragmentDoc = {
     },
     {
       kind: 'FragmentDefinition',
-      name: {kind: 'Name', value: 'DropdownItemWithChildren_MenuItemFragment'},
+      name: {kind: 'Name', value: 'NavbarDropdownItem_MenuItemFragment'},
       typeCondition: {
         kind: 'NamedType',
         name: {kind: 'Name', value: 'MenuItem'},
@@ -30374,15 +32486,65 @@ export const HeaderMenuItem_MenuItemFragmentFragmentDoc = {
             },
           },
           {
-            kind: 'FragmentSpread',
-            name: {kind: 'Name', value: 'DropdownItem_MenuItemFragment'},
+            kind: 'Field',
+            name: {kind: 'Name', value: 'category'},
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {kind: 'Field', name: {kind: 'Name', value: 'slug'}},
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: {kind: 'Name', value: 'collection'},
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {kind: 'Field', name: {kind: 'Name', value: 'slug'}},
+              ],
+            },
           },
         ],
       },
     },
     {
       kind: 'FragmentDefinition',
-      name: {kind: 'Name', value: 'CategoryDropdownItem_MenuItemFragment'},
+      name: {kind: 'Name', value: 'NavbarDropdownTrigger_MenuItemFragment'},
+      typeCondition: {
+        kind: 'NamedType',
+        name: {kind: 'Name', value: 'MenuItem'},
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {kind: 'Field', name: {kind: 'Name', value: 'name'}},
+          {
+            kind: 'Field',
+            name: {kind: 'Name', value: 'translation'},
+            arguments: [
+              {
+                kind: 'Argument',
+                name: {kind: 'Name', value: 'languageCode'},
+                value: {
+                  kind: 'Variable',
+                  name: {kind: 'Name', value: 'languageCode'},
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {kind: 'Field', name: {kind: 'Name', value: 'name'}},
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: {kind: 'Name', value: 'NavbarDropdownContent_MenuItemFragment'},
       typeCondition: {
         kind: 'NamedType',
         name: {kind: 'Name', value: 'MenuItem'},
@@ -30391,14 +32553,13 @@ export const HeaderMenuItem_MenuItemFragmentFragmentDoc = {
         kind: 'SelectionSet',
         selections: [
           {
-            kind: 'FragmentSpread',
-            name: {kind: 'Name', value: 'DropdownItem_MenuItemFragment'},
-          },
-          {
-            kind: 'FragmentSpread',
-            name: {
-              kind: 'Name',
-              value: 'DropdownItemWithChildren_MenuItemFragment',
+            kind: 'Field',
+            name: {kind: 'Name', value: 'page'},
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {kind: 'Field', name: {kind: 'Name', value: 'slug'}},
+              ],
             },
           },
           {
@@ -30410,34 +32571,586 @@ export const HeaderMenuItem_MenuItemFragmentFragmentDoc = {
                 {kind: 'Field', name: {kind: 'Name', value: 'id'}},
                 {
                   kind: 'FragmentSpread',
-                  name: {kind: 'Name', value: 'DropdownItem_MenuItemFragment'},
+                  name: {
+                    kind: 'Name',
+                    value: 'NavbarDropdownItem_MenuItemFragment',
+                  },
                 },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<NavbarDropdown_MenuItemFragmentFragment, unknown>;
+export const NavbarItem_MenuItemFragmentFragmentDoc = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'FragmentDefinition',
+      name: {kind: 'Name', value: 'NavbarItem_MenuItemFragment'},
+      typeCondition: {
+        kind: 'NamedType',
+        name: {kind: 'Name', value: 'MenuItem'},
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: {kind: 'Name', value: 'children'},
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {kind: 'Field', name: {kind: 'Name', value: '__typename'}},
+              ],
+            },
+          },
+          {
+            kind: 'FragmentSpread',
+            name: {kind: 'Name', value: 'NavbarLink_MenuItemFragment'},
+          },
+          {
+            kind: 'FragmentSpread',
+            name: {kind: 'Name', value: 'NavbarDropdown_MenuItemFragment'},
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: {kind: 'Name', value: 'NavbarDropdownTrigger_MenuItemFragment'},
+      typeCondition: {
+        kind: 'NamedType',
+        name: {kind: 'Name', value: 'MenuItem'},
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {kind: 'Field', name: {kind: 'Name', value: 'name'}},
+          {
+            kind: 'Field',
+            name: {kind: 'Name', value: 'translation'},
+            arguments: [
+              {
+                kind: 'Argument',
+                name: {kind: 'Name', value: 'languageCode'},
+                value: {
+                  kind: 'Variable',
+                  name: {kind: 'Name', value: 'languageCode'},
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {kind: 'Field', name: {kind: 'Name', value: 'name'}},
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: {kind: 'Name', value: 'NavbarDropdownItem_MenuItemFragment'},
+      typeCondition: {
+        kind: 'NamedType',
+        name: {kind: 'Name', value: 'MenuItem'},
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {kind: 'Field', name: {kind: 'Name', value: 'name'}},
+          {
+            kind: 'Field',
+            name: {kind: 'Name', value: 'translation'},
+            arguments: [
+              {
+                kind: 'Argument',
+                name: {kind: 'Name', value: 'languageCode'},
+                value: {
+                  kind: 'Variable',
+                  name: {kind: 'Name', value: 'languageCode'},
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {kind: 'Field', name: {kind: 'Name', value: 'name'}},
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: {kind: 'Name', value: 'category'},
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {kind: 'Field', name: {kind: 'Name', value: 'slug'}},
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: {kind: 'Name', value: 'collection'},
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {kind: 'Field', name: {kind: 'Name', value: 'slug'}},
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: {kind: 'Name', value: 'NavbarDropdownContent_MenuItemFragment'},
+      typeCondition: {
+        kind: 'NamedType',
+        name: {kind: 'Name', value: 'MenuItem'},
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: {kind: 'Name', value: 'page'},
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {kind: 'Field', name: {kind: 'Name', value: 'slug'}},
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: {kind: 'Name', value: 'children'},
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {kind: 'Field', name: {kind: 'Name', value: 'id'}},
                 {
                   kind: 'FragmentSpread',
                   name: {
                     kind: 'Name',
-                    value: 'DropdownItemWithChildren_MenuItemFragment',
+                    value: 'NavbarDropdownItem_MenuItemFragment',
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: {kind: 'Name', value: 'NavbarLink_MenuItemFragment'},
+      typeCondition: {
+        kind: 'NamedType',
+        name: {kind: 'Name', value: 'MenuItem'},
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {kind: 'Field', name: {kind: 'Name', value: 'name'}},
+          {
+            kind: 'Field',
+            name: {kind: 'Name', value: 'translation'},
+            arguments: [
+              {
+                kind: 'Argument',
+                name: {kind: 'Name', value: 'languageCode'},
+                value: {
+                  kind: 'Variable',
+                  name: {kind: 'Name', value: 'languageCode'},
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {kind: 'Field', name: {kind: 'Name', value: 'name'}},
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: {kind: 'Name', value: 'page'},
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {kind: 'Field', name: {kind: 'Name', value: 'slug'}},
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: {kind: 'Name', value: 'NavbarDropdown_MenuItemFragment'},
+      typeCondition: {
+        kind: 'NamedType',
+        name: {kind: 'Name', value: 'MenuItem'},
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'FragmentSpread',
+            name: {
+              kind: 'Name',
+              value: 'NavbarDropdownTrigger_MenuItemFragment',
+            },
+          },
+          {
+            kind: 'FragmentSpread',
+            name: {
+              kind: 'Name',
+              value: 'NavbarDropdownContent_MenuItemFragment',
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<NavbarItem_MenuItemFragmentFragment, unknown>;
+export const ProductThumbnail_ImageFragmentFragmentDoc = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'FragmentDefinition',
+      name: {kind: 'Name', value: 'ProductThumbnail_ImageFragment'},
+      typeCondition: {kind: 'NamedType', name: {kind: 'Name', value: 'Image'}},
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {kind: 'Field', name: {kind: 'Name', value: '__typename'}},
+          {kind: 'Field', name: {kind: 'Name', value: 'url'}},
+          {kind: 'Field', name: {kind: 'Name', value: 'alt'}},
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<ProductThumbnail_ImageFragmentFragment, unknown>;
+export const ProductPriceRange_PricingInfoFragmentFragmentDoc = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'FragmentDefinition',
+      name: {kind: 'Name', value: 'ProductPriceRange_PricingInfoFragment'},
+      typeCondition: {
+        kind: 'NamedType',
+        name: {kind: 'Name', value: 'ProductPricingInfo'},
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: {kind: 'Name', value: 'priceRange'},
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: {kind: 'Name', value: 'start'},
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: {kind: 'Name', value: 'gross'},
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: {kind: 'Name', value: 'currency'},
+                            },
+                            {
+                              kind: 'Field',
+                              name: {kind: 'Name', value: 'amount'},
+                            },
+                          ],
+                        },
+                      },
+                    ],
                   },
                 },
                 {
                   kind: 'Field',
-                  name: {kind: 'Name', value: 'children'},
+                  name: {kind: 'Name', value: 'stop'},
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
-                      {kind: 'Field', name: {kind: 'Name', value: 'id'}},
                       {
-                        kind: 'FragmentSpread',
-                        name: {
-                          kind: 'Name',
-                          value: 'DropdownItem_MenuItemFragment',
+                        kind: 'Field',
+                        name: {kind: 'Name', value: 'gross'},
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: {kind: 'Name', value: 'currency'},
+                            },
+                            {
+                              kind: 'Field',
+                              name: {kind: 'Name', value: 'amount'},
+                            },
+                          ],
                         },
                       },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  ProductPriceRange_PricingInfoFragmentFragment,
+  unknown
+>;
+export const ProductCategoryName_CategoryFragmentFragmentDoc = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'FragmentDefinition',
+      name: {kind: 'Name', value: 'ProductCategoryName_CategoryFragment'},
+      typeCondition: {
+        kind: 'NamedType',
+        name: {kind: 'Name', value: 'Category'},
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {kind: 'Field', name: {kind: 'Name', value: '__typename'}},
+          {kind: 'Field', name: {kind: 'Name', value: 'id'}},
+          {kind: 'Field', name: {kind: 'Name', value: 'name'}},
+          {
+            kind: 'Field',
+            name: {kind: 'Name', value: 'translation'},
+            arguments: [
+              {
+                kind: 'Argument',
+                name: {kind: 'Name', value: 'languageCode'},
+                value: {
+                  kind: 'Variable',
+                  name: {kind: 'Name', value: 'languageCode'},
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {kind: 'Field', name: {kind: 'Name', value: '__typename'}},
+                {kind: 'Field', name: {kind: 'Name', value: 'id'}},
+                {kind: 'Field', name: {kind: 'Name', value: 'name'}},
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  ProductCategoryName_CategoryFragmentFragment,
+  unknown
+>;
+export const ProductItem_ProductFragmentFragmentDoc = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'FragmentDefinition',
+      name: {kind: 'Name', value: 'ProductItem_ProductFragment'},
+      typeCondition: {
+        kind: 'NamedType',
+        name: {kind: 'Name', value: 'Product'},
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {kind: 'Field', name: {kind: 'Name', value: '__typename'}},
+          {kind: 'Field', name: {kind: 'Name', value: 'id'}},
+          {kind: 'Field', name: {kind: 'Name', value: 'name'}},
+          {kind: 'Field', name: {kind: 'Name', value: 'slug'}},
+          {
+            kind: 'Field',
+            name: {kind: 'Name', value: 'translation'},
+            arguments: [
+              {
+                kind: 'Argument',
+                name: {kind: 'Name', value: 'languageCode'},
+                value: {
+                  kind: 'Variable',
+                  name: {kind: 'Name', value: 'languageCode'},
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {kind: 'Field', name: {kind: 'Name', value: '__typename'}},
+                {kind: 'Field', name: {kind: 'Name', value: 'id'}},
+                {kind: 'Field', name: {kind: 'Name', value: 'name'}},
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: {kind: 'Name', value: 'thumbnail'},
+            arguments: [
+              {
+                kind: 'Argument',
+                name: {kind: 'Name', value: 'format'},
+                value: {kind: 'EnumValue', value: 'WEBP'},
+              },
+              {
+                kind: 'Argument',
+                name: {kind: 'Name', value: 'size'},
+                value: {kind: 'IntValue', value: '4096'},
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: {kind: 'Name', value: 'ProductThumbnail_ImageFragment'},
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: {kind: 'Name', value: 'pricing'},
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: {
+                    kind: 'Name',
+                    value: 'ProductPriceRange_PricingInfoFragment',
+                  },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: {kind: 'Name', value: 'category'},
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: {
+                    kind: 'Name',
+                    value: 'ProductCategoryName_CategoryFragment',
+                  },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: {kind: 'Name', value: 'variants'},
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {kind: 'Field', name: {kind: 'Name', value: '__typename'}},
+                {kind: 'Field', name: {kind: 'Name', value: 'id'}},
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: {kind: 'Name', value: 'ProductThumbnail_ImageFragment'},
+      typeCondition: {kind: 'NamedType', name: {kind: 'Name', value: 'Image'}},
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {kind: 'Field', name: {kind: 'Name', value: '__typename'}},
+          {kind: 'Field', name: {kind: 'Name', value: 'url'}},
+          {kind: 'Field', name: {kind: 'Name', value: 'alt'}},
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: {kind: 'Name', value: 'ProductPriceRange_PricingInfoFragment'},
+      typeCondition: {
+        kind: 'NamedType',
+        name: {kind: 'Name', value: 'ProductPricingInfo'},
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: {kind: 'Name', value: 'priceRange'},
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: {kind: 'Name', value: 'start'},
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
                       {
-                        kind: 'FragmentSpread',
-                        name: {
-                          kind: 'Name',
-                          value: 'DropdownItemWithChildren_MenuItemFragment',
+                        kind: 'Field',
+                        name: {kind: 'Name', value: 'gross'},
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: {kind: 'Name', value: 'currency'},
+                            },
+                            {
+                              kind: 'Field',
+                              name: {kind: 'Name', value: 'amount'},
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: {kind: 'Name', value: 'stop'},
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: {kind: 'Name', value: 'gross'},
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: {kind: 'Name', value: 'currency'},
+                            },
+                            {
+                              kind: 'Field',
+                              name: {kind: 'Name', value: 'amount'},
+                            },
+                          ],
                         },
                       },
                     ],
@@ -30451,58 +33164,16 @@ export const HeaderMenuItem_MenuItemFragmentFragmentDoc = {
     },
     {
       kind: 'FragmentDefinition',
-      name: {kind: 'Name', value: 'HeaderMenuLink_MenuItemFragment'},
+      name: {kind: 'Name', value: 'ProductCategoryName_CategoryFragment'},
       typeCondition: {
         kind: 'NamedType',
-        name: {kind: 'Name', value: 'MenuItem'},
+        name: {kind: 'Name', value: 'Category'},
       },
       selectionSet: {
         kind: 'SelectionSet',
         selections: [
-          {kind: 'Field', name: {kind: 'Name', value: 'name'}},
-          {
-            kind: 'Field',
-            name: {kind: 'Name', value: 'page'},
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {kind: 'Field', name: {kind: 'Name', value: 'slug'}},
-              ],
-            },
-          },
-          {
-            kind: 'Field',
-            name: {kind: 'Name', value: 'translation'},
-            arguments: [
-              {
-                kind: 'Argument',
-                name: {kind: 'Name', value: 'languageCode'},
-                value: {
-                  kind: 'Variable',
-                  name: {kind: 'Name', value: 'languageCode'},
-                },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {kind: 'Field', name: {kind: 'Name', value: 'name'}},
-              ],
-            },
-          },
-        ],
-      },
-    },
-    {
-      kind: 'FragmentDefinition',
-      name: {kind: 'Name', value: 'CategoryDropdown_MenuItemFragment'},
-      typeCondition: {
-        kind: 'NamedType',
-        name: {kind: 'Name', value: 'MenuItem'},
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
+          {kind: 'Field', name: {kind: 'Name', value: '__typename'}},
+          {kind: 'Field', name: {kind: 'Name', value: 'id'}},
           {kind: 'Field', name: {kind: 'Name', value: 'name'}},
           {
             kind: 'Field',
@@ -30520,24 +33191,9 @@ export const HeaderMenuItem_MenuItemFragmentFragmentDoc = {
             selectionSet: {
               kind: 'SelectionSet',
               selections: [
-                {kind: 'Field', name: {kind: 'Name', value: 'name'}},
-              ],
-            },
-          },
-          {
-            kind: 'Field',
-            name: {kind: 'Name', value: 'children'},
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
+                {kind: 'Field', name: {kind: 'Name', value: '__typename'}},
                 {kind: 'Field', name: {kind: 'Name', value: 'id'}},
-                {
-                  kind: 'FragmentSpread',
-                  name: {
-                    kind: 'Name',
-                    value: 'CategoryDropdownItem_MenuItemFragment',
-                  },
-                },
+                {kind: 'Field', name: {kind: 'Name', value: 'name'}},
               ],
             },
           },
@@ -30545,7 +33201,7 @@ export const HeaderMenuItem_MenuItemFragmentFragmentDoc = {
       },
     },
   ],
-} as unknown as DocumentNode<HeaderMenuItem_MenuItemFragmentFragment, unknown>;
+} as unknown as DocumentNode<ProductItem_ProductFragmentFragment, unknown>;
 export const ShoppingCartButton_CheckoutFragmentFragmentDoc = {
   kind: 'Document',
   definitions: [
@@ -31179,101 +33835,21 @@ export const CartFooter_CheckoutFragmentFragmentDoc = {
     },
   ],
 } as unknown as DocumentNode<CartFooter_CheckoutFragmentFragment, unknown>;
-export const PaginationLinks_PageInfoFragmentFragmentDoc = {
+export const VariantLink_ProductVariantFragmentFragmentDoc = {
   kind: 'Document',
   definitions: [
     {
       kind: 'FragmentDefinition',
-      name: {kind: 'Name', value: 'PaginationLinks_PageInfoFragment'},
+      name: {kind: 'Name', value: 'VariantLink_ProductVariantFragment'},
       typeCondition: {
         kind: 'NamedType',
-        name: {kind: 'Name', value: 'PageInfo'},
+        name: {kind: 'Name', value: 'ProductVariant'},
       },
       selectionSet: {
         kind: 'SelectionSet',
         selections: [
-          {kind: 'Field', name: {kind: 'Name', value: 'hasNextPage'}},
-          {kind: 'Field', name: {kind: 'Name', value: 'endCursor'}},
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<PaginationLinks_PageInfoFragmentFragment, unknown>;
-export const PriceBadge_VariantPricingInfoFragmentFragmentDoc = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'FragmentDefinition',
-      name: {kind: 'Name', value: 'PriceBadge_VariantPricingInfoFragment'},
-      typeCondition: {
-        kind: 'NamedType',
-        name: {kind: 'Name', value: 'VariantPricingInfo'},
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {kind: 'Field', name: {kind: 'Name', value: 'onSale'}},
-          {
-            kind: 'Field',
-            name: {kind: 'Name', value: 'price'},
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'Field',
-                  name: {kind: 'Name', value: 'gross'},
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      {kind: 'Field', name: {kind: 'Name', value: 'currency'}},
-                      {kind: 'Field', name: {kind: 'Name', value: 'amount'}},
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-          {
-            kind: 'Field',
-            name: {kind: 'Name', value: 'priceUndiscounted'},
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'Field',
-                  name: {kind: 'Name', value: 'gross'},
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      {kind: 'Field', name: {kind: 'Name', value: 'currency'}},
-                      {kind: 'Field', name: {kind: 'Name', value: 'amount'}},
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<
-  PriceBadge_VariantPricingInfoFragmentFragment,
-  unknown
->;
-export const ProductCard_ProductFragmentFragmentDoc = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'FragmentDefinition',
-      name: {kind: 'Name', value: 'ProductCard_ProductFragment'},
-      typeCondition: {
-        kind: 'NamedType',
-        name: {kind: 'Name', value: 'Product'},
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
+          {kind: 'Field', name: {kind: 'Name', value: '__typename'}},
+          {kind: 'Field', name: {kind: 'Name', value: 'id'}},
           {kind: 'Field', name: {kind: 'Name', value: 'name'}},
           {
             kind: 'Field',
@@ -31291,42 +33867,155 @@ export const ProductCard_ProductFragmentFragmentDoc = {
             selectionSet: {
               kind: 'SelectionSet',
               selections: [
+                {kind: 'Field', name: {kind: 'Name', value: '__typename'}},
+                {kind: 'Field', name: {kind: 'Name', value: 'id'}},
                 {kind: 'Field', name: {kind: 'Name', value: 'name'}},
               ],
             },
           },
           {
             kind: 'Field',
-            name: {kind: 'Name', value: 'defaultVariant'},
+            name: {kind: 'Name', value: 'product'},
             selectionSet: {
               kind: 'SelectionSet',
               selections: [
+                {kind: 'Field', name: {kind: 'Name', value: '__typename'}},
+                {kind: 'Field', name: {kind: 'Name', value: 'id'}},
+                {kind: 'Field', name: {kind: 'Name', value: 'slug'}},
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  VariantLink_ProductVariantFragmentFragment,
+  unknown
+>;
+export const VariantLinks_ProductFragmentFragmentDoc = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'FragmentDefinition',
+      name: {kind: 'Name', value: 'VariantLinks_ProductFragment'},
+      typeCondition: {
+        kind: 'NamedType',
+        name: {kind: 'Name', value: 'Product'},
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: {kind: 'Name', value: 'variants'},
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {kind: 'Field', name: {kind: 'Name', value: '__typename'}},
+                {kind: 'Field', name: {kind: 'Name', value: 'id'}},
                 {
-                  kind: 'Field',
-                  name: {kind: 'Name', value: 'pricing'},
-                  arguments: [
-                    {
-                      kind: 'Argument',
-                      name: {kind: 'Name', value: 'address'},
-                      value: {
-                        kind: 'Variable',
-                        name: {kind: 'Name', value: 'address'},
-                      },
-                    },
-                  ],
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      {
-                        kind: 'FragmentSpread',
-                        name: {
-                          kind: 'Name',
-                          value: 'PriceBadge_VariantPricingInfoFragment',
-                        },
-                      },
-                    ],
+                  kind: 'FragmentSpread',
+                  name: {
+                    kind: 'Name',
+                    value: 'VariantLink_ProductVariantFragment',
                   },
                 },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: {kind: 'Name', value: 'VariantLink_ProductVariantFragment'},
+      typeCondition: {
+        kind: 'NamedType',
+        name: {kind: 'Name', value: 'ProductVariant'},
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {kind: 'Field', name: {kind: 'Name', value: '__typename'}},
+          {kind: 'Field', name: {kind: 'Name', value: 'id'}},
+          {kind: 'Field', name: {kind: 'Name', value: 'name'}},
+          {
+            kind: 'Field',
+            name: {kind: 'Name', value: 'translation'},
+            arguments: [
+              {
+                kind: 'Argument',
+                name: {kind: 'Name', value: 'languageCode'},
+                value: {
+                  kind: 'Variable',
+                  name: {kind: 'Name', value: 'languageCode'},
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {kind: 'Field', name: {kind: 'Name', value: '__typename'}},
+                {kind: 'Field', name: {kind: 'Name', value: 'id'}},
+                {kind: 'Field', name: {kind: 'Name', value: 'name'}},
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: {kind: 'Name', value: 'product'},
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {kind: 'Field', name: {kind: 'Name', value: '__typename'}},
+                {kind: 'Field', name: {kind: 'Name', value: 'id'}},
+                {kind: 'Field', name: {kind: 'Name', value: 'slug'}},
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<VariantLinks_ProductFragmentFragment, unknown>;
+export const Product_ProductFragmentFragmentDoc = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'FragmentDefinition',
+      name: {kind: 'Name', value: 'Product_ProductFragment'},
+      typeCondition: {
+        kind: 'NamedType',
+        name: {kind: 'Name', value: 'Product'},
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {kind: 'Field', name: {kind: 'Name', value: '__typename'}},
+          {kind: 'Field', name: {kind: 'Name', value: 'id'}},
+          {kind: 'Field', name: {kind: 'Name', value: 'name'}},
+          {kind: 'Field', name: {kind: 'Name', value: 'description'}},
+          {
+            kind: 'Field',
+            name: {kind: 'Name', value: 'translation'},
+            arguments: [
+              {
+                kind: 'Argument',
+                name: {kind: 'Name', value: 'languageCode'},
+                value: {
+                  kind: 'Variable',
+                  name: {kind: 'Name', value: 'languageCode'},
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {kind: 'Field', name: {kind: 'Name', value: '__typename'}},
+                {kind: 'Field', name: {kind: 'Name', value: 'id'}},
+                {kind: 'Field', name: {kind: 'Name', value: 'name'}},
+                {kind: 'Field', name: {kind: 'Name', value: 'description'}},
               ],
             },
           },
@@ -31337,248 +34026,9 @@ export const ProductCard_ProductFragmentFragmentDoc = {
             arguments: [
               {
                 kind: 'Argument',
-                name: {kind: 'Name', value: 'size'},
-                value: {kind: 'IntValue', value: '4096'},
+                name: {kind: 'Name', value: 'format'},
+                value: {kind: 'EnumValue', value: 'WEBP'},
               },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {kind: 'Field', name: {kind: 'Name', value: 'url'}},
-                {kind: 'Field', name: {kind: 'Name', value: 'alt'}},
-              ],
-            },
-          },
-        ],
-      },
-    },
-    {
-      kind: 'FragmentDefinition',
-      name: {kind: 'Name', value: 'PriceBadge_VariantPricingInfoFragment'},
-      typeCondition: {
-        kind: 'NamedType',
-        name: {kind: 'Name', value: 'VariantPricingInfo'},
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {kind: 'Field', name: {kind: 'Name', value: 'onSale'}},
-          {
-            kind: 'Field',
-            name: {kind: 'Name', value: 'price'},
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'Field',
-                  name: {kind: 'Name', value: 'gross'},
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      {kind: 'Field', name: {kind: 'Name', value: 'currency'}},
-                      {kind: 'Field', name: {kind: 'Name', value: 'amount'}},
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-          {
-            kind: 'Field',
-            name: {kind: 'Name', value: 'priceUndiscounted'},
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'Field',
-                  name: {kind: 'Name', value: 'gross'},
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      {kind: 'Field', name: {kind: 'Name', value: 'currency'}},
-                      {kind: 'Field', name: {kind: 'Name', value: 'amount'}},
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<ProductCard_ProductFragmentFragment, unknown>;
-export const ProductList_ProductCountableConnectionFragmentFragmentDoc = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'FragmentDefinition',
-      name: {
-        kind: 'Name',
-        value: 'ProductList_ProductCountableConnectionFragment',
-      },
-      typeCondition: {
-        kind: 'NamedType',
-        name: {kind: 'Name', value: 'ProductCountableConnection'},
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            name: {kind: 'Name', value: 'edges'},
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'Field',
-                  name: {kind: 'Name', value: 'node'},
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      {kind: 'Field', name: {kind: 'Name', value: 'id'}},
-                      {kind: 'Field', name: {kind: 'Name', value: 'slug'}},
-                      {
-                        kind: 'FragmentSpread',
-                        name: {
-                          kind: 'Name',
-                          value: 'ProductCard_ProductFragment',
-                        },
-                      },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-    {
-      kind: 'FragmentDefinition',
-      name: {kind: 'Name', value: 'PriceBadge_VariantPricingInfoFragment'},
-      typeCondition: {
-        kind: 'NamedType',
-        name: {kind: 'Name', value: 'VariantPricingInfo'},
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {kind: 'Field', name: {kind: 'Name', value: 'onSale'}},
-          {
-            kind: 'Field',
-            name: {kind: 'Name', value: 'price'},
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'Field',
-                  name: {kind: 'Name', value: 'gross'},
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      {kind: 'Field', name: {kind: 'Name', value: 'currency'}},
-                      {kind: 'Field', name: {kind: 'Name', value: 'amount'}},
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-          {
-            kind: 'Field',
-            name: {kind: 'Name', value: 'priceUndiscounted'},
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'Field',
-                  name: {kind: 'Name', value: 'gross'},
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      {kind: 'Field', name: {kind: 'Name', value: 'currency'}},
-                      {kind: 'Field', name: {kind: 'Name', value: 'amount'}},
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-    {
-      kind: 'FragmentDefinition',
-      name: {kind: 'Name', value: 'ProductCard_ProductFragment'},
-      typeCondition: {
-        kind: 'NamedType',
-        name: {kind: 'Name', value: 'Product'},
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {kind: 'Field', name: {kind: 'Name', value: 'name'}},
-          {
-            kind: 'Field',
-            name: {kind: 'Name', value: 'translation'},
-            arguments: [
-              {
-                kind: 'Argument',
-                name: {kind: 'Name', value: 'languageCode'},
-                value: {
-                  kind: 'Variable',
-                  name: {kind: 'Name', value: 'languageCode'},
-                },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {kind: 'Field', name: {kind: 'Name', value: 'name'}},
-              ],
-            },
-          },
-          {
-            kind: 'Field',
-            name: {kind: 'Name', value: 'defaultVariant'},
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'Field',
-                  name: {kind: 'Name', value: 'pricing'},
-                  arguments: [
-                    {
-                      kind: 'Argument',
-                      name: {kind: 'Name', value: 'address'},
-                      value: {
-                        kind: 'Variable',
-                        name: {kind: 'Name', value: 'address'},
-                      },
-                    },
-                  ],
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      {
-                        kind: 'FragmentSpread',
-                        name: {
-                          kind: 'Name',
-                          value: 'PriceBadge_VariantPricingInfoFragment',
-                        },
-                      },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-          {kind: 'Field', name: {kind: 'Name', value: 'isAvailable'}},
-          {
-            kind: 'Field',
-            name: {kind: 'Name', value: 'thumbnail'},
-            arguments: [
               {
                 kind: 'Argument',
                 name: {kind: 'Name', value: 'size'},
@@ -31588,32 +34038,59 @@ export const ProductList_ProductCountableConnectionFragmentFragmentDoc = {
             selectionSet: {
               kind: 'SelectionSet',
               selections: [
-                {kind: 'Field', name: {kind: 'Name', value: 'url'}},
-                {kind: 'Field', name: {kind: 'Name', value: 'alt'}},
+                {
+                  kind: 'FragmentSpread',
+                  name: {kind: 'Name', value: 'ProductThumbnail_ImageFragment'},
+                },
               ],
             },
+          },
+          {
+            kind: 'Field',
+            name: {kind: 'Name', value: 'pricing'},
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: {
+                    kind: 'Name',
+                    value: 'ProductPriceRange_PricingInfoFragment',
+                  },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: {kind: 'Name', value: 'variants'},
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {kind: 'Field', name: {kind: 'Name', value: '__typename'}},
+                {kind: 'Field', name: {kind: 'Name', value: 'id'}},
+              ],
+            },
+          },
+          {
+            kind: 'FragmentSpread',
+            name: {kind: 'Name', value: 'VariantLinks_ProductFragment'},
           },
         ],
       },
     },
-  ],
-} as unknown as DocumentNode<
-  ProductList_ProductCountableConnectionFragmentFragment,
-  unknown
->;
-export const AttributeCheckbox_AttributeFragmentFragmentDoc = {
-  kind: 'Document',
-  definitions: [
     {
       kind: 'FragmentDefinition',
-      name: {kind: 'Name', value: 'AttributeCheckbox_AttributeFragment'},
+      name: {kind: 'Name', value: 'VariantLink_ProductVariantFragment'},
       typeCondition: {
         kind: 'NamedType',
-        name: {kind: 'Name', value: 'AttributeValue'},
+        name: {kind: 'Name', value: 'ProductVariant'},
       },
       selectionSet: {
         kind: 'SelectionSet',
         selections: [
+          {kind: 'Field', name: {kind: 'Name', value: '__typename'}},
+          {kind: 'Field', name: {kind: 'Name', value: 'id'}},
           {kind: 'Field', name: {kind: 'Name', value: 'name'}},
           {
             kind: 'Field',
@@ -31631,89 +34108,101 @@ export const AttributeCheckbox_AttributeFragmentFragmentDoc = {
             selectionSet: {
               kind: 'SelectionSet',
               selections: [
+                {kind: 'Field', name: {kind: 'Name', value: '__typename'}},
+                {kind: 'Field', name: {kind: 'Name', value: 'id'}},
                 {kind: 'Field', name: {kind: 'Name', value: 'name'}},
               ],
             },
           },
-          {kind: 'Field', name: {kind: 'Name', value: 'slug'}},
+          {
+            kind: 'Field',
+            name: {kind: 'Name', value: 'product'},
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {kind: 'Field', name: {kind: 'Name', value: '__typename'}},
+                {kind: 'Field', name: {kind: 'Name', value: 'id'}},
+                {kind: 'Field', name: {kind: 'Name', value: 'slug'}},
+              ],
+            },
+          },
         ],
       },
     },
-  ],
-} as unknown as DocumentNode<
-  AttributeCheckbox_AttributeFragmentFragment,
-  unknown
->;
-export const ProductAttributesDropdown_AttributeFragmentFragmentDoc = {
-  kind: 'Document',
-  definitions: [
     {
       kind: 'FragmentDefinition',
-      name: {
-        kind: 'Name',
-        value: 'ProductAttributesDropdown_AttributeFragment',
+      name: {kind: 'Name', value: 'ProductThumbnail_ImageFragment'},
+      typeCondition: {kind: 'NamedType', name: {kind: 'Name', value: 'Image'}},
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {kind: 'Field', name: {kind: 'Name', value: '__typename'}},
+          {kind: 'Field', name: {kind: 'Name', value: 'url'}},
+          {kind: 'Field', name: {kind: 'Name', value: 'alt'}},
+        ],
       },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: {kind: 'Name', value: 'ProductPriceRange_PricingInfoFragment'},
       typeCondition: {
         kind: 'NamedType',
-        name: {kind: 'Name', value: 'Attribute'},
+        name: {kind: 'Name', value: 'ProductPricingInfo'},
       },
       selectionSet: {
         kind: 'SelectionSet',
         selections: [
-          {kind: 'Field', name: {kind: 'Name', value: 'name'}},
           {
             kind: 'Field',
-            name: {kind: 'Name', value: 'translation'},
-            arguments: [
-              {
-                kind: 'Argument',
-                name: {kind: 'Name', value: 'languageCode'},
-                value: {
-                  kind: 'Variable',
-                  name: {kind: 'Name', value: 'languageCode'},
-                },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {kind: 'Field', name: {kind: 'Name', value: 'name'}},
-              ],
-            },
-          },
-          {kind: 'Field', name: {kind: 'Name', value: 'slug'}},
-          {
-            kind: 'Field',
-            name: {kind: 'Name', value: 'choices'},
-            arguments: [
-              {
-                kind: 'Argument',
-                name: {kind: 'Name', value: 'first'},
-                value: {kind: 'IntValue', value: '20'},
-              },
-            ],
+            name: {kind: 'Name', value: 'priceRange'},
             selectionSet: {
               kind: 'SelectionSet',
               selections: [
                 {
                   kind: 'Field',
-                  name: {kind: 'Name', value: 'edges'},
+                  name: {kind: 'Name', value: 'start'},
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
                       {
                         kind: 'Field',
-                        name: {kind: 'Name', value: 'node'},
+                        name: {kind: 'Name', value: 'gross'},
                         selectionSet: {
                           kind: 'SelectionSet',
                           selections: [
-                            {kind: 'Field', name: {kind: 'Name', value: 'id'}},
                             {
-                              kind: 'FragmentSpread',
-                              name: {
-                                kind: 'Name',
-                                value: 'AttributeCheckbox_AttributeFragment',
-                              },
+                              kind: 'Field',
+                              name: {kind: 'Name', value: 'currency'},
+                            },
+                            {
+                              kind: 'Field',
+                              name: {kind: 'Name', value: 'amount'},
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: {kind: 'Name', value: 'stop'},
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: {kind: 'Name', value: 'gross'},
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: {kind: 'Name', value: 'currency'},
+                            },
+                            {
+                              kind: 'Field',
+                              name: {kind: 'Name', value: 'amount'},
                             },
                           ],
                         },
@@ -31729,14 +34218,52 @@ export const ProductAttributesDropdown_AttributeFragmentFragmentDoc = {
     },
     {
       kind: 'FragmentDefinition',
-      name: {kind: 'Name', value: 'AttributeCheckbox_AttributeFragment'},
+      name: {kind: 'Name', value: 'VariantLinks_ProductFragment'},
       typeCondition: {
         kind: 'NamedType',
-        name: {kind: 'Name', value: 'AttributeValue'},
+        name: {kind: 'Name', value: 'Product'},
       },
       selectionSet: {
         kind: 'SelectionSet',
         selections: [
+          {
+            kind: 'Field',
+            name: {kind: 'Name', value: 'variants'},
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {kind: 'Field', name: {kind: 'Name', value: '__typename'}},
+                {kind: 'Field', name: {kind: 'Name', value: 'id'}},
+                {
+                  kind: 'FragmentSpread',
+                  name: {
+                    kind: 'Name',
+                    value: 'VariantLink_ProductVariantFragment',
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<Product_ProductFragmentFragment, unknown>;
+export const CategoryDropdownItem_CategoryFragmentFragmentDoc = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'FragmentDefinition',
+      name: {kind: 'Name', value: 'CategoryDropdownItem_CategoryFragment'},
+      typeCondition: {
+        kind: 'NamedType',
+        name: {kind: 'Name', value: 'Category'},
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {kind: 'Field', name: {kind: 'Name', value: '__typename'}},
+          {kind: 'Field', name: {kind: 'Name', value: 'id'}},
           {kind: 'Field', name: {kind: 'Name', value: 'name'}},
           {
             kind: 'Field',
@@ -31764,7 +34291,52 @@ export const ProductAttributesDropdown_AttributeFragmentFragmentDoc = {
     },
   ],
 } as unknown as DocumentNode<
-  ProductAttributesDropdown_AttributeFragmentFragment,
+  CategoryDropdownItem_CategoryFragmentFragment,
+  unknown
+>;
+export const CollectionDropdownItem_CategoryFragmentFragmentDoc = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'FragmentDefinition',
+      name: {kind: 'Name', value: 'CollectionDropdownItem_CategoryFragment'},
+      typeCondition: {
+        kind: 'NamedType',
+        name: {kind: 'Name', value: 'Collection'},
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {kind: 'Field', name: {kind: 'Name', value: '__typename'}},
+          {kind: 'Field', name: {kind: 'Name', value: 'id'}},
+          {kind: 'Field', name: {kind: 'Name', value: 'name'}},
+          {
+            kind: 'Field',
+            name: {kind: 'Name', value: 'translation'},
+            arguments: [
+              {
+                kind: 'Argument',
+                name: {kind: 'Name', value: 'languageCode'},
+                value: {
+                  kind: 'Variable',
+                  name: {kind: 'Name', value: 'languageCode'},
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {kind: 'Field', name: {kind: 'Name', value: 'name'}},
+              ],
+            },
+          },
+          {kind: 'Field', name: {kind: 'Name', value: 'slug'}},
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  CollectionDropdownItem_CategoryFragmentFragment,
   unknown
 >;
 export const Breadcrumbs_CheckoutFragmentFragmentDoc = {
@@ -34063,13 +36635,13 @@ export const RequestEmailChangeMutationDocument = {
   RequestEmailChangeMutationMutation,
   RequestEmailChangeMutationMutationVariables
 >;
-export const HeaderMenu_MenuQueryDocument = {
+export const NavbarMenu_MenuQueryDocument = {
   kind: 'Document',
   definitions: [
     {
       kind: 'OperationDefinition',
       operation: 'query',
-      name: {kind: 'Name', value: 'HeaderMenu_MenuQuery'},
+      name: {kind: 'Name', value: 'NavbarMenu_MenuQuery'},
       variableDefinitions: [
         {
           kind: 'VariableDefinition',
@@ -34101,7 +36673,7 @@ export const HeaderMenu_MenuQueryDocument = {
               {
                 kind: 'Argument',
                 name: {kind: 'Name', value: 'name'},
-                value: {kind: 'StringValue', value: 'header', block: false},
+                value: {kind: 'StringValue', value: 'navbar', block: false},
               },
               {
                 kind: 'Argument',
@@ -34126,7 +36698,7 @@ export const HeaderMenu_MenuQueryDocument = {
                         kind: 'FragmentSpread',
                         name: {
                           kind: 'Name',
-                          value: 'HeaderMenuItem_MenuItemFragment',
+                          value: 'NavbarItem_MenuItemFragment',
                         },
                       },
                     ],
@@ -34140,7 +36712,7 @@ export const HeaderMenu_MenuQueryDocument = {
     },
     {
       kind: 'FragmentDefinition',
-      name: {kind: 'Name', value: 'HeaderMenuLink_MenuItemFragment'},
+      name: {kind: 'Name', value: 'NavbarLink_MenuItemFragment'},
       typeCondition: {
         kind: 'NamedType',
         name: {kind: 'Name', value: 'MenuItem'},
@@ -34151,6 +36723,26 @@ export const HeaderMenu_MenuQueryDocument = {
           {kind: 'Field', name: {kind: 'Name', value: 'name'}},
           {
             kind: 'Field',
+            name: {kind: 'Name', value: 'translation'},
+            arguments: [
+              {
+                kind: 'Argument',
+                name: {kind: 'Name', value: 'languageCode'},
+                value: {
+                  kind: 'Variable',
+                  name: {kind: 'Name', value: 'languageCode'},
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {kind: 'Field', name: {kind: 'Name', value: 'name'}},
+              ],
+            },
+          },
+          {
+            kind: 'Field',
             name: {kind: 'Name', value: 'page'},
             selectionSet: {
               kind: 'SelectionSet',
@@ -34159,6 +36751,20 @@ export const HeaderMenu_MenuQueryDocument = {
               ],
             },
           },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: {kind: 'Name', value: 'NavbarDropdownTrigger_MenuItemFragment'},
+      typeCondition: {
+        kind: 'NamedType',
+        name: {kind: 'Name', value: 'MenuItem'},
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {kind: 'Field', name: {kind: 'Name', value: 'name'}},
           {
             kind: 'Field',
             name: {kind: 'Name', value: 'translation'},
@@ -34184,7 +36790,7 @@ export const HeaderMenu_MenuQueryDocument = {
     },
     {
       kind: 'FragmentDefinition',
-      name: {kind: 'Name', value: 'DropdownItem_MenuItemFragment'},
+      name: {kind: 'Name', value: 'NavbarDropdownItem_MenuItemFragment'},
       typeCondition: {
         kind: 'NamedType',
         name: {kind: 'Name', value: 'MenuItem'},
@@ -34193,6 +36799,26 @@ export const HeaderMenu_MenuQueryDocument = {
         kind: 'SelectionSet',
         selections: [
           {kind: 'Field', name: {kind: 'Name', value: 'name'}},
+          {
+            kind: 'Field',
+            name: {kind: 'Name', value: 'translation'},
+            arguments: [
+              {
+                kind: 'Argument',
+                name: {kind: 'Name', value: 'languageCode'},
+                value: {
+                  kind: 'Variable',
+                  name: {kind: 'Name', value: 'languageCode'},
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {kind: 'Field', name: {kind: 'Name', value: 'name'}},
+              ],
+            },
+          },
           {
             kind: 'Field',
             name: {kind: 'Name', value: 'category'},
@@ -34205,21 +36831,11 @@ export const HeaderMenu_MenuQueryDocument = {
           },
           {
             kind: 'Field',
-            name: {kind: 'Name', value: 'translation'},
-            arguments: [
-              {
-                kind: 'Argument',
-                name: {kind: 'Name', value: 'languageCode'},
-                value: {
-                  kind: 'Variable',
-                  name: {kind: 'Name', value: 'languageCode'},
-                },
-              },
-            ],
+            name: {kind: 'Name', value: 'collection'},
             selectionSet: {
               kind: 'SelectionSet',
               selections: [
-                {kind: 'Field', name: {kind: 'Name', value: 'name'}},
+                {kind: 'Field', name: {kind: 'Name', value: 'slug'}},
               ],
             },
           },
@@ -34228,165 +36844,7 @@ export const HeaderMenu_MenuQueryDocument = {
     },
     {
       kind: 'FragmentDefinition',
-      name: {kind: 'Name', value: 'DropdownItemWithChildren_MenuItemFragment'},
-      typeCondition: {
-        kind: 'NamedType',
-        name: {kind: 'Name', value: 'MenuItem'},
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {kind: 'Field', name: {kind: 'Name', value: 'name'}},
-          {
-            kind: 'Field',
-            name: {kind: 'Name', value: 'translation'},
-            arguments: [
-              {
-                kind: 'Argument',
-                name: {kind: 'Name', value: 'languageCode'},
-                value: {
-                  kind: 'Variable',
-                  name: {kind: 'Name', value: 'languageCode'},
-                },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {kind: 'Field', name: {kind: 'Name', value: 'name'}},
-              ],
-            },
-          },
-          {
-            kind: 'FragmentSpread',
-            name: {kind: 'Name', value: 'DropdownItem_MenuItemFragment'},
-          },
-        ],
-      },
-    },
-    {
-      kind: 'FragmentDefinition',
-      name: {kind: 'Name', value: 'CategoryDropdownItem_MenuItemFragment'},
-      typeCondition: {
-        kind: 'NamedType',
-        name: {kind: 'Name', value: 'MenuItem'},
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'FragmentSpread',
-            name: {kind: 'Name', value: 'DropdownItem_MenuItemFragment'},
-          },
-          {
-            kind: 'FragmentSpread',
-            name: {
-              kind: 'Name',
-              value: 'DropdownItemWithChildren_MenuItemFragment',
-            },
-          },
-          {
-            kind: 'Field',
-            name: {kind: 'Name', value: 'children'},
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {kind: 'Field', name: {kind: 'Name', value: 'id'}},
-                {
-                  kind: 'FragmentSpread',
-                  name: {kind: 'Name', value: 'DropdownItem_MenuItemFragment'},
-                },
-                {
-                  kind: 'FragmentSpread',
-                  name: {
-                    kind: 'Name',
-                    value: 'DropdownItemWithChildren_MenuItemFragment',
-                  },
-                },
-                {
-                  kind: 'Field',
-                  name: {kind: 'Name', value: 'children'},
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      {kind: 'Field', name: {kind: 'Name', value: 'id'}},
-                      {
-                        kind: 'FragmentSpread',
-                        name: {
-                          kind: 'Name',
-                          value: 'DropdownItem_MenuItemFragment',
-                        },
-                      },
-                      {
-                        kind: 'FragmentSpread',
-                        name: {
-                          kind: 'Name',
-                          value: 'DropdownItemWithChildren_MenuItemFragment',
-                        },
-                      },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-    {
-      kind: 'FragmentDefinition',
-      name: {kind: 'Name', value: 'CategoryDropdown_MenuItemFragment'},
-      typeCondition: {
-        kind: 'NamedType',
-        name: {kind: 'Name', value: 'MenuItem'},
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {kind: 'Field', name: {kind: 'Name', value: 'name'}},
-          {
-            kind: 'Field',
-            name: {kind: 'Name', value: 'translation'},
-            arguments: [
-              {
-                kind: 'Argument',
-                name: {kind: 'Name', value: 'languageCode'},
-                value: {
-                  kind: 'Variable',
-                  name: {kind: 'Name', value: 'languageCode'},
-                },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {kind: 'Field', name: {kind: 'Name', value: 'name'}},
-              ],
-            },
-          },
-          {
-            kind: 'Field',
-            name: {kind: 'Name', value: 'children'},
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {kind: 'Field', name: {kind: 'Name', value: 'id'}},
-                {
-                  kind: 'FragmentSpread',
-                  name: {
-                    kind: 'Name',
-                    value: 'CategoryDropdownItem_MenuItemFragment',
-                  },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-    {
-      kind: 'FragmentDefinition',
-      name: {kind: 'Name', value: 'HeaderMenuItem_MenuItemFragment'},
+      name: {kind: 'Name', value: 'NavbarDropdownContent_MenuItemFragment'},
       typeCondition: {
         kind: 'NamedType',
         name: {kind: 'Name', value: 'MenuItem'},
@@ -34399,24 +36857,93 @@ export const HeaderMenu_MenuQueryDocument = {
             name: {kind: 'Name', value: 'page'},
             selectionSet: {
               kind: 'SelectionSet',
-              selections: [{kind: 'Field', name: {kind: 'Name', value: 'id'}}],
+              selections: [
+                {kind: 'Field', name: {kind: 'Name', value: 'slug'}},
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: {kind: 'Name', value: 'children'},
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {kind: 'Field', name: {kind: 'Name', value: 'id'}},
+                {
+                  kind: 'FragmentSpread',
+                  name: {
+                    kind: 'Name',
+                    value: 'NavbarDropdownItem_MenuItemFragment',
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: {kind: 'Name', value: 'NavbarDropdown_MenuItemFragment'},
+      typeCondition: {
+        kind: 'NamedType',
+        name: {kind: 'Name', value: 'MenuItem'},
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'FragmentSpread',
+            name: {
+              kind: 'Name',
+              value: 'NavbarDropdownTrigger_MenuItemFragment',
             },
           },
           {
             kind: 'FragmentSpread',
-            name: {kind: 'Name', value: 'HeaderMenuLink_MenuItemFragment'},
+            name: {
+              kind: 'Name',
+              value: 'NavbarDropdownContent_MenuItemFragment',
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: {kind: 'Name', value: 'NavbarItem_MenuItemFragment'},
+      typeCondition: {
+        kind: 'NamedType',
+        name: {kind: 'Name', value: 'MenuItem'},
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: {kind: 'Name', value: 'children'},
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {kind: 'Field', name: {kind: 'Name', value: '__typename'}},
+              ],
+            },
           },
           {
             kind: 'FragmentSpread',
-            name: {kind: 'Name', value: 'CategoryDropdown_MenuItemFragment'},
+            name: {kind: 'Name', value: 'NavbarLink_MenuItemFragment'},
+          },
+          {
+            kind: 'FragmentSpread',
+            name: {kind: 'Name', value: 'NavbarDropdown_MenuItemFragment'},
           },
         ],
       },
     },
   ],
 } as unknown as DocumentNode<
-  HeaderMenu_MenuQueryQuery,
-  HeaderMenu_MenuQueryQueryVariables
+  NavbarMenu_MenuQueryQuery,
+  NavbarMenu_MenuQueryQueryVariables
 >;
 export const CartDialog_CheckoutQueryDocument = {
   kind: 'Document',
@@ -34982,14 +37509,1068 @@ export const DeleteCheckoutLinesMutationDocument = {
   DeleteCheckoutLinesMutationMutation,
   DeleteCheckoutLinesMutationMutationVariables
 >;
-export const GetNavCategoriesQueryDocument = {
+export const CategoryPage_CategoryQueryDocument = {
   kind: 'Document',
   definitions: [
     {
       kind: 'OperationDefinition',
       operation: 'query',
-      name: {kind: 'Name', value: 'GetNavCategoriesQuery'},
+      name: {kind: 'Name', value: 'CategoryPage_CategoryQuery'},
       variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {kind: 'Variable', name: {kind: 'Name', value: 'slug'}},
+          type: {kind: 'NamedType', name: {kind: 'Name', value: 'String'}},
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {kind: 'Variable', name: {kind: 'Name', value: 'channel'}},
+          type: {kind: 'NamedType', name: {kind: 'Name', value: 'String'}},
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: {kind: 'Name', value: 'languageCode'},
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: {kind: 'Name', value: 'LanguageCodeEnum'},
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: {kind: 'Name', value: 'category'},
+            arguments: [
+              {
+                kind: 'Argument',
+                name: {kind: 'Name', value: 'slug'},
+                value: {kind: 'Variable', name: {kind: 'Name', value: 'slug'}},
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {kind: 'Field', name: {kind: 'Name', value: '__typename'}},
+                {kind: 'Field', name: {kind: 'Name', value: 'id'}},
+                {
+                  kind: 'Field',
+                  name: {kind: 'Name', value: 'products'},
+                  arguments: [
+                    {
+                      kind: 'Argument',
+                      name: {kind: 'Name', value: 'first'},
+                      value: {kind: 'IntValue', value: '100'},
+                    },
+                    {
+                      kind: 'Argument',
+                      name: {kind: 'Name', value: 'channel'},
+                      value: {
+                        kind: 'Variable',
+                        name: {kind: 'Name', value: 'channel'},
+                      },
+                    },
+                  ],
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: {kind: 'Name', value: 'edges'},
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: {kind: 'Name', value: 'node'},
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: {kind: 'Name', value: '__typename'},
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: {kind: 'Name', value: 'id'},
+                                  },
+                                  {
+                                    kind: 'FragmentSpread',
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'ProductItem_ProductFragment',
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: {kind: 'Name', value: 'ProductThumbnail_ImageFragment'},
+      typeCondition: {kind: 'NamedType', name: {kind: 'Name', value: 'Image'}},
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {kind: 'Field', name: {kind: 'Name', value: '__typename'}},
+          {kind: 'Field', name: {kind: 'Name', value: 'url'}},
+          {kind: 'Field', name: {kind: 'Name', value: 'alt'}},
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: {kind: 'Name', value: 'ProductPriceRange_PricingInfoFragment'},
+      typeCondition: {
+        kind: 'NamedType',
+        name: {kind: 'Name', value: 'ProductPricingInfo'},
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: {kind: 'Name', value: 'priceRange'},
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: {kind: 'Name', value: 'start'},
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: {kind: 'Name', value: 'gross'},
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: {kind: 'Name', value: 'currency'},
+                            },
+                            {
+                              kind: 'Field',
+                              name: {kind: 'Name', value: 'amount'},
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: {kind: 'Name', value: 'stop'},
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: {kind: 'Name', value: 'gross'},
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: {kind: 'Name', value: 'currency'},
+                            },
+                            {
+                              kind: 'Field',
+                              name: {kind: 'Name', value: 'amount'},
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: {kind: 'Name', value: 'ProductCategoryName_CategoryFragment'},
+      typeCondition: {
+        kind: 'NamedType',
+        name: {kind: 'Name', value: 'Category'},
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {kind: 'Field', name: {kind: 'Name', value: '__typename'}},
+          {kind: 'Field', name: {kind: 'Name', value: 'id'}},
+          {kind: 'Field', name: {kind: 'Name', value: 'name'}},
+          {
+            kind: 'Field',
+            name: {kind: 'Name', value: 'translation'},
+            arguments: [
+              {
+                kind: 'Argument',
+                name: {kind: 'Name', value: 'languageCode'},
+                value: {
+                  kind: 'Variable',
+                  name: {kind: 'Name', value: 'languageCode'},
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {kind: 'Field', name: {kind: 'Name', value: '__typename'}},
+                {kind: 'Field', name: {kind: 'Name', value: 'id'}},
+                {kind: 'Field', name: {kind: 'Name', value: 'name'}},
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: {kind: 'Name', value: 'ProductItem_ProductFragment'},
+      typeCondition: {
+        kind: 'NamedType',
+        name: {kind: 'Name', value: 'Product'},
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {kind: 'Field', name: {kind: 'Name', value: '__typename'}},
+          {kind: 'Field', name: {kind: 'Name', value: 'id'}},
+          {kind: 'Field', name: {kind: 'Name', value: 'name'}},
+          {kind: 'Field', name: {kind: 'Name', value: 'slug'}},
+          {
+            kind: 'Field',
+            name: {kind: 'Name', value: 'translation'},
+            arguments: [
+              {
+                kind: 'Argument',
+                name: {kind: 'Name', value: 'languageCode'},
+                value: {
+                  kind: 'Variable',
+                  name: {kind: 'Name', value: 'languageCode'},
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {kind: 'Field', name: {kind: 'Name', value: '__typename'}},
+                {kind: 'Field', name: {kind: 'Name', value: 'id'}},
+                {kind: 'Field', name: {kind: 'Name', value: 'name'}},
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: {kind: 'Name', value: 'thumbnail'},
+            arguments: [
+              {
+                kind: 'Argument',
+                name: {kind: 'Name', value: 'format'},
+                value: {kind: 'EnumValue', value: 'WEBP'},
+              },
+              {
+                kind: 'Argument',
+                name: {kind: 'Name', value: 'size'},
+                value: {kind: 'IntValue', value: '4096'},
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: {kind: 'Name', value: 'ProductThumbnail_ImageFragment'},
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: {kind: 'Name', value: 'pricing'},
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: {
+                    kind: 'Name',
+                    value: 'ProductPriceRange_PricingInfoFragment',
+                  },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: {kind: 'Name', value: 'category'},
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: {
+                    kind: 'Name',
+                    value: 'ProductCategoryName_CategoryFragment',
+                  },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: {kind: 'Name', value: 'variants'},
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {kind: 'Field', name: {kind: 'Name', value: '__typename'}},
+                {kind: 'Field', name: {kind: 'Name', value: 'id'}},
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  CategoryPage_CategoryQueryQuery,
+  CategoryPage_CategoryQueryQueryVariables
+>;
+export const CollectionPage_CollectionQueryDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: {kind: 'Name', value: 'CollectionPage_CollectionQuery'},
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {kind: 'Variable', name: {kind: 'Name', value: 'slug'}},
+          type: {kind: 'NamedType', name: {kind: 'Name', value: 'String'}},
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {kind: 'Variable', name: {kind: 'Name', value: 'channel'}},
+          type: {kind: 'NamedType', name: {kind: 'Name', value: 'String'}},
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: {kind: 'Name', value: 'languageCode'},
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: {kind: 'Name', value: 'LanguageCodeEnum'},
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: {kind: 'Name', value: 'collection'},
+            arguments: [
+              {
+                kind: 'Argument',
+                name: {kind: 'Name', value: 'slug'},
+                value: {kind: 'Variable', name: {kind: 'Name', value: 'slug'}},
+              },
+              {
+                kind: 'Argument',
+                name: {kind: 'Name', value: 'channel'},
+                value: {
+                  kind: 'Variable',
+                  name: {kind: 'Name', value: 'channel'},
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {kind: 'Field', name: {kind: 'Name', value: '__typename'}},
+                {kind: 'Field', name: {kind: 'Name', value: 'id'}},
+                {
+                  kind: 'Field',
+                  name: {kind: 'Name', value: 'products'},
+                  arguments: [
+                    {
+                      kind: 'Argument',
+                      name: {kind: 'Name', value: 'first'},
+                      value: {kind: 'IntValue', value: '100'},
+                    },
+                  ],
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: {kind: 'Name', value: 'edges'},
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: {kind: 'Name', value: 'node'},
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: {kind: 'Name', value: '__typename'},
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: {kind: 'Name', value: 'id'},
+                                  },
+                                  {
+                                    kind: 'FragmentSpread',
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'ProductItem_ProductFragment',
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: {kind: 'Name', value: 'ProductThumbnail_ImageFragment'},
+      typeCondition: {kind: 'NamedType', name: {kind: 'Name', value: 'Image'}},
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {kind: 'Field', name: {kind: 'Name', value: '__typename'}},
+          {kind: 'Field', name: {kind: 'Name', value: 'url'}},
+          {kind: 'Field', name: {kind: 'Name', value: 'alt'}},
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: {kind: 'Name', value: 'ProductPriceRange_PricingInfoFragment'},
+      typeCondition: {
+        kind: 'NamedType',
+        name: {kind: 'Name', value: 'ProductPricingInfo'},
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: {kind: 'Name', value: 'priceRange'},
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: {kind: 'Name', value: 'start'},
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: {kind: 'Name', value: 'gross'},
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: {kind: 'Name', value: 'currency'},
+                            },
+                            {
+                              kind: 'Field',
+                              name: {kind: 'Name', value: 'amount'},
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: {kind: 'Name', value: 'stop'},
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: {kind: 'Name', value: 'gross'},
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: {kind: 'Name', value: 'currency'},
+                            },
+                            {
+                              kind: 'Field',
+                              name: {kind: 'Name', value: 'amount'},
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: {kind: 'Name', value: 'ProductCategoryName_CategoryFragment'},
+      typeCondition: {
+        kind: 'NamedType',
+        name: {kind: 'Name', value: 'Category'},
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {kind: 'Field', name: {kind: 'Name', value: '__typename'}},
+          {kind: 'Field', name: {kind: 'Name', value: 'id'}},
+          {kind: 'Field', name: {kind: 'Name', value: 'name'}},
+          {
+            kind: 'Field',
+            name: {kind: 'Name', value: 'translation'},
+            arguments: [
+              {
+                kind: 'Argument',
+                name: {kind: 'Name', value: 'languageCode'},
+                value: {
+                  kind: 'Variable',
+                  name: {kind: 'Name', value: 'languageCode'},
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {kind: 'Field', name: {kind: 'Name', value: '__typename'}},
+                {kind: 'Field', name: {kind: 'Name', value: 'id'}},
+                {kind: 'Field', name: {kind: 'Name', value: 'name'}},
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: {kind: 'Name', value: 'ProductItem_ProductFragment'},
+      typeCondition: {
+        kind: 'NamedType',
+        name: {kind: 'Name', value: 'Product'},
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {kind: 'Field', name: {kind: 'Name', value: '__typename'}},
+          {kind: 'Field', name: {kind: 'Name', value: 'id'}},
+          {kind: 'Field', name: {kind: 'Name', value: 'name'}},
+          {kind: 'Field', name: {kind: 'Name', value: 'slug'}},
+          {
+            kind: 'Field',
+            name: {kind: 'Name', value: 'translation'},
+            arguments: [
+              {
+                kind: 'Argument',
+                name: {kind: 'Name', value: 'languageCode'},
+                value: {
+                  kind: 'Variable',
+                  name: {kind: 'Name', value: 'languageCode'},
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {kind: 'Field', name: {kind: 'Name', value: '__typename'}},
+                {kind: 'Field', name: {kind: 'Name', value: 'id'}},
+                {kind: 'Field', name: {kind: 'Name', value: 'name'}},
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: {kind: 'Name', value: 'thumbnail'},
+            arguments: [
+              {
+                kind: 'Argument',
+                name: {kind: 'Name', value: 'format'},
+                value: {kind: 'EnumValue', value: 'WEBP'},
+              },
+              {
+                kind: 'Argument',
+                name: {kind: 'Name', value: 'size'},
+                value: {kind: 'IntValue', value: '4096'},
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: {kind: 'Name', value: 'ProductThumbnail_ImageFragment'},
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: {kind: 'Name', value: 'pricing'},
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: {
+                    kind: 'Name',
+                    value: 'ProductPriceRange_PricingInfoFragment',
+                  },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: {kind: 'Name', value: 'category'},
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: {
+                    kind: 'Name',
+                    value: 'ProductCategoryName_CategoryFragment',
+                  },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: {kind: 'Name', value: 'variants'},
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {kind: 'Field', name: {kind: 'Name', value: '__typename'}},
+                {kind: 'Field', name: {kind: 'Name', value: 'id'}},
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  CollectionPage_CollectionQueryQuery,
+  CollectionPage_CollectionQueryQueryVariables
+>;
+export const ProductPage_ProductQueryDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: {kind: 'Name', value: 'ProductPage_ProductQuery'},
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {kind: 'Variable', name: {kind: 'Name', value: 'slug'}},
+          type: {
+            kind: 'NonNullType',
+            type: {kind: 'NamedType', name: {kind: 'Name', value: 'String'}},
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {kind: 'Variable', name: {kind: 'Name', value: 'channel'}},
+          type: {kind: 'NamedType', name: {kind: 'Name', value: 'String'}},
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: {kind: 'Name', value: 'languageCode'},
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: {kind: 'Name', value: 'LanguageCodeEnum'},
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: {kind: 'Name', value: 'product'},
+            arguments: [
+              {
+                kind: 'Argument',
+                name: {kind: 'Name', value: 'slug'},
+                value: {kind: 'Variable', name: {kind: 'Name', value: 'slug'}},
+              },
+              {
+                kind: 'Argument',
+                name: {kind: 'Name', value: 'channel'},
+                value: {
+                  kind: 'Variable',
+                  name: {kind: 'Name', value: 'channel'},
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {kind: 'Field', name: {kind: 'Name', value: '__typename'}},
+                {kind: 'Field', name: {kind: 'Name', value: 'id'}},
+                {
+                  kind: 'FragmentSpread',
+                  name: {kind: 'Name', value: 'Product_ProductFragment'},
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: {kind: 'Name', value: 'ProductThumbnail_ImageFragment'},
+      typeCondition: {kind: 'NamedType', name: {kind: 'Name', value: 'Image'}},
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {kind: 'Field', name: {kind: 'Name', value: '__typename'}},
+          {kind: 'Field', name: {kind: 'Name', value: 'url'}},
+          {kind: 'Field', name: {kind: 'Name', value: 'alt'}},
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: {kind: 'Name', value: 'ProductPriceRange_PricingInfoFragment'},
+      typeCondition: {
+        kind: 'NamedType',
+        name: {kind: 'Name', value: 'ProductPricingInfo'},
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: {kind: 'Name', value: 'priceRange'},
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: {kind: 'Name', value: 'start'},
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: {kind: 'Name', value: 'gross'},
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: {kind: 'Name', value: 'currency'},
+                            },
+                            {
+                              kind: 'Field',
+                              name: {kind: 'Name', value: 'amount'},
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: {kind: 'Name', value: 'stop'},
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: {kind: 'Name', value: 'gross'},
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: {kind: 'Name', value: 'currency'},
+                            },
+                            {
+                              kind: 'Field',
+                              name: {kind: 'Name', value: 'amount'},
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: {kind: 'Name', value: 'VariantLink_ProductVariantFragment'},
+      typeCondition: {
+        kind: 'NamedType',
+        name: {kind: 'Name', value: 'ProductVariant'},
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {kind: 'Field', name: {kind: 'Name', value: '__typename'}},
+          {kind: 'Field', name: {kind: 'Name', value: 'id'}},
+          {kind: 'Field', name: {kind: 'Name', value: 'name'}},
+          {
+            kind: 'Field',
+            name: {kind: 'Name', value: 'translation'},
+            arguments: [
+              {
+                kind: 'Argument',
+                name: {kind: 'Name', value: 'languageCode'},
+                value: {
+                  kind: 'Variable',
+                  name: {kind: 'Name', value: 'languageCode'},
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {kind: 'Field', name: {kind: 'Name', value: '__typename'}},
+                {kind: 'Field', name: {kind: 'Name', value: 'id'}},
+                {kind: 'Field', name: {kind: 'Name', value: 'name'}},
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: {kind: 'Name', value: 'product'},
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {kind: 'Field', name: {kind: 'Name', value: '__typename'}},
+                {kind: 'Field', name: {kind: 'Name', value: 'id'}},
+                {kind: 'Field', name: {kind: 'Name', value: 'slug'}},
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: {kind: 'Name', value: 'VariantLinks_ProductFragment'},
+      typeCondition: {
+        kind: 'NamedType',
+        name: {kind: 'Name', value: 'Product'},
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: {kind: 'Name', value: 'variants'},
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {kind: 'Field', name: {kind: 'Name', value: '__typename'}},
+                {kind: 'Field', name: {kind: 'Name', value: 'id'}},
+                {
+                  kind: 'FragmentSpread',
+                  name: {
+                    kind: 'Name',
+                    value: 'VariantLink_ProductVariantFragment',
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: {kind: 'Name', value: 'Product_ProductFragment'},
+      typeCondition: {
+        kind: 'NamedType',
+        name: {kind: 'Name', value: 'Product'},
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {kind: 'Field', name: {kind: 'Name', value: '__typename'}},
+          {kind: 'Field', name: {kind: 'Name', value: 'id'}},
+          {kind: 'Field', name: {kind: 'Name', value: 'name'}},
+          {kind: 'Field', name: {kind: 'Name', value: 'description'}},
+          {
+            kind: 'Field',
+            name: {kind: 'Name', value: 'translation'},
+            arguments: [
+              {
+                kind: 'Argument',
+                name: {kind: 'Name', value: 'languageCode'},
+                value: {
+                  kind: 'Variable',
+                  name: {kind: 'Name', value: 'languageCode'},
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {kind: 'Field', name: {kind: 'Name', value: '__typename'}},
+                {kind: 'Field', name: {kind: 'Name', value: 'id'}},
+                {kind: 'Field', name: {kind: 'Name', value: 'name'}},
+                {kind: 'Field', name: {kind: 'Name', value: 'description'}},
+              ],
+            },
+          },
+          {kind: 'Field', name: {kind: 'Name', value: 'isAvailable'}},
+          {
+            kind: 'Field',
+            name: {kind: 'Name', value: 'thumbnail'},
+            arguments: [
+              {
+                kind: 'Argument',
+                name: {kind: 'Name', value: 'format'},
+                value: {kind: 'EnumValue', value: 'WEBP'},
+              },
+              {
+                kind: 'Argument',
+                name: {kind: 'Name', value: 'size'},
+                value: {kind: 'IntValue', value: '4096'},
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: {kind: 'Name', value: 'ProductThumbnail_ImageFragment'},
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: {kind: 'Name', value: 'pricing'},
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: {
+                    kind: 'Name',
+                    value: 'ProductPriceRange_PricingInfoFragment',
+                  },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: {kind: 'Name', value: 'variants'},
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {kind: 'Field', name: {kind: 'Name', value: '__typename'}},
+                {kind: 'Field', name: {kind: 'Name', value: 'id'}},
+              ],
+            },
+          },
+          {
+            kind: 'FragmentSpread',
+            name: {kind: 'Name', value: 'VariantLinks_ProductFragment'},
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  ProductPage_ProductQueryQuery,
+  ProductPage_ProductQueryQueryVariables
+>;
+export const CategoryDropdownItems_CategoriesQueryDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: {kind: 'Name', value: 'CategoryDropdownItems_CategoriesQuery'},
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {kind: 'Variable', name: {kind: 'Name', value: 'first'}},
+          type: {kind: 'NamedType', name: {kind: 'Name', value: 'Int'}},
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {kind: 'Variable', name: {kind: 'Name', value: 'after'}},
+          type: {kind: 'NamedType', name: {kind: 'Name', value: 'String'}},
+        },
         {
           kind: 'VariableDefinition',
           variable: {
@@ -35014,13 +38595,13 @@ export const GetNavCategoriesQueryDocument = {
             arguments: [
               {
                 kind: 'Argument',
-                name: {kind: 'Name', value: 'level'},
-                value: {kind: 'IntValue', value: '0'},
+                name: {kind: 'Name', value: 'first'},
+                value: {kind: 'Variable', name: {kind: 'Name', value: 'first'}},
               },
               {
                 kind: 'Argument',
-                name: {kind: 'Name', value: 'first'},
-                value: {kind: 'IntValue', value: '12'},
+                name: {kind: 'Name', value: 'after'},
+                value: {kind: 'Variable', name: {kind: 'Name', value: 'after'}},
               },
             ],
             selectionSet: {
@@ -35038,262 +38619,42 @@ export const GetNavCategoriesQueryDocument = {
                         selectionSet: {
                           kind: 'SelectionSet',
                           selections: [
+                            {
+                              kind: 'Field',
+                              name: {kind: 'Name', value: '__typename'},
+                            },
                             {kind: 'Field', name: {kind: 'Name', value: 'id'}},
                             {
-                              kind: 'Field',
-                              name: {kind: 'Name', value: 'name'},
-                            },
-                            {
-                              kind: 'Field',
-                              name: {kind: 'Name', value: 'translation'},
-                              arguments: [
-                                {
-                                  kind: 'Argument',
-                                  name: {kind: 'Name', value: 'languageCode'},
-                                  value: {
-                                    kind: 'Variable',
-                                    name: {kind: 'Name', value: 'languageCode'},
-                                  },
-                                },
-                              ],
-                              selectionSet: {
-                                kind: 'SelectionSet',
-                                selections: [
-                                  {
-                                    kind: 'Field',
-                                    name: {kind: 'Name', value: 'name'},
-                                  },
-                                ],
-                              },
-                            },
-                            {
-                              kind: 'Field',
-                              name: {kind: 'Name', value: 'slug'},
-                            },
-                            {
-                              kind: 'Field',
-                              name: {kind: 'Name', value: 'level'},
-                            },
-                            {
-                              kind: 'Field',
-                              name: {kind: 'Name', value: 'children'},
-                              arguments: [
-                                {
-                                  kind: 'Argument',
-                                  name: {kind: 'Name', value: 'first'},
-                                  value: {kind: 'IntValue', value: '12'},
-                                },
-                              ],
-                              selectionSet: {
-                                kind: 'SelectionSet',
-                                selections: [
-                                  {
-                                    kind: 'Field',
-                                    name: {kind: 'Name', value: 'edges'},
-                                    selectionSet: {
-                                      kind: 'SelectionSet',
-                                      selections: [
-                                        {
-                                          kind: 'Field',
-                                          name: {kind: 'Name', value: 'node'},
-                                          selectionSet: {
-                                            kind: 'SelectionSet',
-                                            selections: [
-                                              {
-                                                kind: 'Field',
-                                                name: {
-                                                  kind: 'Name',
-                                                  value: 'id',
-                                                },
-                                              },
-                                              {
-                                                kind: 'Field',
-                                                name: {
-                                                  kind: 'Name',
-                                                  value: 'name',
-                                                },
-                                              },
-                                              {
-                                                kind: 'Field',
-                                                name: {
-                                                  kind: 'Name',
-                                                  value: 'translation',
-                                                },
-                                                arguments: [
-                                                  {
-                                                    kind: 'Argument',
-                                                    name: {
-                                                      kind: 'Name',
-                                                      value: 'languageCode',
-                                                    },
-                                                    value: {
-                                                      kind: 'Variable',
-                                                      name: {
-                                                        kind: 'Name',
-                                                        value: 'languageCode',
-                                                      },
-                                                    },
-                                                  },
-                                                ],
-                                                selectionSet: {
-                                                  kind: 'SelectionSet',
-                                                  selections: [
-                                                    {
-                                                      kind: 'Field',
-                                                      name: {
-                                                        kind: 'Name',
-                                                        value: 'name',
-                                                      },
-                                                    },
-                                                  ],
-                                                },
-                                              },
-                                              {
-                                                kind: 'Field',
-                                                name: {
-                                                  kind: 'Name',
-                                                  value: 'slug',
-                                                },
-                                              },
-                                              {
-                                                kind: 'Field',
-                                                name: {
-                                                  kind: 'Name',
-                                                  value: 'level',
-                                                },
-                                              },
-                                              {
-                                                kind: 'Field',
-                                                name: {
-                                                  kind: 'Name',
-                                                  value: 'children',
-                                                },
-                                                arguments: [
-                                                  {
-                                                    kind: 'Argument',
-                                                    name: {
-                                                      kind: 'Name',
-                                                      value: 'first',
-                                                    },
-                                                    value: {
-                                                      kind: 'IntValue',
-                                                      value: '12',
-                                                    },
-                                                  },
-                                                ],
-                                                selectionSet: {
-                                                  kind: 'SelectionSet',
-                                                  selections: [
-                                                    {
-                                                      kind: 'Field',
-                                                      name: {
-                                                        kind: 'Name',
-                                                        value: 'edges',
-                                                      },
-                                                      selectionSet: {
-                                                        kind: 'SelectionSet',
-                                                        selections: [
-                                                          {
-                                                            kind: 'Field',
-                                                            name: {
-                                                              kind: 'Name',
-                                                              value: 'node',
-                                                            },
-                                                            selectionSet: {
-                                                              kind: 'SelectionSet',
-                                                              selections: [
-                                                                {
-                                                                  kind: 'Field',
-                                                                  name: {
-                                                                    kind: 'Name',
-                                                                    value: 'id',
-                                                                  },
-                                                                },
-                                                                {
-                                                                  kind: 'Field',
-                                                                  name: {
-                                                                    kind: 'Name',
-                                                                    value:
-                                                                      'name',
-                                                                  },
-                                                                },
-                                                                {
-                                                                  kind: 'Field',
-                                                                  name: {
-                                                                    kind: 'Name',
-                                                                    value:
-                                                                      'translation',
-                                                                  },
-                                                                  arguments: [
-                                                                    {
-                                                                      kind: 'Argument',
-                                                                      name: {
-                                                                        kind: 'Name',
-                                                                        value:
-                                                                          'languageCode',
-                                                                      },
-                                                                      value: {
-                                                                        kind: 'Variable',
-                                                                        name: {
-                                                                          kind: 'Name',
-                                                                          value:
-                                                                            'languageCode',
-                                                                        },
-                                                                      },
-                                                                    },
-                                                                  ],
-                                                                  selectionSet:
-                                                                    {
-                                                                      kind: 'SelectionSet',
-                                                                      selections:
-                                                                        [
-                                                                          {
-                                                                            kind: 'Field',
-                                                                            name: {
-                                                                              kind: 'Name',
-                                                                              value:
-                                                                                'name',
-                                                                            },
-                                                                          },
-                                                                        ],
-                                                                    },
-                                                                },
-                                                                {
-                                                                  kind: 'Field',
-                                                                  name: {
-                                                                    kind: 'Name',
-                                                                    value:
-                                                                      'slug',
-                                                                  },
-                                                                },
-                                                                {
-                                                                  kind: 'Field',
-                                                                  name: {
-                                                                    kind: 'Name',
-                                                                    value:
-                                                                      'level',
-                                                                  },
-                                                                },
-                                                              ],
-                                                            },
-                                                          },
-                                                        ],
-                                                      },
-                                                    },
-                                                  ],
-                                                },
-                                              },
-                                            ],
-                                          },
-                                        },
-                                      ],
-                                    },
-                                  },
-                                ],
+                              kind: 'FragmentSpread',
+                              name: {
+                                kind: 'Name',
+                                value: 'CategoryDropdownItem_CategoryFragment',
                               },
                             },
                           ],
                         },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: {kind: 'Name', value: 'pageInfo'},
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: {kind: 'Name', value: 'hasNextPage'},
+                      },
+                      {kind: 'Field', name: {kind: 'Name', value: 'endCursor'}},
+                      {
+                        kind: 'Field',
+                        name: {kind: 'Name', value: 'hasPreviousPage'},
+                      },
+                      {
+                        kind: 'Field',
+                        name: {kind: 'Name', value: 'startCursor'},
                       },
                     ],
                   },
@@ -35304,19 +38665,66 @@ export const GetNavCategoriesQueryDocument = {
         ],
       },
     },
+    {
+      kind: 'FragmentDefinition',
+      name: {kind: 'Name', value: 'CategoryDropdownItem_CategoryFragment'},
+      typeCondition: {
+        kind: 'NamedType',
+        name: {kind: 'Name', value: 'Category'},
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {kind: 'Field', name: {kind: 'Name', value: '__typename'}},
+          {kind: 'Field', name: {kind: 'Name', value: 'id'}},
+          {kind: 'Field', name: {kind: 'Name', value: 'name'}},
+          {
+            kind: 'Field',
+            name: {kind: 'Name', value: 'translation'},
+            arguments: [
+              {
+                kind: 'Argument',
+                name: {kind: 'Name', value: 'languageCode'},
+                value: {
+                  kind: 'Variable',
+                  name: {kind: 'Name', value: 'languageCode'},
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {kind: 'Field', name: {kind: 'Name', value: 'name'}},
+              ],
+            },
+          },
+          {kind: 'Field', name: {kind: 'Name', value: 'slug'}},
+        ],
+      },
+    },
   ],
 } as unknown as DocumentNode<
-  GetNavCategoriesQueryQuery,
-  GetNavCategoriesQueryQueryVariables
+  CategoryDropdownItems_CategoriesQueryQuery,
+  CategoryDropdownItems_CategoriesQueryQueryVariables
 >;
-export const GetNavCollectionsQueryDocument = {
+export const CollectionDropdownItems_CategoriesQueryDocument = {
   kind: 'Document',
   definitions: [
     {
       kind: 'OperationDefinition',
       operation: 'query',
-      name: {kind: 'Name', value: 'GetNavCollectionsQuery'},
+      name: {kind: 'Name', value: 'CollectionDropdownItems_CategoriesQuery'},
       variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {kind: 'Variable', name: {kind: 'Name', value: 'first'}},
+          type: {kind: 'NamedType', name: {kind: 'Name', value: 'Int'}},
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {kind: 'Variable', name: {kind: 'Name', value: 'after'}},
+          type: {kind: 'NamedType', name: {kind: 'Name', value: 'String'}},
+        },
         {
           kind: 'VariableDefinition',
           variable: {kind: 'Variable', name: {kind: 'Name', value: 'channel'}},
@@ -35347,7 +38755,12 @@ export const GetNavCollectionsQueryDocument = {
               {
                 kind: 'Argument',
                 name: {kind: 'Name', value: 'first'},
-                value: {kind: 'IntValue', value: '6'},
+                value: {kind: 'Variable', name: {kind: 'Name', value: 'first'}},
+              },
+              {
+                kind: 'Argument',
+                name: {kind: 'Name', value: 'after'},
+                value: {kind: 'Variable', name: {kind: 'Name', value: 'after'}},
               },
               {
                 kind: 'Argument',
@@ -35373,40 +38786,43 @@ export const GetNavCollectionsQueryDocument = {
                         selectionSet: {
                           kind: 'SelectionSet',
                           selections: [
+                            {
+                              kind: 'Field',
+                              name: {kind: 'Name', value: '__typename'},
+                            },
                             {kind: 'Field', name: {kind: 'Name', value: 'id'}},
                             {
-                              kind: 'Field',
-                              name: {kind: 'Name', value: 'name'},
-                            },
-                            {
-                              kind: 'Field',
-                              name: {kind: 'Name', value: 'translation'},
-                              arguments: [
-                                {
-                                  kind: 'Argument',
-                                  name: {kind: 'Name', value: 'languageCode'},
-                                  value: {
-                                    kind: 'Variable',
-                                    name: {kind: 'Name', value: 'languageCode'},
-                                  },
-                                },
-                              ],
-                              selectionSet: {
-                                kind: 'SelectionSet',
-                                selections: [
-                                  {
-                                    kind: 'Field',
-                                    name: {kind: 'Name', value: 'name'},
-                                  },
-                                ],
+                              kind: 'FragmentSpread',
+                              name: {
+                                kind: 'Name',
+                                value:
+                                  'CollectionDropdownItem_CategoryFragment',
                               },
-                            },
-                            {
-                              kind: 'Field',
-                              name: {kind: 'Name', value: 'slug'},
                             },
                           ],
                         },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: {kind: 'Name', value: 'pageInfo'},
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: {kind: 'Name', value: 'hasNextPage'},
+                      },
+                      {kind: 'Field', name: {kind: 'Name', value: 'endCursor'}},
+                      {
+                        kind: 'Field',
+                        name: {kind: 'Name', value: 'hasPreviousPage'},
+                      },
+                      {
+                        kind: 'Field',
+                        name: {kind: 'Name', value: 'startCursor'},
                       },
                     ],
                   },
@@ -35417,18 +38833,55 @@ export const GetNavCollectionsQueryDocument = {
         ],
       },
     },
+    {
+      kind: 'FragmentDefinition',
+      name: {kind: 'Name', value: 'CollectionDropdownItem_CategoryFragment'},
+      typeCondition: {
+        kind: 'NamedType',
+        name: {kind: 'Name', value: 'Collection'},
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {kind: 'Field', name: {kind: 'Name', value: '__typename'}},
+          {kind: 'Field', name: {kind: 'Name', value: 'id'}},
+          {kind: 'Field', name: {kind: 'Name', value: 'name'}},
+          {
+            kind: 'Field',
+            name: {kind: 'Name', value: 'translation'},
+            arguments: [
+              {
+                kind: 'Argument',
+                name: {kind: 'Name', value: 'languageCode'},
+                value: {
+                  kind: 'Variable',
+                  name: {kind: 'Name', value: 'languageCode'},
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {kind: 'Field', name: {kind: 'Name', value: 'name'}},
+              ],
+            },
+          },
+          {kind: 'Field', name: {kind: 'Name', value: 'slug'}},
+        ],
+      },
+    },
   ],
 } as unknown as DocumentNode<
-  GetNavCollectionsQueryQuery,
-  GetNavCollectionsQueryQueryVariables
+  CollectionDropdownItems_CategoriesQueryQuery,
+  CollectionDropdownItems_CategoriesQueryQueryVariables
 >;
-export const Pagination_ProductsQueryDocument = {
+export const ProductItems_ProductsQueryDocument = {
   kind: 'Document',
   definitions: [
     {
       kind: 'OperationDefinition',
       operation: 'query',
-      name: {kind: 'Name', value: 'Pagination_ProductsQuery'},
+      name: {kind: 'Name', value: 'ProductItems_ProductsQuery'},
       variableDefinitions: [
         {
           kind: 'VariableDefinition',
@@ -35442,29 +38895,46 @@ export const Pagination_ProductsQueryDocument = {
         },
         {
           kind: 'VariableDefinition',
-          variable: {kind: 'Variable', name: {kind: 'Name', value: 'search'}},
+          variable: {kind: 'Variable', name: {kind: 'Name', value: 'last'}},
+          type: {kind: 'NamedType', name: {kind: 'Name', value: 'Int'}},
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {kind: 'Variable', name: {kind: 'Name', value: 'before'}},
           type: {kind: 'NamedType', name: {kind: 'Name', value: 'String'}},
-        },
-        {
-          kind: 'VariableDefinition',
-          variable: {kind: 'Variable', name: {kind: 'Name', value: 'filter'}},
-          type: {
-            kind: 'NamedType',
-            name: {kind: 'Name', value: 'ProductFilterInput'},
-          },
-        },
-        {
-          kind: 'VariableDefinition',
-          variable: {kind: 'Variable', name: {kind: 'Name', value: 'address'}},
-          type: {
-            kind: 'NamedType',
-            name: {kind: 'Name', value: 'AddressInput'},
-          },
         },
         {
           kind: 'VariableDefinition',
           variable: {kind: 'Variable', name: {kind: 'Name', value: 'channel'}},
           type: {kind: 'NamedType', name: {kind: 'Name', value: 'String'}},
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: {kind: 'Name', value: 'categoryIds'},
+          },
+          type: {
+            kind: 'ListType',
+            type: {
+              kind: 'NonNullType',
+              type: {kind: 'NamedType', name: {kind: 'Name', value: 'ID'}},
+            },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: {kind: 'Name', value: 'collectionIds'},
+          },
+          type: {
+            kind: 'ListType',
+            type: {
+              kind: 'NonNullType',
+              type: {kind: 'NamedType', name: {kind: 'Name', value: 'ID'}},
+            },
+          },
         },
         {
           kind: 'VariableDefinition',
@@ -35500,18 +38970,40 @@ export const Pagination_ProductsQueryDocument = {
               },
               {
                 kind: 'Argument',
-                name: {kind: 'Name', value: 'search'},
+                name: {kind: 'Name', value: 'last'},
+                value: {kind: 'Variable', name: {kind: 'Name', value: 'last'}},
+              },
+              {
+                kind: 'Argument',
+                name: {kind: 'Name', value: 'before'},
                 value: {
                   kind: 'Variable',
-                  name: {kind: 'Name', value: 'search'},
+                  name: {kind: 'Name', value: 'before'},
                 },
               },
               {
                 kind: 'Argument',
                 name: {kind: 'Name', value: 'filter'},
                 value: {
-                  kind: 'Variable',
-                  name: {kind: 'Name', value: 'filter'},
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: {kind: 'Name', value: 'categories'},
+                      value: {
+                        kind: 'Variable',
+                        name: {kind: 'Name', value: 'categoryIds'},
+                      },
+                    },
+                    {
+                      kind: 'ObjectField',
+                      name: {kind: 'Name', value: 'collections'},
+                      value: {
+                        kind: 'Variable',
+                        name: {kind: 'Name', value: 'collectionIds'},
+                      },
+                    },
+                  ],
                 },
               },
               {
@@ -35528,78 +39020,49 @@ export const Pagination_ProductsQueryDocument = {
               selections: [
                 {
                   kind: 'Field',
-                  name: {kind: 'Name', value: 'pageInfo'},
+                  name: {kind: 'Name', value: 'edges'},
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
                       {
-                        kind: 'FragmentSpread',
-                        name: {
-                          kind: 'Name',
-                          value: 'PaginationLinks_PageInfoFragment',
+                        kind: 'Field',
+                        name: {kind: 'Name', value: 'node'},
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {kind: 'Field', name: {kind: 'Name', value: 'id'}},
+                            {
+                              kind: 'FragmentSpread',
+                              name: {
+                                kind: 'Name',
+                                value: 'ProductItem_ProductFragment',
+                              },
+                            },
+                          ],
                         },
                       },
                     ],
                   },
                 },
                 {
-                  kind: 'FragmentSpread',
-                  name: {
-                    kind: 'Name',
-                    value: 'ProductList_ProductCountableConnectionFragment',
-                  },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-    {
-      kind: 'FragmentDefinition',
-      name: {kind: 'Name', value: 'PriceBadge_VariantPricingInfoFragment'},
-      typeCondition: {
-        kind: 'NamedType',
-        name: {kind: 'Name', value: 'VariantPricingInfo'},
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {kind: 'Field', name: {kind: 'Name', value: 'onSale'}},
-          {
-            kind: 'Field',
-            name: {kind: 'Name', value: 'price'},
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
                   kind: 'Field',
-                  name: {kind: 'Name', value: 'gross'},
+                  name: {kind: 'Name', value: 'pageInfo'},
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
-                      {kind: 'Field', name: {kind: 'Name', value: 'currency'}},
-                      {kind: 'Field', name: {kind: 'Name', value: 'amount'}},
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-          {
-            kind: 'Field',
-            name: {kind: 'Name', value: 'priceUndiscounted'},
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'Field',
-                  name: {kind: 'Name', value: 'gross'},
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      {kind: 'Field', name: {kind: 'Name', value: 'currency'}},
-                      {kind: 'Field', name: {kind: 'Name', value: 'amount'}},
+                      {
+                        kind: 'Field',
+                        name: {kind: 'Name', value: 'hasNextPage'},
+                      },
+                      {kind: 'Field', name: {kind: 'Name', value: 'endCursor'}},
+                      {
+                        kind: 'Field',
+                        name: {kind: 'Name', value: 'hasPreviousPage'},
+                      },
+                      {
+                        kind: 'Field',
+                        name: {kind: 'Name', value: 'startCursor'},
+                      },
                     ],
                   },
                 },
@@ -35611,14 +39074,103 @@ export const Pagination_ProductsQueryDocument = {
     },
     {
       kind: 'FragmentDefinition',
-      name: {kind: 'Name', value: 'ProductCard_ProductFragment'},
+      name: {kind: 'Name', value: 'ProductThumbnail_ImageFragment'},
+      typeCondition: {kind: 'NamedType', name: {kind: 'Name', value: 'Image'}},
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {kind: 'Field', name: {kind: 'Name', value: '__typename'}},
+          {kind: 'Field', name: {kind: 'Name', value: 'url'}},
+          {kind: 'Field', name: {kind: 'Name', value: 'alt'}},
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: {kind: 'Name', value: 'ProductPriceRange_PricingInfoFragment'},
       typeCondition: {
         kind: 'NamedType',
-        name: {kind: 'Name', value: 'Product'},
+        name: {kind: 'Name', value: 'ProductPricingInfo'},
       },
       selectionSet: {
         kind: 'SelectionSet',
         selections: [
+          {
+            kind: 'Field',
+            name: {kind: 'Name', value: 'priceRange'},
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: {kind: 'Name', value: 'start'},
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: {kind: 'Name', value: 'gross'},
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: {kind: 'Name', value: 'currency'},
+                            },
+                            {
+                              kind: 'Field',
+                              name: {kind: 'Name', value: 'amount'},
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: {kind: 'Name', value: 'stop'},
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: {kind: 'Name', value: 'gross'},
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: {kind: 'Name', value: 'currency'},
+                            },
+                            {
+                              kind: 'Field',
+                              name: {kind: 'Name', value: 'amount'},
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: {kind: 'Name', value: 'ProductCategoryName_CategoryFragment'},
+      typeCondition: {
+        kind: 'NamedType',
+        name: {kind: 'Name', value: 'Category'},
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {kind: 'Field', name: {kind: 'Name', value: '__typename'}},
+          {kind: 'Field', name: {kind: 'Name', value: 'id'}},
           {kind: 'Field', name: {kind: 'Name', value: 'name'}},
           {
             kind: 'Field',
@@ -35636,50 +39188,60 @@ export const Pagination_ProductsQueryDocument = {
             selectionSet: {
               kind: 'SelectionSet',
               selections: [
+                {kind: 'Field', name: {kind: 'Name', value: '__typename'}},
+                {kind: 'Field', name: {kind: 'Name', value: 'id'}},
+                {kind: 'Field', name: {kind: 'Name', value: 'name'}},
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: {kind: 'Name', value: 'ProductItem_ProductFragment'},
+      typeCondition: {
+        kind: 'NamedType',
+        name: {kind: 'Name', value: 'Product'},
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {kind: 'Field', name: {kind: 'Name', value: '__typename'}},
+          {kind: 'Field', name: {kind: 'Name', value: 'id'}},
+          {kind: 'Field', name: {kind: 'Name', value: 'name'}},
+          {kind: 'Field', name: {kind: 'Name', value: 'slug'}},
+          {
+            kind: 'Field',
+            name: {kind: 'Name', value: 'translation'},
+            arguments: [
+              {
+                kind: 'Argument',
+                name: {kind: 'Name', value: 'languageCode'},
+                value: {
+                  kind: 'Variable',
+                  name: {kind: 'Name', value: 'languageCode'},
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {kind: 'Field', name: {kind: 'Name', value: '__typename'}},
+                {kind: 'Field', name: {kind: 'Name', value: 'id'}},
                 {kind: 'Field', name: {kind: 'Name', value: 'name'}},
               ],
             },
           },
           {
             kind: 'Field',
-            name: {kind: 'Name', value: 'defaultVariant'},
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'Field',
-                  name: {kind: 'Name', value: 'pricing'},
-                  arguments: [
-                    {
-                      kind: 'Argument',
-                      name: {kind: 'Name', value: 'address'},
-                      value: {
-                        kind: 'Variable',
-                        name: {kind: 'Name', value: 'address'},
-                      },
-                    },
-                  ],
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      {
-                        kind: 'FragmentSpread',
-                        name: {
-                          kind: 'Name',
-                          value: 'PriceBadge_VariantPricingInfoFragment',
-                        },
-                      },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-          {kind: 'Field', name: {kind: 'Name', value: 'isAvailable'}},
-          {
-            kind: 'Field',
             name: {kind: 'Name', value: 'thumbnail'},
             arguments: [
+              {
+                kind: 'Argument',
+                name: {kind: 'Name', value: 'format'},
+                value: {kind: 'EnumValue', value: 'WEBP'},
+              },
               {
                 kind: 'Argument',
                 name: {kind: 'Name', value: 'size'},
@@ -35689,66 +39251,53 @@ export const Pagination_ProductsQueryDocument = {
             selectionSet: {
               kind: 'SelectionSet',
               selections: [
-                {kind: 'Field', name: {kind: 'Name', value: 'url'}},
-                {kind: 'Field', name: {kind: 'Name', value: 'alt'}},
+                {
+                  kind: 'FragmentSpread',
+                  name: {kind: 'Name', value: 'ProductThumbnail_ImageFragment'},
+                },
               ],
             },
           },
-        ],
-      },
-    },
-    {
-      kind: 'FragmentDefinition',
-      name: {kind: 'Name', value: 'PaginationLinks_PageInfoFragment'},
-      typeCondition: {
-        kind: 'NamedType',
-        name: {kind: 'Name', value: 'PageInfo'},
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {kind: 'Field', name: {kind: 'Name', value: 'hasNextPage'}},
-          {kind: 'Field', name: {kind: 'Name', value: 'endCursor'}},
-        ],
-      },
-    },
-    {
-      kind: 'FragmentDefinition',
-      name: {
-        kind: 'Name',
-        value: 'ProductList_ProductCountableConnectionFragment',
-      },
-      typeCondition: {
-        kind: 'NamedType',
-        name: {kind: 'Name', value: 'ProductCountableConnection'},
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
           {
             kind: 'Field',
-            name: {kind: 'Name', value: 'edges'},
+            name: {kind: 'Name', value: 'pricing'},
             selectionSet: {
               kind: 'SelectionSet',
               selections: [
                 {
-                  kind: 'Field',
-                  name: {kind: 'Name', value: 'node'},
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      {kind: 'Field', name: {kind: 'Name', value: 'id'}},
-                      {kind: 'Field', name: {kind: 'Name', value: 'slug'}},
-                      {
-                        kind: 'FragmentSpread',
-                        name: {
-                          kind: 'Name',
-                          value: 'ProductCard_ProductFragment',
-                        },
-                      },
-                    ],
+                  kind: 'FragmentSpread',
+                  name: {
+                    kind: 'Name',
+                    value: 'ProductPriceRange_PricingInfoFragment',
                   },
                 },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: {kind: 'Name', value: 'category'},
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: {
+                    kind: 'Name',
+                    value: 'ProductCategoryName_CategoryFragment',
+                  },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: {kind: 'Name', value: 'variants'},
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {kind: 'Field', name: {kind: 'Name', value: '__typename'}},
+                {kind: 'Field', name: {kind: 'Name', value: 'id'}},
               ],
             },
           },
@@ -35757,33 +39306,40 @@ export const Pagination_ProductsQueryDocument = {
     },
   ],
 } as unknown as DocumentNode<
-  Pagination_ProductsQueryQuery,
-  Pagination_ProductsQueryQueryVariables
+  ProductItems_ProductsQueryQuery,
+  ProductItems_ProductsQueryQueryVariables
 >;
-export const GetCategoryIdsQueryDocument = {
+export const GetCategoryIdsDocument = {
   kind: 'Document',
   definitions: [
     {
       kind: 'OperationDefinition',
       operation: 'query',
-      name: {kind: 'Name', value: 'GetCategoryIdsQuery'},
+      name: {kind: 'Name', value: 'GetCategoryIds'},
       variableDefinitions: [
         {
           kind: 'VariableDefinition',
           variable: {kind: 'Variable', name: {kind: 'Name', value: 'first'}},
-          type: {kind: 'NamedType', name: {kind: 'Name', value: 'Int'}},
-        },
-        {
-          kind: 'VariableDefinition',
-          variable: {kind: 'Variable', name: {kind: 'Name', value: 'after'}},
-          type: {kind: 'NamedType', name: {kind: 'Name', value: 'String'}},
-        },
-        {
-          kind: 'VariableDefinition',
-          variable: {kind: 'Variable', name: {kind: 'Name', value: 'filter'}},
           type: {
-            kind: 'NamedType',
-            name: {kind: 'Name', value: 'CategoryFilterInput'},
+            kind: 'NonNullType',
+            type: {kind: 'NamedType', name: {kind: 'Name', value: 'Int'}},
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {kind: 'Variable', name: {kind: 'Name', value: 'slugs'}},
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'ListType',
+              type: {
+                kind: 'NonNullType',
+                type: {
+                  kind: 'NamedType',
+                  name: {kind: 'Name', value: 'String'},
+                },
+              },
+            },
           },
         },
       ],
@@ -35801,15 +39357,19 @@ export const GetCategoryIdsQueryDocument = {
               },
               {
                 kind: 'Argument',
-                name: {kind: 'Name', value: 'after'},
-                value: {kind: 'Variable', name: {kind: 'Name', value: 'after'}},
-              },
-              {
-                kind: 'Argument',
                 name: {kind: 'Name', value: 'filter'},
                 value: {
-                  kind: 'Variable',
-                  name: {kind: 'Name', value: 'filter'},
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: {kind: 'Name', value: 'slugs'},
+                      value: {
+                        kind: 'Variable',
+                        name: {kind: 'Name', value: 'slugs'},
+                      },
+                    },
+                  ],
                 },
               },
             ],
@@ -35835,20 +39395,6 @@ export const GetCategoryIdsQueryDocument = {
                     ],
                   },
                 },
-                {
-                  kind: 'Field',
-                  name: {kind: 'Name', value: 'pageInfo'},
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      {
-                        kind: 'Field',
-                        name: {kind: 'Name', value: 'hasNextPage'},
-                      },
-                      {kind: 'Field', name: {kind: 'Name', value: 'endCursor'}},
-                    ],
-                  },
-                },
               ],
             },
           },
@@ -35856,34 +39402,38 @@ export const GetCategoryIdsQueryDocument = {
       },
     },
   ],
-} as unknown as DocumentNode<
-  GetCategoryIdsQueryQuery,
-  GetCategoryIdsQueryQueryVariables
->;
+} as unknown as DocumentNode<GetCategoryIdsQuery, GetCategoryIdsQueryVariables>;
 export const GetCollectionIdsDocument = {
   kind: 'Document',
   definitions: [
     {
       kind: 'OperationDefinition',
       operation: 'query',
-      name: {kind: 'Name', value: 'getCollectionIds'},
+      name: {kind: 'Name', value: 'GetCollectionIds'},
       variableDefinitions: [
         {
           kind: 'VariableDefinition',
           variable: {kind: 'Variable', name: {kind: 'Name', value: 'first'}},
-          type: {kind: 'NamedType', name: {kind: 'Name', value: 'Int'}},
-        },
-        {
-          kind: 'VariableDefinition',
-          variable: {kind: 'Variable', name: {kind: 'Name', value: 'after'}},
-          type: {kind: 'NamedType', name: {kind: 'Name', value: 'String'}},
-        },
-        {
-          kind: 'VariableDefinition',
-          variable: {kind: 'Variable', name: {kind: 'Name', value: 'filter'}},
           type: {
-            kind: 'NamedType',
-            name: {kind: 'Name', value: 'CollectionFilterInput'},
+            kind: 'NonNullType',
+            type: {kind: 'NamedType', name: {kind: 'Name', value: 'Int'}},
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {kind: 'Variable', name: {kind: 'Name', value: 'slugs'}},
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'ListType',
+              type: {
+                kind: 'NonNullType',
+                type: {
+                  kind: 'NamedType',
+                  name: {kind: 'Name', value: 'String'},
+                },
+              },
+            },
           },
         },
         {
@@ -35906,15 +39456,19 @@ export const GetCollectionIdsDocument = {
               },
               {
                 kind: 'Argument',
-                name: {kind: 'Name', value: 'after'},
-                value: {kind: 'Variable', name: {kind: 'Name', value: 'after'}},
-              },
-              {
-                kind: 'Argument',
                 name: {kind: 'Name', value: 'filter'},
                 value: {
-                  kind: 'Variable',
-                  name: {kind: 'Name', value: 'filter'},
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: {kind: 'Name', value: 'slugs'},
+                      value: {
+                        kind: 'Variable',
+                        name: {kind: 'Name', value: 'slugs'},
+                      },
+                    },
+                  ],
                 },
               },
               {
@@ -35945,20 +39499,6 @@ export const GetCollectionIdsDocument = {
                           ],
                         },
                       },
-                    ],
-                  },
-                },
-                {
-                  kind: 'Field',
-                  name: {kind: 'Name', value: 'pageInfo'},
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      {
-                        kind: 'Field',
-                        name: {kind: 'Name', value: 'hasNextPage'},
-                      },
-                      {kind: 'Field', name: {kind: 'Name', value: 'endCursor'}},
                     ],
                   },
                 },
@@ -35972,224 +39512,6 @@ export const GetCollectionIdsDocument = {
 } as unknown as DocumentNode<
   GetCollectionIdsQuery,
   GetCollectionIdsQueryVariables
->;
-export const ProductAttributes_AttributesQueryDocument = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'OperationDefinition',
-      operation: 'query',
-      name: {kind: 'Name', value: 'ProductAttributes_AttributesQuery'},
-      variableDefinitions: [
-        {
-          kind: 'VariableDefinition',
-          variable: {kind: 'Variable', name: {kind: 'Name', value: 'where'}},
-          type: {
-            kind: 'NamedType',
-            name: {kind: 'Name', value: 'AttributeWhereInput'},
-          },
-        },
-        {
-          kind: 'VariableDefinition',
-          variable: {kind: 'Variable', name: {kind: 'Name', value: 'channel'}},
-          type: {kind: 'NamedType', name: {kind: 'Name', value: 'String'}},
-        },
-        {
-          kind: 'VariableDefinition',
-          variable: {
-            kind: 'Variable',
-            name: {kind: 'Name', value: 'languageCode'},
-          },
-          type: {
-            kind: 'NonNullType',
-            type: {
-              kind: 'NamedType',
-              name: {kind: 'Name', value: 'LanguageCodeEnum'},
-            },
-          },
-        },
-      ],
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            name: {kind: 'Name', value: 'attributes'},
-            arguments: [
-              {
-                kind: 'Argument',
-                name: {kind: 'Name', value: 'first'},
-                value: {kind: 'IntValue', value: '16'},
-              },
-              {
-                kind: 'Argument',
-                name: {kind: 'Name', value: 'where'},
-                value: {kind: 'Variable', name: {kind: 'Name', value: 'where'}},
-              },
-              {
-                kind: 'Argument',
-                name: {kind: 'Name', value: 'channel'},
-                value: {
-                  kind: 'Variable',
-                  name: {kind: 'Name', value: 'channel'},
-                },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'Field',
-                  name: {kind: 'Name', value: 'edges'},
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      {
-                        kind: 'Field',
-                        name: {kind: 'Name', value: 'node'},
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {kind: 'Field', name: {kind: 'Name', value: 'id'}},
-                            {
-                              kind: 'FragmentSpread',
-                              name: {
-                                kind: 'Name',
-                                value:
-                                  'ProductAttributesDropdown_AttributeFragment',
-                              },
-                            },
-                          ],
-                        },
-                      },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-    {
-      kind: 'FragmentDefinition',
-      name: {kind: 'Name', value: 'AttributeCheckbox_AttributeFragment'},
-      typeCondition: {
-        kind: 'NamedType',
-        name: {kind: 'Name', value: 'AttributeValue'},
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {kind: 'Field', name: {kind: 'Name', value: 'name'}},
-          {
-            kind: 'Field',
-            name: {kind: 'Name', value: 'translation'},
-            arguments: [
-              {
-                kind: 'Argument',
-                name: {kind: 'Name', value: 'languageCode'},
-                value: {
-                  kind: 'Variable',
-                  name: {kind: 'Name', value: 'languageCode'},
-                },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {kind: 'Field', name: {kind: 'Name', value: 'name'}},
-              ],
-            },
-          },
-          {kind: 'Field', name: {kind: 'Name', value: 'slug'}},
-        ],
-      },
-    },
-    {
-      kind: 'FragmentDefinition',
-      name: {
-        kind: 'Name',
-        value: 'ProductAttributesDropdown_AttributeFragment',
-      },
-      typeCondition: {
-        kind: 'NamedType',
-        name: {kind: 'Name', value: 'Attribute'},
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {kind: 'Field', name: {kind: 'Name', value: 'name'}},
-          {
-            kind: 'Field',
-            name: {kind: 'Name', value: 'translation'},
-            arguments: [
-              {
-                kind: 'Argument',
-                name: {kind: 'Name', value: 'languageCode'},
-                value: {
-                  kind: 'Variable',
-                  name: {kind: 'Name', value: 'languageCode'},
-                },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {kind: 'Field', name: {kind: 'Name', value: 'name'}},
-              ],
-            },
-          },
-          {kind: 'Field', name: {kind: 'Name', value: 'slug'}},
-          {
-            kind: 'Field',
-            name: {kind: 'Name', value: 'choices'},
-            arguments: [
-              {
-                kind: 'Argument',
-                name: {kind: 'Name', value: 'first'},
-                value: {kind: 'IntValue', value: '20'},
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'Field',
-                  name: {kind: 'Name', value: 'edges'},
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      {
-                        kind: 'Field',
-                        name: {kind: 'Name', value: 'node'},
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {kind: 'Field', name: {kind: 'Name', value: 'id'}},
-                            {
-                              kind: 'FragmentSpread',
-                              name: {
-                                kind: 'Name',
-                                value: 'AttributeCheckbox_AttributeFragment',
-                              },
-                            },
-                          ],
-                        },
-                      },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<
-  ProductAttributes_AttributesQueryQuery,
-  ProductAttributes_AttributesQueryQueryVariables
 >;
 export const Summary_QueryDocument = {
   kind: 'Document',
@@ -38240,6 +41562,45 @@ export const ShippingPage_CheckoutQueryDocument = {
 } as unknown as DocumentNode<
   ShippingPage_CheckoutQueryQuery,
   ShippingPage_CheckoutQueryQueryVariables
+>;
+export const DeactivateAllTokensMutationDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: {kind: 'Name', value: 'DeactivateAllTokensMutation'},
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: {kind: 'Name', value: 'tokensDeactivateAll'},
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: {kind: 'Name', value: 'errors'},
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {kind: 'Field', name: {kind: 'Name', value: 'field'}},
+                      {kind: 'Field', name: {kind: 'Name', value: 'message'}},
+                      {kind: 'Field', name: {kind: 'Name', value: 'code'}},
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  DeactivateAllTokensMutationMutation,
+  DeactivateAllTokensMutationMutationVariables
 >;
 export const RefreshAccessTokenMutationDocument = {
   kind: 'Document',
