@@ -11,25 +11,20 @@ import {logInAction} from '../../_tools/log-in-action';
 import type {LoginFormSchema} from './use-login-form-schema';
 
 export function useLoginSubmit(form: UseFormReturn<LoginFormSchema>) {
-  const intlRouter = useIntlRouter();
-  const [routeIsPending, startTransition] = useTransition();
   const intl = useIntl();
+  const intlRouter = useIntlRouter();
 
-  return {
-    routeIsPending,
-    loginSubmit: useCallback(
-      async ({email, password}: LoginFormSchema) => {
-        try {
-          const {type, result} = await logInAction({email, password});
+  const [pending, startTransition] = useTransition();
 
-          if (type === 'error') {
-            // TODO: display server error
-            return;
-          }
+  const loginSubmit = useCallback(
+    async ({email, password}: LoginFormSchema) => {
+      try {
+        const {type, result} = await logInAction({email, password});
+
+        if (type === 'success') {
           localStorage.setItem(result.name, result.value);
 
           form.reset();
-
           toast.default({
             title: intl.formatMessage({
               defaultMessage: 'Success',
@@ -40,15 +35,20 @@ export function useLoginSubmit(form: UseFormReturn<LoginFormSchema>) {
               id: 'r/rQ02',
             }),
           });
+
           startTransition(() => {
             intlRouter.push(formatPathname(...APP_ROUTES.ROOT));
           });
-        } catch (error) {
-          // TODO: display server error
-          console.error(error);
         }
-      },
-      [form, intl, intlRouter],
-    ),
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    [form, intl, intlRouter],
+  );
+
+  return {
+    pending,
+    loginSubmit,
   };
 }

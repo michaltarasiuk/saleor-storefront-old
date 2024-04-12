@@ -1,53 +1,12 @@
 import {useRouter} from 'next/navigation';
-import {
-  // experimental_useOptimistic as useOptimistic,
-  useCallback,
-  useMemo,
-  useState,
-} from 'react';
+import {useCallback, useMemo, useState} from 'react';
 
-// import {useStable} from '@/lib/hooks/use-stable';
 import {checkoutLineQuantityEditAction} from './checkout-line-quantity-edit-action';
 
-// export function useCheckoutLineQuantityEdit(lineId: string, value: number) {
-//   const stableValue = useStable(value);
-
-//   const [optimisticQuantity, setOptimisticQuantity] =
-//     useOptimistic(stableValue);
-
-//   const updateQuantity = useCallback(
-//     async (quantity: number) => {
-//       setOptimisticQuantity(quantity);
-
-//       try {
-//         await checkoutLineQuantityEditAction({
-//           lineId,
-//           quantity,
-//         });
-//       } catch (error) {
-//         // TODO: display server error
-//         console.error(error);
-//       }
-//     },
-//     [lineId, setOptimisticQuantity],
-//   );
-
-//   return {
-//     optimisticQuantity,
-//     ...useMemo(
-//       () => ({
-//         increaseQuantity: () => updateQuantity(optimisticQuantity + 1),
-//         decreaseQuantity: () => updateQuantity(optimisticQuantity - 1),
-//       }),
-//       [optimisticQuantity, updateQuantity],
-//     ),
-//   };
-// }
-
-// TOOD: Replace this with optimistic updates
 export function useCheckoutLineQuantityEdit(lineId: string, value: number) {
   const [quantity, setQuantity] = useState(value);
   const [isPending, setIsPending] = useState(false);
+
   const router = useRouter();
 
   const updateQuantity = useCallback(
@@ -60,12 +19,13 @@ export function useCheckoutLineQuantityEdit(lineId: string, value: number) {
           quantity,
         });
         setQuantity(quantity);
+
         router.refresh();
       } catch (error) {
-        // TODO: display server error
         console.error(error);
+      } finally {
+        setIsPending(false);
       }
-      setIsPending(false);
     },
     [router, lineId],
   );

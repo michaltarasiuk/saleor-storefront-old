@@ -33,14 +33,14 @@ export function SetPasswordForm({email, token}: Props) {
   const form = useForm<SetPasswordFormSchema>({
     resolver: zodResolver(setPasswordSchema),
   });
-  const {setPasswordSubmit, routeIsPending} = useSetPasswordSubmit(form, {
+  const {setPasswordSubmit, pending} = useSetPasswordSubmit(form, {
     email,
     token,
   });
 
   const refMountCallback = useRefMountCallback<ElementRef<'input'>>();
 
-  const disabled = form.formState.isSubmitting || routeIsPending;
+  const disabled = form.formState.isSubmitting || pending;
 
   return (
     <Form form={form} onSubmit={form.handleSubmit(setPasswordSubmit)}>

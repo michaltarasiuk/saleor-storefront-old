@@ -1,4 +1,13 @@
-const graphQLEndpoint = new URL(process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT);
+// @ts-check
+
+function getGraphQLEndpointUrl() {
+  const graphQLEndpoint = process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT;
+  if (!graphQLEndpoint) throw Error('graphQL endpoint is not defined');
+
+  return new URL(graphQLEndpoint);
+}
+
+const graphQLEndpointUrl = getGraphQLEndpointUrl();
 
 /** @type {import('next').NextConfig} */
 const config = {
@@ -16,8 +25,11 @@ const config = {
   images: {
     remotePatterns: [
       {
-        hostname: graphQLEndpoint.hostname,
-        protocol: graphQLEndpoint.protocol.slice(0, -1), // Remove trailing colon
+        hostname: graphQLEndpointUrl.hostname,
+        protocol: (() => {
+          const protocol = graphQLEndpointUrl.protocol.slice(0, -1); // Remove trailing colon;
+          if (protocol === 'http' || protocol === 'https') return protocol;
+        })(),
       },
     ],
   },

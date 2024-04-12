@@ -15,29 +15,23 @@ export function useSetPasswordSubmit(
   {email, token}: {readonly email: string; readonly token: string},
 ) {
   const intlRouter = useIntlRouter();
-  const [routeIsPending, startTransition] = useTransition();
   const intl = useIntl();
 
-  return {
-    routeIsPending,
-    setPasswordSubmit: useCallback(
-      async ({password}: SetPasswordFormSchema) => {
-        try {
-          const {type, result} = await setPasswordAction({
-            email,
-            token,
-            password,
-          });
+  const [pending, startTransition] = useTransition();
 
-          if (type === 'error') {
-            // TODO: display server error
-            return;
-          }
+  const setPasswordSubmit = useCallback(
+    async ({password}: SetPasswordFormSchema) => {
+      try {
+        const {type, result} = await setPasswordAction({
+          email,
+          token,
+          password,
+        });
 
+        if (type === 'success') {
           localStorage.setItem(result.name, result.value);
 
           form.reset();
-
           toast.default({
             title: intl.formatMessage({
               defaultMessage: 'Success',
@@ -52,12 +46,16 @@ export function useSetPasswordSubmit(
           startTransition(() => {
             intlRouter.push(formatPathname(...APP_ROUTES.ROOT));
           });
-        } catch (error) {
-          // TODO: display server error
-          console.error(error);
         }
-      },
-      [email, form, intl, intlRouter, token],
-    ),
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    [email, form, intl, intlRouter, token],
+  );
+
+  return {
+    pending,
+    setPasswordSubmit,
   };
 }

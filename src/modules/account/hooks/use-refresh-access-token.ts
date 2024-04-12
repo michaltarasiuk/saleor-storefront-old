@@ -6,20 +6,9 @@ import {formatPathname} from '@/lib/tools/format-pathname';
 
 import {refreshAccessToken} from '../tools/refresh-access-token';
 
-// let refreshAccessTokenPromise: ReturnType<typeof refreshAccessToken> | null =
-//   null;
-
-// function cache(refreshAccessTokenFn: typeof refreshAccessToken) {
-//   if (!refreshAccessTokenPromise) {
-//     refreshAccessTokenPromise = refreshAccessTokenFn().then(
-//       (response) => ((refreshAccessTokenPromise = null), response),
-//     );
-//   }
-//   return refreshAccessTokenPromise;
-// }
+const refreshAccessTokenFn = cache(refreshAccessToken);
 
 export function useRefreshAccessToken() {
-  const refreshAccessTokenFn = cache(refreshAccessToken);
   const response = use(refreshAccessTokenFn());
   const intlRouter = useIntlRouter();
 

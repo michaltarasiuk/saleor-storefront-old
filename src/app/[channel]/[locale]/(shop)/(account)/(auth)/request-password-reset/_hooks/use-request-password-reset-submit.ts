@@ -31,6 +31,7 @@ export function useRequestPasswordResetSubmit(
         if (errors?.length) {
           // TODO: display server error
         } else {
+          form.reset();
           toast.default({
             title: intl.formatMessage({
               defaultMessage: 'Success',
@@ -45,10 +46,7 @@ export function useRequestPasswordResetSubmit(
             ),
           });
         }
-
-        form.reset();
       } catch (error) {
-        // TODO: display server error
         console.error(error);
       }
     },

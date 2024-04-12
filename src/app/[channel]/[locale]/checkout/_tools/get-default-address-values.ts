@@ -9,27 +9,31 @@ import {capitalize} from '@/lib/tools/capitalize';
 
 import type {AddressFieldsSchema} from '../_hooks/use-address-fields-schema';
 
-export function getDefaultAddressValues({
-  addressValues,
-  countryCode,
-  cityChoices,
-  countryAreaChoices,
-}: {
+type DefaultAddressValues = Partial<AddressFieldsSchema>;
+
+interface Input {
   readonly addressValues: Partial<
     Omit<Address, keyof Node | keyof ObjectWithMetadata>
   >;
   readonly countryCode: CountryCode;
   readonly cityChoices: ReadonlyArray<ChoiceValue>;
   readonly countryAreaChoices: ReadonlyArray<ChoiceValue>;
-}): Partial<AddressFieldsSchema> {
+}
+
+export function getDefaultAddressValues({
+  addressValues,
+  countryCode,
+  cityChoices,
+  countryAreaChoices,
+}: Input): DefaultAddressValues {
   const city = cityChoices.at(0)?.raw;
   const countryArea = countryAreaChoices.at(0)?.raw;
 
   return {
     ...addressValues,
     ...(countryCode && {country: countryCode}),
-    ...(city && {city}),
     ...(addressValues?.city && {city: capitalize(addressValues.city)}),
+    ...(city && {city}),
     ...(countryArea && {countryArea}),
   };
 }

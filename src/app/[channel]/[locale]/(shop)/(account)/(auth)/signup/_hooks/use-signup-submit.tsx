@@ -1,4 +1,4 @@
-import {useCallback, useTransition} from 'react';
+import {useCallback, useMemo, useTransition} from 'react';
 import type {UseFormReturn} from 'react-hook-form';
 
 import {ORIGIN} from '@/env/env-local';
@@ -14,86 +14,106 @@ import {signUp} from '../_tools/sign-up';
 import type {SignupFormSchema} from './use-signup-form-schema';
 
 export function useSignupSubmit(form: UseFormReturn<SignupFormSchema>) {
-  const channel = useChannel();
-  const intl = useIntl();
   const intlRouter = useIntlRouter();
-  const [routeIsPending, startTransition] = useTransition();
+  const channel = useChannel();
+  const toast = useToast();
+  const [pending, startTransition] = useTransition();
 
-  return {
-    routeIsPending,
-    signupSubmit: useCallback(
-      async ({email, password}: SignupFormSchema) => {
-        try {
-          const {requiresConfirmation, user, errors} =
-            (
-              await signUp({
-                email,
-                password,
-                channel,
-                redirectUrl: new URL(
-                  APP_ROUTES.CONFIRM_ACCOUNT,
-                  ORIGIN,
-                ).toString(),
-              })
-            ).accountRegister ?? {};
+  const singupSubmit = useCallback(
+    async ({email, password}: SignupFormSchema) => {
+      try {
+        const {requiresConfirmation, user, errors} =
+          (
+            await signUp({
+              email,
+              password,
+              channel,
+              redirectUrl: new URL(
+                APP_ROUTES.CONFIRM_ACCOUNT,
+                ORIGIN,
+              ).toString(),
+            })
+          ).accountRegister ?? {};
 
-          if (errors?.length !== 0) {
-            toast.destructive({
-              title: intl.formatMessage({
-                defaultMessage: 'Error',
-                id: 'KN7zKn',
-              }),
-              description: intl.formatMessage({
-                defaultMessage: 'Failed to sign up',
-                id: 'bUnGvj',
-              }),
-            });
-          } else if (requiresConfirmation && user) {
-            toast.default({
-              title: intl.formatMessage({
-                defaultMessage: 'Success',
-                id: 'xrKHS6',
-              }),
-              description: intl.formatMessage(
-                {
-                  defaultMessage:
-                    'Confirmation email was sent to {email} mailbox.',
-                  id: 'OFXKGv',
-                },
-                {email: user.email},
-              ),
-            });
-          } else {
-            const {type, result} = await logInAction({email, password});
+        if (errors?.length !== 0) {
+          toast.destructive();
+          return;
+        }
 
-            if (type === 'error') {
-              // TODO: display server error
-              return;
-            }
+        if (requiresConfirmation && user) {
+          toast.successRegister(user.email);
+        } else if (!requiresConfirmation) {
+          const {type, result} = await logInAction({email, password});
+
+          if (type === 'success') {
             localStorage.setItem(result.name, result.value);
+
+            form.reset();
+            toast.successLogIn();
 
             startTransition(() => {
               intlRouter.push(formatPathname(APP_ROUTES.ROOT));
             });
           }
-          form.reset();
-
-          toast.default({
-            title: intl.formatMessage({
-              defaultMessage: 'Success',
-              id: 'xrKHS6',
-            }),
-            description: intl.formatMessage({
-              defaultMessage: 'Successfuly logged in.',
-              id: 'r/rQ02',
-            }),
-          });
-        } catch (error) {
-          // TODO: display server error
-          console.error(error);
         }
-      },
-      [channel, form, intl, intlRouter],
-    ),
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    [channel, form, intlRouter, toast],
+  );
+
+  return {
+    pending,
+    singupSubmit,
   };
+}
+
+function useToast() {
+  const intl = useIntl();
+
+  return useMemo(
+    () => ({
+      successRegister(email: string) {
+        toast.default({
+          title: intl.formatMessage({
+            defaultMessage: 'Success',
+            id: 'xrKHS6',
+          }),
+          description: intl.formatMessage(
+            {
+              defaultMessage: 'Confirmation email was sent to {email} mailbox.',
+              id: 'OFXKGv',
+            },
+            {email},
+          ),
+        });
+      },
+      successLogIn() {
+        toast.default({
+          title: intl.formatMessage({
+            defaultMessage: 'Success',
+            id: 'xrKHS6',
+          }),
+          description: intl.formatMessage({
+            defaultMessage: 'Successfuly logged in.',
+            id: 'r/rQ02',
+          }),
+        });
+      },
+      destructive() {
+        toast.destructive({
+          title: intl.formatMessage({
+            defaultMessage: 'Error',
+            id: 'KN7zKn',
+          }),
+          description: intl.formatMessage({
+            defaultMessage: 'Failed to sign up',
+            id: 'bUnGvj',
+          }),
+        });
+      },
+    }),
+    [intl],
+  );
 }

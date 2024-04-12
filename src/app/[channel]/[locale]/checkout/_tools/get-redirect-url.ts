@@ -1,5 +1,6 @@
 import {APP_ROUTES} from '@/lib/consts';
 import {formatPathname} from '@/lib/tools/format-pathname';
+import {areDefined} from '@/lib/tools/is-defined';
 
 type Checkout = Partial<{
   readonly shippingAddress: unknown;
@@ -9,9 +10,9 @@ type Checkout = Partial<{
 
 export function getRedirectUrl(
   {shippingAddress, deliveryMethod, billingAddress}: Checkout,
-  pathname: string,
+  requestedRoute: string,
 ) {
-  const requirementRecords = {
+  const routes = {
     [formatPathname(...APP_ROUTES.CHECKOUT.INFORMATION)]: {},
     [formatPathname(...APP_ROUTES.CHECKOUT.SHIPPING)]: {
       shippingAddress,
@@ -27,18 +28,15 @@ export function getRedirectUrl(
     },
   };
 
-  const [requirementName] =
-    Object.entries(requirementRecords[pathname] ?? {}).find(
-      (requirementEntry) => !requirementEntry[1],
-    ) ?? [];
+  const routeRequirements = routes[requestedRoute];
+  if (!routeRequirements) return null;
 
-  if (!requirementName) {
-    return null;
+  if (areDefined(...Object.values(routeRequirements))) return null;
+
+  for (const [redirectUrl, routeRequirements] of Object.entries(
+    routes,
+  ).toReversed()) {
+    if (areDefined(...Object.values(routeRequirements))) return redirectUrl;
   }
-  return (
-    Object.entries(requirementRecords).findLast(
-      ([, requirementRecord]) =>
-        !Object.hasOwn(requirementRecord, requirementName),
-    )?.[0] ?? null
-  );
+  return null;
 }

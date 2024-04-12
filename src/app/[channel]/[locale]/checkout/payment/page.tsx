@@ -30,32 +30,25 @@ const PaymentPage_CheckoutQuery = graphql(/* GraphQL */ `
 `);
 
 export default async function PaymentPage() {
-  const checkout =
-    (
-      await fetchQueryData(
-        PaymentPage_CheckoutQuery,
-        {
-          id: getCheckoutId() ?? goToRoot(),
-        },
-        {
-          fetchOptions: {
-            cache: 'no-cache',
-          },
-        },
-      )
-    ).checkout ?? goToRoot();
+  const {checkout} = await fetchQueryData(
+    PaymentPage_CheckoutQuery,
+    {
+      id: getCheckoutId() ?? goToRoot(),
+    },
+    {
+      fetchOptions: {
+        cache: 'no-cache',
+      },
+    },
+  );
+  if (!checkout || !checkout.quantity) goToRoot();
 
-  if (!checkout.quantity) {
-    goToRoot();
-  }
   const redirectUrl = getRedirectUrl(
     checkout,
     formatPathname(...APP_ROUTES.CHECKOUT.PAYMENT),
   );
+  if (redirectUrl) redirect(redirectUrl);
 
-  if (redirectUrl) {
-    redirect(redirectUrl);
-  }
   return (
     <div className={cn('space-y-7')}>
       <Breadcrumbs checkout={checkout} />

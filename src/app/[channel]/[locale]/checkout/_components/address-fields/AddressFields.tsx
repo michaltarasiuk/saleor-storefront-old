@@ -50,7 +50,6 @@ export function AddressFields({
   );
 
   const form = useFormContext<AddressFieldsSchema>();
-
   const intl = useIntl();
 
   return (
