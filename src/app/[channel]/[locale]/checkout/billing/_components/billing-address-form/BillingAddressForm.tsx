@@ -61,9 +61,9 @@ export function BillingAddressForm({
     resolver: zodResolver(billingAddressFieldsSchema),
     defaultValues,
   });
-  const {billingAddressSubmit, routeIsPending} = useBillingAddressSubmit(form);
+  const {billingAddressSubmit, pending} = useBillingAddressSubmit(form);
 
-  const disabled = form.formState.isSubmitting || routeIsPending;
+  const disabled = form.formState.isSubmitting || pending;
 
   return (
     <Form form={form} onSubmit={form.handleSubmit(billingAddressSubmit)}>

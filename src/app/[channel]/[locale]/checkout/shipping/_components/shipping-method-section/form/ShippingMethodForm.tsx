@@ -48,14 +48,13 @@ export function ShippingMethodForm({checkout}: Props) {
   const form = useForm<ShippingMethodSchema>({
     resolver: zodResolver(shippingMethodSchema),
   });
-  const {shippingMethodSubmit, routeIsPending} = useShippingMethodSubmit(form);
+  const {shippingMethodSubmit, pending} = useShippingMethodSubmit(form);
 
   const defaultValue =
     shippingMethod && 'id' in shippingMethod
       ? shippingMethod.id
       : shippingMethods.at(0)?.id;
-
-  const disabled = form.formState.isSubmitting || routeIsPending;
+  const disabled = form.formState.isSubmitting || pending;
 
   return (
     <Form form={form} onSubmit={form.handleSubmit(shippingMethodSubmit)}>

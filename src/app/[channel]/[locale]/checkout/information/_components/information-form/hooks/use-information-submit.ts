@@ -16,28 +16,23 @@ export function useInformationSubmit(
   form: UseFormReturn<InformationFieldsSchema>,
 ) {
   const intlRouter = useIntlRouter();
-  const [routeIsPending, startTransition] = useTransition();
+  const [pending, startTransition] = useTransition();
 
-  return {
-    routeIsPending,
-    shippingAddressSubmit: useCallback(
-      async ({
-        email,
-        useShippingAsBillingAddress,
-        streetAddress2,
-        ...restAddressFields
-      }: InformationFieldsSchema) => {
+  const informationSubmit = useCallback(
+    async ({
+      email,
+      useShippingAsBillingAddress,
+      streetAddress2,
+      ...restAddressFields
+    }: InformationFieldsSchema) => {
+      try {
         const addressInput: AddressInput = {
           ...(streetAddress2 && {streetAddress2}),
           ...restAddressFields,
         };
 
-        try {
-          const [
-            checkoutShippingAddress,
-            checkoutBillingAddress,
-            checkoutEmail,
-          ] = await Promise.all([
+        const [checkoutShippingAddress, checkoutBillingAddress, checkoutEmail] =
+          await Promise.all([
             ADDRESS_FIELDS_NAMES.some(
               (addressFieldName) =>
                 form.getFieldState(addressFieldName).isDirty,
@@ -52,23 +47,26 @@ export function useInformationSubmit(
               : null,
           ]);
 
-          if (
-            checkoutShippingAddress?.errors.length ||
-            checkoutBillingAddress?.errors.length ||
-            checkoutEmail?.errors.length
-          ) {
-          } else {
-            startTransition(() => {
-              intlRouter.push(formatPathname(...APP_ROUTES.CHECKOUT.SHIPPING));
-              intlRouter.refresh();
-            });
-          }
-        } catch (error) {
-          // TODO: display server error
-          console.error(error);
+        if (
+          checkoutShippingAddress?.errors.length ||
+          checkoutBillingAddress?.errors.length ||
+          checkoutEmail?.errors.length
+        ) {
+        } else {
+          startTransition(() => {
+            intlRouter.push(formatPathname(...APP_ROUTES.CHECKOUT.SHIPPING));
+            intlRouter.refresh();
+          });
         }
-      },
-      [form, intlRouter],
-    ),
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    [form, intlRouter],
+  );
+
+  return {
+    pending,
+    informationSubmit,
   };
 }

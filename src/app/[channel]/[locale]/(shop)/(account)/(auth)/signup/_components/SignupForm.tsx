@@ -28,11 +28,11 @@ export function SignupForm() {
   const form = useForm<SignupFormSchema>({
     resolver: zodResolver(signupFormSchema),
   });
-  const {routeIsPending, signupSubmit} = useSignupSubmit(form);
+  const {signupSubmit, pending} = useSignupSubmit(form);
 
   const refMountCallback = useRefMountCallback<ElementRef<'input'>>();
 
-  const disabled = form.formState.isSubmitting || routeIsPending;
+  const disabled = form.formState.isSubmitting || pending;
 
   return (
     <Form form={form} onSubmit={form.handleSubmit(signupSubmit)}>

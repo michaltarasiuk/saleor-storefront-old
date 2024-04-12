@@ -68,16 +68,15 @@ export function InformationForm({
     resolver: zodResolver(informationFieldsSchema),
     defaultValues,
   });
-  const {shippingAddressSubmit, routeIsPending} = useInformationSubmit(form);
-
-  const refMountCallback = useRefMountCallback<ElementRef<'input'>>();
+  const {informationSubmit, pending} = useInformationSubmit(form);
 
   const intl = useIntl();
+  const refMountCallback = useRefMountCallback<ElementRef<'input'>>();
 
-  const disabled = form.formState.isSubmitting || routeIsPending;
+  const disabled = form.formState.isSubmitting || pending;
 
   return (
-    <Form form={form} onSubmit={form.handleSubmit(shippingAddressSubmit)}>
+    <Form form={form} onSubmit={form.handleSubmit(informationSubmit)}>
       <section className={cn('space-y-3')}>
         <Heading>
           <FormattedMessage defaultMessage="Contact" id="zFegDD" />

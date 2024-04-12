@@ -13,39 +13,38 @@ export function useBillingAddressSubmit(
   form: UseFormReturn<AddressFieldsSchema>,
 ) {
   const intlRouter = useIntlRouter();
-  const [routeIsPending, startTransition] = useTransition();
+  const [pending, startTransition] = useTransition();
 
-  return {
-    routeIsPending,
-    billingAddressSubmit: useCallback(
-      async ({streetAddress2, ...restBillingAddress}: AddressFieldsSchema) => {
-        try {
+  const billingAddressSubmit = useCallback(
+    async ({streetAddress2, ...restBillingAddress}: AddressFieldsSchema) => {
+      try {
+        const hasDirtyField = ADDRESS_FIELDS_NAMES.some(
+          (addressFieldName) => form.getFieldState(addressFieldName).isDirty,
+        );
+
+        if (hasDirtyField) {
           const {errors} =
-            (ADDRESS_FIELDS_NAMES.some(
-              (addressFieldName) =>
-                form.getFieldState(addressFieldName).isDirty,
-            )
-              ? await updateCheckoutBillingAddressAction({
-                  ...(streetAddress2 && {streetAddress2}),
-                  ...restBillingAddress,
-                })
-              : null) ?? {};
+            (await updateCheckoutBillingAddressAction({
+              ...(streetAddress2 && {streetAddress2}),
+              ...restBillingAddress,
+            })) ?? {};
 
-          if (errors?.length) {
-            // TODO: display server error
-            console.error(errors);
-          } else {
+          if (!errors?.length) {
             startTransition(() => {
               intlRouter.push(formatPathname(...APP_ROUTES.CHECKOUT.PAYMENT));
               intlRouter.refresh();
             });
           }
-        } catch (error) {
-          // TODO: display server error
-          console.error(error);
         }
-      },
-      [form, intlRouter],
-    ),
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    [form, intlRouter],
+  );
+
+  return {
+    billingAddressSubmit,
+    pending,
   };
 }

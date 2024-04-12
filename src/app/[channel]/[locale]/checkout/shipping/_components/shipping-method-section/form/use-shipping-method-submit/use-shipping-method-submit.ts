@@ -12,33 +12,33 @@ export function useShippingMethodSubmit(
   form: UseFormReturn<ShippingMethodSchema>,
 ) {
   const intlRouter = useIntlRouter();
-  const [routeIsPending, startTransition] = useTransition();
+  const [pending, startTransition] = useTransition();
 
-  return {
-    routeIsPending,
-    shippingMethodSubmit: useCallback(
-      async ({deliveryMethodId}: ShippingMethodSchema) => {
-        try {
+  const shippingMethodSubmit = useCallback(
+    async ({deliveryMethodId}: ShippingMethodSchema) => {
+      try {
+        const isDirty = form.getFieldState('deliveryMethodId').isDirty;
+
+        if (isDirty) {
           const {errors} =
-            (form.getFieldState('deliveryMethodId').isDirty
-              ? await updateCheckoutDeliveryMethodAction(deliveryMethodId)
-              : null) ?? {};
+            (await updateCheckoutDeliveryMethodAction(deliveryMethodId)) ?? {};
 
-          if (errors?.length) {
-            // TODO: display server error
-            console.error(errors);
-          } else {
+          if (!errors?.length) {
             startTransition(() => {
               intlRouter.push(formatPathname(...APP_ROUTES.CHECKOUT.BILLING));
               intlRouter.refresh();
             });
           }
-        } catch (error) {
-          // TODO: display server error
-          console.error(error);
         }
-      },
-      [form, intlRouter],
-    ),
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    [form, intlRouter],
+  );
+
+  return {
+    shippingMethodSubmit,
+    pending,
   };
 }

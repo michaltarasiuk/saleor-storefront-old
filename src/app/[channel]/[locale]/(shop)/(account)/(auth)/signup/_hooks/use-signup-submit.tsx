@@ -19,7 +19,7 @@ export function useSignupSubmit(form: UseFormReturn<SignupFormSchema>) {
   const toast = useToast();
   const [pending, startTransition] = useTransition();
 
-  const singupSubmit = useCallback(
+  const signupSubmit = useCallback(
     async ({email, password}: SignupFormSchema) => {
       try {
         const {requiresConfirmation, user, errors} =
@@ -35,14 +35,14 @@ export function useSignupSubmit(form: UseFormReturn<SignupFormSchema>) {
             })
           ).accountRegister ?? {};
 
-        if (errors?.length !== 0) {
+        if (!errors?.length) {
           toast.destructive();
           return;
         }
 
-        if (requiresConfirmation && user) {
-          toast.successRegister(user.email);
-        } else if (!requiresConfirmation) {
+        if (requiresConfirmation) {
+          if (user) toast.successRegister(user.email);
+        } else {
           const {type, result} = await logInAction({email, password});
 
           if (type === 'success') {
@@ -64,8 +64,8 @@ export function useSignupSubmit(form: UseFormReturn<SignupFormSchema>) {
   );
 
   return {
+    signupSubmit,
     pending,
-    singupSubmit,
   };
 }
 

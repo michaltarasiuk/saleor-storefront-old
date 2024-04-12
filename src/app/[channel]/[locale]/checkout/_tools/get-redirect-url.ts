@@ -1,6 +1,6 @@
 import {APP_ROUTES} from '@/lib/consts';
+import {allDefined} from '@/lib/tools/all-defined';
 import {formatPathname} from '@/lib/tools/format-pathname';
-import {areDefined} from '@/lib/tools/is-defined';
 
 type Checkout = Partial<{
   readonly shippingAddress: unknown;
@@ -28,15 +28,15 @@ export function getRedirectUrl(
     },
   };
 
-  const routeRequirements = routes[requestedRoute];
-  if (!routeRequirements) return null;
+  const requestedRouteRequirements = routes[requestedRoute];
+  if (!requestedRouteRequirements) return null;
 
-  if (areDefined(...Object.values(routeRequirements))) return null;
+  if (allDefined(...Object.values(requestedRouteRequirements))) return null;
 
   for (const [redirectUrl, routeRequirements] of Object.entries(
     routes,
   ).toReversed()) {
-    if (areDefined(...Object.values(routeRequirements))) return redirectUrl;
+    if (allDefined(...Object.values(routeRequirements))) return redirectUrl;
   }
   return null;
 }
