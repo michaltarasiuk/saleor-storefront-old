@@ -23,18 +23,17 @@ const UpdateCheckoutShippingAddressMutation = graphql(/* GraphQL */ `
 export async function updateCheckoutShippingAddressAction(
   shippingAddress: AddressInput,
 ) {
-  return (
-    await fetchMutationData(
-      UpdateCheckoutShippingAddressMutation,
-      {
-        shippingAddress,
-        id: getCheckoutId() ?? raise('Checkout id is not defined'),
+  const {checkoutShippingAddressUpdate} = await fetchMutationData(
+    UpdateCheckoutShippingAddressMutation,
+    {
+      shippingAddress,
+      id: getCheckoutId() ?? raise('Checkout id is not defined'),
+    },
+    {
+      fetchOptions: {
+        cache: 'no-cache',
       },
-      {
-        fetchOptions: {
-          cache: 'no-cache',
-        },
-      },
-    )
-  ).checkoutShippingAddressUpdate;
+    },
+  );
+  return checkoutShippingAddressUpdate;
 }

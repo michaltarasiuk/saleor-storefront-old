@@ -9,24 +9,24 @@ export const COUNTRY_SEARCH_PARAM_NAME = 'country';
 export function useSetCountrySearchParam() {
   const basePathRelative = useBasePathRelative();
   const searchParams = useSearchParams();
-
   const intlRouter = useIntlRouter();
   const [routeIsPending, startTransition] = useTransition();
 
+  const setCountrySearchParam = useCallback(
+    (value: string) => {
+      const newSearchParams = new URLSearchParams(searchParams.toString());
+      newSearchParams.set(COUNTRY_SEARCH_PARAM_NAME, value);
+
+      startTransition(() => {
+        intlRouter.push(basePathRelative + '?' + newSearchParams.toString());
+        intlRouter.refresh();
+      });
+    },
+    [basePathRelative, intlRouter, searchParams],
+  );
+
   return {
     routeIsPending,
-    setCountrySearchParam: useCallback(
-      (value: string) => {
-        const newSearchParams = new URLSearchParams(searchParams.toString());
-
-        newSearchParams.set(COUNTRY_SEARCH_PARAM_NAME, value);
-
-        startTransition(() => {
-          intlRouter.push(basePathRelative + '?' + newSearchParams.toString());
-          intlRouter.refresh();
-        });
-      },
-      [basePathRelative, intlRouter, searchParams],
-    ),
+    setCountrySearchParam,
   };
 }

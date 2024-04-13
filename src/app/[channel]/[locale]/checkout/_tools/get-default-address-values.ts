@@ -9,16 +9,18 @@ import {capitalize} from '@/lib/tools/capitalize';
 
 import type {AddressFieldsSchema} from '../_hooks/use-address-fields-schema';
 
-type DefaultAddressValues = Partial<AddressFieldsSchema>;
+type AddressValues = Partial<
+  Omit<Address, keyof Node | keyof ObjectWithMetadata>
+>;
 
 interface Input {
-  readonly addressValues: Partial<
-    Omit<Address, keyof Node | keyof ObjectWithMetadata>
-  >;
+  readonly addressValues: AddressValues;
   readonly countryCode: CountryCode;
   readonly cityChoices: ReadonlyArray<ChoiceValue>;
   readonly countryAreaChoices: ReadonlyArray<ChoiceValue>;
 }
+
+type DefaultAddressValues = Partial<AddressFieldsSchema>;
 
 export function getDefaultAddressValues({
   addressValues,

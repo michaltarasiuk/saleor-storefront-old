@@ -11,12 +11,12 @@ export function useCountryOptions(countryCodes: readonly string[]) {
       type: 'region',
     });
 
-    return countryCodes.flatMap((countryCode) => {
-      if (!isCountryCode(countryCode)) {
+    return countryCodes.flatMap((value) => {
+      if (!isCountryCode(value)) {
         return [];
       }
 
-      const label = intlDisplayNames.of(countryCode);
+      const label = intlDisplayNames.of(value);
 
       if (!label) {
         return [];
@@ -25,7 +25,7 @@ export function useCountryOptions(countryCodes: readonly string[]) {
       return [
         {
           label,
-          value: countryCode,
+          value,
         },
       ];
     });

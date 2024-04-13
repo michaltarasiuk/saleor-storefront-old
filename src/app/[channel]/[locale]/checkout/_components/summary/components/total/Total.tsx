@@ -47,10 +47,9 @@ interface Props {
 }
 
 export async function CheckoutTotal({checkout}: Props) {
-  const intl = await getIntl(getLocale());
-
   const {subtotalPrice, shippingPrice, totalPrice, displayGrossPrices} =
     getFragment(CheckoutTotal_CheckoutFragment, checkout);
+  const intl = await getIntl(getLocale());
 
   return (
     <Table className={cn('mt-6 gap-2')}>

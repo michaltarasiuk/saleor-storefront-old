@@ -23,10 +23,12 @@ const UpdateCheckoutDeliveryMethodMutation = graphql(/* GraphQL */ `
 export async function updateCheckoutDeliveryMethodAction(
   deliveryMethodId: UpdateCheckoutDeliveryMethodMutationMutationVariables['deliveryMethodId'],
 ) {
-  return (
-    await fetchMutationData(UpdateCheckoutDeliveryMethodMutation, {
+  const {checkoutDeliveryMethodUpdate} = await fetchMutationData(
+    UpdateCheckoutDeliveryMethodMutation,
+    {
       deliveryMethodId,
       id: getCheckoutId() ?? raise('Checkout id is not defined'),
-    })
-  ).checkoutDeliveryMethodUpdate;
+    },
+  );
+  return checkoutDeliveryMethodUpdate;
 }

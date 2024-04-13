@@ -48,7 +48,6 @@ export function CountryAreaFormField({addressValidationData, disabled}: Props) {
   );
 
   const form = useFormContext<AddressFieldsSchema>();
-
   const intl = useIntl();
 
   const placeholder = intl.formatMessage(

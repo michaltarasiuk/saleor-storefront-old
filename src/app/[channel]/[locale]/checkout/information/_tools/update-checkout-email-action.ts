@@ -20,18 +20,17 @@ const UpdateCheckoutEmailMutation = graphql(/* GraphQL */ `
 export async function updateCheckoutEmailAction(
   email: UpdateCheckoutEmailMutationMutationVariables['email'],
 ) {
-  return (
-    await fetchMutationData(
-      UpdateCheckoutEmailMutation,
-      {
-        email,
-        id: getCheckoutId() ?? raise('Checkout id is not defined'),
+  const {checkoutEmailUpdate} = await fetchMutationData(
+    UpdateCheckoutEmailMutation,
+    {
+      email,
+      id: getCheckoutId() ?? raise('Checkout id is not defined'),
+    },
+    {
+      fetchOptions: {
+        cache: 'no-cache',
       },
-      {
-        fetchOptions: {
-          cache: 'no-cache',
-        },
-      },
-    )
-  ).checkoutEmailUpdate;
+    },
+  );
+  return checkoutEmailUpdate;
 }

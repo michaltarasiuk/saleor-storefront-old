@@ -8,7 +8,7 @@ import {fetchQueryData} from '@/lib/tools/get-client';
 import {getCheckoutId} from '@/modules/checkout/tools/cookies';
 
 import {Breadcrumbs} from '../_components/breadcrumbs';
-import {getCountrySearchParam} from '../_tools/get-country-search-param';
+import {extractCountryCode} from '../_tools/extract-country-code';
 import {getRedirectUrl} from '../_tools/get-redirect-url';
 import {goToRoot} from '../_tools/go-to-root';
 import {InformationSection} from './_components/InformationSection';
@@ -63,7 +63,7 @@ export default async function InformationPage({searchParams}: Props) {
       <Breadcrumbs checkout={checkout} />
       <InformationSection
         checkout={checkout}
-        country={getCountrySearchParam(searchParams)}
+        country={extractCountryCode(searchParams)}
       />
     </div>
   );
