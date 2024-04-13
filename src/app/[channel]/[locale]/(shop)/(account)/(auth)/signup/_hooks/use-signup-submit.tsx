@@ -49,7 +49,7 @@ export function useSignupSubmit(form: UseFormReturn<SignupFormSchema>) {
             localStorage.setItem(result.name, result.value);
 
             form.reset();
-            toast.successLogIn();
+            toast.successLogin();
 
             startTransition(() => {
               intlRouter.push(formatPathname(APP_ROUTES.ROOT));
@@ -89,7 +89,7 @@ function useToast() {
           ),
         });
       },
-      successLogIn() {
+      successLogin() {
         toast.default({
           title: intl.formatMessage({
             defaultMessage: 'Success',
