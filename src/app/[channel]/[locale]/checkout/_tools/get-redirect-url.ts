@@ -12,8 +12,9 @@ export function getRedirectUrl(
   {shippingAddress, deliveryMethod, billingAddress}: Checkout,
   requestedRoute: string,
 ) {
+  const informationRoute = formatPathname(...APP_ROUTES.CHECKOUT.INFORMATION);
   const routes = {
-    [formatPathname(...APP_ROUTES.CHECKOUT.INFORMATION)]: {},
+    [informationRoute]: {},
     [formatPathname(...APP_ROUTES.CHECKOUT.SHIPPING)]: {
       shippingAddress,
     },
@@ -29,8 +30,7 @@ export function getRedirectUrl(
   };
 
   const requestedRouteRequirements = routes[requestedRoute];
-  if (!requestedRouteRequirements) return null;
-
+  if (!requestedRouteRequirements) return informationRoute;
   if (allDefined(...Object.values(requestedRouteRequirements))) return null;
 
   for (const [redirectUrl, routeRequirements] of Object.entries(
@@ -38,5 +38,5 @@ export function getRedirectUrl(
   ).toReversed()) {
     if (allDefined(...Object.values(routeRequirements))) return redirectUrl;
   }
-  return null;
+  throw new Error('no route');
 }

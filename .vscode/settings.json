@@ -1,14 +1,20 @@
 {
+  "explorer.fileNesting.enabled": true,
+  "explorer.fileNesting.patterns": {
+    "*.ts": "${capture}.test.ts",
+    "*.tsx": "${capture}.test.tsx, ${capture}*.tsx",
+    "write_static_config.ts": "static_config.json"
+  },
+  "files.readonlyInclude": {
+    "dist/**": true,
+    "messages/**": true,
+    "node_modules/**": true,
+    "pnpm-lock.yaml": true,
+    "src/graphql/generated/**": true,
+    "src/i18n/compiled-messages/**": true
+  },
   "tailwindCSS.experimental.classRegex": [
     ["cva\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"]
   ],
-  "typescript.tsdk": "node_modules/typescript/lib",
-  "files.readonlyInclude": {
-    "node_modules/**": true,
-    "dist/**": true,
-    "src/graphql/generated/**": true,
-    "messages/**": true,
-    "src/i18n/compiled-messages/**": true,
-    "pnpm-lock.yaml": true
-  }
+  "typescript.tsdk": "node_modules/typescript/lib"
 }
