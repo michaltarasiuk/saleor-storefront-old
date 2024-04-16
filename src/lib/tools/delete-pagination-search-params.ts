@@ -5,3 +5,19 @@ export function deletePaginationSearchParams(searchParams: URLSearchParams) {
     searchParams.delete(name),
   );
 }
+
+if (import.meta.vitest) {
+  const {test, expect} = import.meta.vitest;
+
+  test('delete pagination search params', () => {
+    const searchParams = new URLSearchParams([
+      ['category', 'audiobooks'],
+      ['first', '10'],
+    ]);
+    deletePaginationSearchParams(searchParams);
+
+    expect(Array.from(searchParams.entries())).toEqual([
+      ['category', 'audiobooks'],
+    ]);
+  });
+}

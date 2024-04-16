@@ -32,15 +32,15 @@ export async function addCheckoutLineAction({
 }: Variables) {
   const id = getCheckoutId();
 
-  return !isDefined(id)
-    ? await createCheckoutAction({
-        channel,
-        lines: [line],
-        languageCode,
-      })
-    : await fetchMutationData(
+  return isDefined(id)
+    ? await fetchMutationData(
         AddCheckoutLineMutation,
         {id, line},
         {fetchOptions: {cache: 'no-cache'}},
-      );
+      )
+    : await createCheckoutAction({
+        channel,
+        lines: [line],
+        languageCode,
+      });
 }
