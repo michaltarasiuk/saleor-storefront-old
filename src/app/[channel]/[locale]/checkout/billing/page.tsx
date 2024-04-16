@@ -50,7 +50,7 @@ export default async function BillingPage({searchParams}: Props) {
       },
     },
   );
-  if (!checkout || !checkout.quantity) goToRoot();
+  if (!checkout?.quantity) goToRoot();
 
   const redirectUrl = getRedirectUrl(
     checkout,

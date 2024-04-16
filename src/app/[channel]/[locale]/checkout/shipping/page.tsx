@@ -45,7 +45,7 @@ export default async function ShippingPage() {
       },
     },
   );
-  if (!checkout || !checkout.quantity) goToRoot();
+  if (!checkout?.quantity) goToRoot();
 
   const redirectUrl = getRedirectUrl(
     checkout,

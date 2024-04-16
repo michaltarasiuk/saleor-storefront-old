@@ -41,7 +41,7 @@ export default async function PaymentPage() {
       },
     },
   );
-  if (!checkout || !checkout.quantity) goToRoot();
+  if (!checkout?.quantity) goToRoot();
 
   const redirectUrl = getRedirectUrl(
     checkout,
