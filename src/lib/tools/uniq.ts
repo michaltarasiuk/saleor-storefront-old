@@ -19,3 +19,62 @@ export function uniqBy<Item>(
   }
   return newArr;
 }
+
+if (import.meta.vitest) {
+  const {describe, test, expect} = import.meta.vitest;
+
+  describe('uniq', () => {
+    function createArrOfNumbers() {
+      return [1, 2, 2, 3, 4, 5, 5];
+    }
+
+    test('to be new array', () => {
+      const arr = createArrOfNumbers();
+      expect(uniq(arr)).not.toBe(arr);
+    });
+
+    test('to be an array with unique elements', () => {
+      const arr = createArrOfNumbers();
+      expect(uniq(arr)).toEqual([1, 2, 3, 4, 5]);
+    });
+  });
+
+  describe('uniq by', () => {
+    function createArrOfIndexRecords() {
+      return [
+        {
+          index: 1,
+        },
+        {
+          index: 2,
+        },
+        {
+          index: 2,
+        },
+        {
+          index: 3,
+        },
+      ];
+    }
+
+    test('to be new array', () => {
+      const arr = createArrOfIndexRecords();
+      expect(uniqBy(arr, ({index}) => index)).not.toBe(arr);
+    });
+
+    test('to be an array with unique elements', () => {
+      const arr = createArrOfIndexRecords();
+      expect(uniqBy(arr, ({index}) => index)).toEqual([
+        {
+          index: 1,
+        },
+        {
+          index: 2,
+        },
+        {
+          index: 3,
+        },
+      ]);
+    });
+  });
+}
