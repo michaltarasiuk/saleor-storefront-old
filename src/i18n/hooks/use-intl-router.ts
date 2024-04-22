@@ -16,11 +16,11 @@ export function useIntlRouter() {
 
       return {
         push: (...[href, options]: Parameters<typeof push>) =>
-          push(`${basePath}${href}`, options),
+          push(basePath + href, options),
         replace: (...[href, options]: Parameters<typeof replace>) =>
-          replace(`${basePath}${href}`, options),
+          replace(basePath + href, options),
         prefetch: (...[href, options]: Parameters<typeof prefetch>) =>
-          prefetch(`${basePath}${href}`, options),
+          prefetch(basePath + href, options),
       };
     }, [channel, locale, prefetch, push, replace]),
   };
