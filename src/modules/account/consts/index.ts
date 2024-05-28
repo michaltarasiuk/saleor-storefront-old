@@ -1,6 +1,6 @@
 export const COOKIE_NAMES = {
-  ACCESS_TOKEN: '__Host-accessToken',
-  REFRESH_TOKEN: '__Secure-refreshToken',
+  ACCESS_TOKEN: 'accessToken',
+  REFRESH_TOKEN: 'refreshToken',
 };
 
 export const MIN_PASSWORD_LENGTH = 8;

@@ -2,7 +2,7 @@ import 'server-only';
 
 import {cookies} from 'next/headers';
 
-const CHECKOUT_ID_COOKIE_NAME = '__Host-checkoutId';
+const CHECKOUT_ID_COOKIE_NAME = 'checkoutId';
 
 export function setCheckoutId(value: string) {
   cookies().set(CHECKOUT_ID_COOKIE_NAME, value, {
