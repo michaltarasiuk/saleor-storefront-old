@@ -1,4 +1,4 @@
-import type {MenuCheckboxItemProps} from '@radix-ui/react-dropdown-menu';
+import type {DropdownMenuCheckboxItemProps} from '@radix-ui/react-dropdown-menu';
 import {Check} from 'lucide-react';
 
 import {cn} from '@/lib/tools/cn';
@@ -9,7 +9,7 @@ export function FiltersDropdownItem({
   children,
   className,
   ...restProps
-}: MenuCheckboxItemProps) {
+}: DropdownMenuCheckboxItemProps) {
   return (
     <DropdownMenu.CheckboxItem
       {...restProps}

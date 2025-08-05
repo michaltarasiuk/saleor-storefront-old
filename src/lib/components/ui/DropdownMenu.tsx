@@ -86,7 +86,7 @@ export function DropdownMenuItem({
 export function DropdownMenuSeparator({
   className,
   ...restProps
-}: DropdownMenu_.MenuSeparatorProps) {
+}: DropdownMenu_.DropdownMenuSeparatorProps) {
   return (
     <DropdownMenu_.Separator
       className={cn('-mx-1 my-1 h-px bg-muted', className)}

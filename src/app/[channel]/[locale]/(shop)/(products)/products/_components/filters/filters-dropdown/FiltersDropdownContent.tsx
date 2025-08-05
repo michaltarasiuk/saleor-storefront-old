@@ -1,4 +1,4 @@
-import type {MenuContentProps} from '@radix-ui/react-dropdown-menu';
+import type {DropdownMenuContentProps} from '@radix-ui/react-dropdown-menu';
 
 import {cn} from '@/lib/tools/cn';
 
@@ -8,7 +8,7 @@ export function FiltersDropdownContent({
   children,
   className,
   ...restProps
-}: MenuContentProps) {
+}: DropdownMenuContentProps) {
   return (
     <DropdownMenu.Portal>
       <DropdownMenu.Content
