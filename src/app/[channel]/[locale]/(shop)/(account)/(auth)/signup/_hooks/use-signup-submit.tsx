@@ -35,7 +35,7 @@ export function useSignupSubmit(form: UseFormReturn<SignupFormSchema>) {
             })
           ).accountRegister ?? {};
 
-        if (!errors?.length) {
+        if (errors?.length) {
           toast.destructive();
           return;
         }
