@@ -37,14 +37,14 @@ export function ProductList({queryVariables}: Props) {
 
   return (
     <>
-      <ol
+      <ul
         className={cn(
           'grid grid-cols-3 gap-x-10 gap-y-6 max-xl:gap-x-8 max-xl:gap-y-4 max-lg:grid-cols-2 max-sm:grid-cols-1',
         )}>
         {variablesArray.map((variables, idx) => (
           <ProductItems key={idx} variables={variables} />
         ))}
-      </ol>
+      </ul>
       <nav className={cn('mt-4 flex flex-col gap-2')}>
         <div className={cn('flex justify-center')}>
           {lastVariables && <PageNav variables={lastVariables} {...actions} />}

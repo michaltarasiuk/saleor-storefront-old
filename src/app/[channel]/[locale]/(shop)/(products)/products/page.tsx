@@ -38,7 +38,7 @@ async function ProductsPage_({searchParams: searchParamsObj}: Props) {
 
 function ProductsListSkeleton() {
   return (
-    <ol
+    <ul
       className={cn(
         'grid grid-cols-3 gap-x-10 gap-y-6',
         'max-xl:gap-x-8 max-xl:gap-y-4',
@@ -57,6 +57,6 @@ function ProductsListSkeleton() {
           </div>
         </li>
       ))}
-    </ol>
+    </ul>
   );
 }
