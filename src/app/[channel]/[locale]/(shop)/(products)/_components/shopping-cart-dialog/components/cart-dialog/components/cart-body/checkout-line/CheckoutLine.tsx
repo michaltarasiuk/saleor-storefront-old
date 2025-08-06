@@ -80,18 +80,13 @@ export function CheckoutLine({checkout, checkoutLine, onDelete}: Props) {
   return (
     <div className={cn('flex justify-between border-b px-1 py-4')}>
       <div className={cn('flex gap-2')}>
-        <div className={cn('relative h-16 w-16 rounded-md border')}>
+        <div
+          className={cn('relative h-16 w-16 flex-shrink-0 rounded-md border')}>
           <div className={cn('absolute -right-2 -top-3')}>
             <DeleteCheckoutLine lineId={id} onDelete={() => onDelete(id)} />
           </div>
           {image && (
-            <Image
-              src={image.url}
-              alt={image.alt}
-              height={64}
-              width={64}
-              className={cn('flex-shrink-0')}
-            />
+            <Image src={image.url} alt={image.alt} height={64} width={64} />
           )}
         </div>
         <div className={cn('flex flex-col justify-center')}>
