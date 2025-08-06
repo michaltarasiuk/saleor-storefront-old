@@ -85,7 +85,13 @@ export function CheckoutLine({checkout, checkoutLine, onDelete}: Props) {
             <DeleteCheckoutLine lineId={id} onDelete={() => onDelete(id)} />
           </div>
           {image && (
-            <Image src={image.url} alt={image.alt} height={64} width={64} />
+            <Image
+              src={image.url}
+              alt={image.alt}
+              height={64}
+              width={64}
+              className={cn('flex-shrink-0')}
+            />
           )}
         </div>
         <div className={cn('flex flex-col justify-center')}>
