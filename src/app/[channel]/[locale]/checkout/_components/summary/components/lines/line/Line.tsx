@@ -75,7 +75,7 @@ export function Line({checkout, checkoutLine}: Props) {
       <div className={cn('flex items-center gap-2')}>
         <div
           className={cn(
-            'relative rounded-lg border border-faded-black bg-subdued-foreground',
+            'relative shrink-0 rounded-lg border border-faded-black bg-subdued-foreground',
           )}>
           <div className={cn('absolute -right-2 -top-2')}>
             <Quantity value={quantity} />
