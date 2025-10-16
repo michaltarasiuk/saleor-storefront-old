@@ -4,7 +4,7 @@ import {localeToLangCode} from '@/i18n/tools/locale-to-lang-code';
 import {Dialog, DialogTrigger} from '@/lib/components/ui/Dialog';
 import {cn} from '@/lib/tools/cn';
 import {fetchQueryData} from '@/lib/tools/get-client';
-import {raise} from '@/lib/tools/raise';
+import {isDefined} from '@/lib/tools/is-defined';
 
 import {DialogContent} from '../DialogContent';
 import {EmptyCartDialog} from '../EmptyCartDialog';
@@ -28,36 +28,32 @@ interface Props {
 }
 
 export async function CartDialog({id}: Props) {
-  const checkout =
-    (
-      await fetchQueryData(
-        CartDialog_CheckoutQuery,
-        {
-          id,
-          languageCode: localeToLangCode(getLocale()),
-        },
-        {
-          fetchOptions: {
-            cache: 'no-cache',
-          },
-        },
-      )
-    ).checkout ?? raise('`checkout` is not defined');
-
-  if (checkout.quantity) {
-    return (
-      <Dialog>
-        <DialogTrigger asChild>
-          <ShoppingCartButton checkout={checkout} />
-        </DialogTrigger>
-        <DialogContent>
-          <div className={cn('flex h-full flex-col justify-between')}>
-            <CartBody checkout={checkout} />
-            <CartFooter checkout={checkout} />
-          </div>
-        </DialogContent>
-      </Dialog>
-    );
+  const {checkout} = await fetchQueryData(
+    CartDialog_CheckoutQuery,
+    {
+      id,
+      languageCode: localeToLangCode(getLocale()),
+    },
+    {
+      fetchOptions: {
+        cache: 'no-cache',
+      },
+    },
+  );
+  if (!isDefined(checkout) || !checkout.quantity) {
+    return <EmptyCartDialog />;
   }
-  return <EmptyCartDialog />;
+  return (
+    <Dialog>
+      <DialogTrigger asChild>
+        <ShoppingCartButton checkout={checkout} />
+      </DialogTrigger>
+      <DialogContent>
+        <div className={cn('flex h-full flex-col justify-between')}>
+          <CartBody checkout={checkout} />
+          <CartFooter checkout={checkout} />
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
 }
