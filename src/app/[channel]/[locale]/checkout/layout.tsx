@@ -1,5 +1,5 @@
 import '@/styles/globals.css';
-import './styles/globals.css';
+import './styles/checkout.css';
 
 import type {AvailableChannel, AvailableLocale} from '@/i18n/consts';
 import {cn} from '@/lib/tools/cn';

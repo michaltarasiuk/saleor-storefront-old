@@ -1,5 +1,5 @@
 import '@/styles/globals.css';
-import './styles/globals.css';
+import './styles/shop.css';
 import '../polyfills';
 
 import type {AvailableChannel, AvailableLocale} from '@/i18n/consts';

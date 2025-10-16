@@ -1,6 +1,7 @@
 'use client';
 
 import {useRouter} from 'next/navigation';
+import {useTransition} from 'react';
 
 import {useBasePath} from '@/i18n/hooks/use-base-path';
 import {FormattedMessage} from '@/i18n/react-intl';
@@ -14,22 +15,27 @@ interface Props {
 }
 
 export function AddToCartButton({variantId}: Props) {
-  const {channel, languageCode} = basePathToQueryVariables(...useBasePath());
   const router = useRouter();
-
+  const basePath = useBasePath();
+  const [isPending, startTransition] = useTransition();
   return (
     <Button
       variant="outline"
-      disabled={!isDefined(variantId)}
+      disabled={!isDefined(variantId) || isPending}
       onClick={async () => {
-        if (isDefined(variantId)) {
+        if (!isDefined(variantId)) {
+          return;
+        }
+        startTransition(async () => {
           await addCheckoutLineAction({
-            line: {quantity: 1, variantId},
-            channel,
-            languageCode,
+            line: {
+              quantity: 1,
+              variantId,
+            },
+            ...basePathToQueryVariables(...basePath),
           });
           router.refresh();
-        }
+        });
       }}>
       <FormattedMessage defaultMessage="Add to cart" id="ADKef8" />
     </Button>

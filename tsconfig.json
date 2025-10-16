@@ -32,6 +32,6 @@
     "strict": true,
     "types": ["vitest/importMeta"]
   },
-  "include": ["dist/types/**/*.ts", "next-env.d.ts", "./src/**/*"],
+  "include": ["./src/**/*", "dist/types/**/*.ts", "next-env.d.ts", "css.d.ts"],
   "exclude": ["node_modules"]
 }

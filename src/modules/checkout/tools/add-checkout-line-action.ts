@@ -31,7 +31,6 @@ export async function addCheckoutLineAction({
   languageCode,
 }: Variables) {
   const id = getCheckoutId();
-
   return isDefined(id)
     ? await fetchMutationData(
         AddCheckoutLineMutation,
