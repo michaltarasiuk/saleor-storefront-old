@@ -65,7 +65,7 @@ export function Product({product, searchParams}: Props) {
   const variantId = searchParams.get(PRODUCT_PAGE_SEARCH_PARAM_NAMES.VARIANT);
 
   return (
-    <div className={cn('mt-6 flex gap-8')}>
+    <div className={cn('mt-6 flex flex-col gap-8 md:flex-row')}>
       <div className={cn('flex-1')}>
         {thumbnail && <ProductThumbnail thumbnail={thumbnail} />}
       </div>
