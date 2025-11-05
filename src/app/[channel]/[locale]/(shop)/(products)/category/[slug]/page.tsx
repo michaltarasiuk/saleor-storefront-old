@@ -46,7 +46,11 @@ async function CategoryPage_({params: {slug}}: Props) {
 
   // TODO: Replace with pagination
   return (
-    <ol className={cn('grid grid-cols-3 gap-x-10 gap-y-6')}>
+    <ol
+      className={cn(
+        'grid grid-cols-2 gap-x-4 gap-y-2',
+        'md:grid-cols-3 md:gap-x-10 md:gap-y-6',
+      )}>
       {category?.products?.edges.map(({node}) => (
         <ProductItem key={node.id} product={node} />
       ))}
