@@ -46,7 +46,12 @@ async function CollectionPage_({params: {slug}}: Props) {
 
   // TODO: Replace with pagination
   return (
-    <ol className={cn('grid grid-cols-3 gap-x-10 gap-y-6')}>
+    <ol
+      className={cn(
+        'grid grid-cols-3 gap-x-10 gap-y-6',
+        ' max-lg:grid-cols-2 max-sm:grid-cols-1',
+        ' max-xl:gap-x-8 max-xl:gap-y-4',
+      )}>
       {collection?.products?.edges.map(({node}) => (
         <ProductItem key={node.id} product={node} />
       ))}

@@ -39,7 +39,9 @@ export function ProductList({queryVariables}: Props) {
     <>
       <ul
         className={cn(
-          'grid grid-cols-3 gap-x-10 gap-y-6 max-xl:gap-x-8 max-xl:gap-y-4 max-lg:grid-cols-2 max-sm:grid-cols-1',
+          'grid grid-cols-3 gap-x-10 gap-y-6',
+          ' max-lg:grid-cols-2 max-sm:grid-cols-1',
+          ' max-xl:gap-x-8 max-xl:gap-y-4',
         )}>
         {variablesArray.map((variables, idx) => (
           <ProductItems key={idx} variables={variables} />
