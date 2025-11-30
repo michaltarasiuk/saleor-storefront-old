@@ -25,11 +25,13 @@ export default function CheckoutLayout({
     <html lang={locale} className={fontSans.className}>
       <body>
         <Providers channel={channel} locale={locale}>
-          <div
-            className={cn(
-              'grid h-full grid-cols-[56%_44%]',
-              'max-md:hidden', // Hide UI on mobile
-            )}>
+          <div className={cn('flex flex-col md:hidden')}>
+            <main className={cn('flex-1 px-4 pb-5 pt-4')}>{children}</main>
+            <div className={cn('border-t border-faded-black px-4 pb-5 pt-4')}>
+              <Summary />
+            </div>
+          </div>
+          <div className={cn('hidden h-full md:grid md:grid-cols-[56%_44%]')}>
             <main className={cn('flex justify-end pb-5 pl-24 pr-16 pt-14')}>
               <div className={cn('w-[570px]')}>{children}</div>
             </main>

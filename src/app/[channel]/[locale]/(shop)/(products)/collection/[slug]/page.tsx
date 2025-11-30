@@ -48,9 +48,10 @@ async function CollectionPage_({params: {slug}}: Props) {
   return (
     <ol
       className={cn(
-        'grid grid-cols-3 gap-x-10 gap-y-6',
-        ' max-lg:grid-cols-2 max-sm:grid-cols-1',
-        ' max-xl:gap-x-8 max-xl:gap-y-4',
+        'grid grid-cols-1 gap-x-8 gap-y-4',
+        'sm:grid-cols-2',
+        'lg:grid-cols-3',
+        'xl:gap-x-10 xl:gap-y-6',
       )}>
       {collection?.products?.edges.map(({node}) => (
         <ProductItem key={node.id} product={node} />

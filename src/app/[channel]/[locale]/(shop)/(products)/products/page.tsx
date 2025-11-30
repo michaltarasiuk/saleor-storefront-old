@@ -40,10 +40,10 @@ function ProductsListSkeleton() {
   return (
     <ul
       className={cn(
-        'grid grid-cols-3 gap-x-10 gap-y-6',
-        'max-xl:gap-x-8 max-xl:gap-y-4',
-        'max-lg:grid-cols-2',
-        'max-sm:grid-cols-1',
+        'grid grid-cols-1 gap-x-8 gap-y-4',
+        'sm:grid-cols-2',
+        'lg:grid-cols-3',
+        'xl:gap-x-10 xl:gap-y-6',
       )}>
       {Array.from({length: 6}, (_, i) => (
         <li key={i} className={cn('aspect-square')}>
